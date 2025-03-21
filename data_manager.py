@@ -208,6 +208,32 @@ def set_skill_expectation(job_level, competency, skill, expected_score):
     save_data("expectations", expectations_df)
     return True, "Skill expectation set successfully"
 
+def set_competency_expectation(job_level, competency, expected_score):
+    """Set the expected score for a competency at a specific job level"""
+    # Use a separate file for competency expectations
+    comp_expectations_df = load_data("comp_expectations")
+    
+    # Check if expectation already exists
+    existing = comp_expectations_df[
+        (comp_expectations_df["job_level"] == job_level) & 
+        (comp_expectations_df["competency"] == competency)
+    ]
+    
+    if not existing.empty:
+        # Update existing expectation
+        comp_expectations_df.loc[existing.index, "expected_score"] = expected_score
+    else:
+        # Add new expectation
+        new_expectation = pd.DataFrame({
+            "job_level": [job_level],
+            "competency": [competency],
+            "expected_score": [expected_score]
+        })
+        comp_expectations_df = pd.concat([comp_expectations_df, new_expectation], ignore_index=True)
+    
+    save_data("comp_expectations", comp_expectations_df)
+    return True, "Competency expectation set successfully"
+
 def add_assessment(employee_id, competency, skill, score, assessment_type, notes=""):
     """Add a new skill assessment"""
     assessments_df = load_data("assessments")
