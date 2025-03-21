@@ -6,4 +6,4 @@ employee_id,name,email,job_title,job_level,department,manager_id,hire_date
 5,Afonso Solano,test@test.com,Product Designer,Senior,Design,6.0,2025-03-21
 6,Cher,test@test.com,Product Designer,Manager,Design,7.0,2025-03-21
 7,Admin,admin@test.com,Product Designer,Manager,Design,6.0,2025-03-21
-8,Bruno Duarte,brnduarte@gmail.com,Product Designer,Senior,Design,6.0,2025-03-21
+8,Bruno Duarte,brnduarte@gmail.com,Product Designer,Associate,Design,6.0,2025-03-21
