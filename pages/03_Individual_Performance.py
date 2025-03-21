@@ -339,12 +339,32 @@ if employee_id:
                             (assessments_df["employee_id"] == employee_id) &
                             (assessments_df["competency"] == selected_comp) &
                             (assessments_df["skill"] == selected_skill)
-                        ].sort_values("assessment_date", ascending=False)
+                        ]
                         
                         if not skill_history.empty:
-                            history_table = skill_history[["assessment_date", "assessment_type", "score", "notes"]]
-                            history_table["assessment_date"] = pd.to_datetime(history_table["assessment_date"]).dt.strftime("%Y-%m-%d")
-                            st.dataframe(history_table)
+                            # Convert and sort by date
+                            skill_history["assessment_date"] = pd.to_datetime(skill_history["assessment_date"])
+                            skill_history = skill_history.sort_values("assessment_date", ascending=False)
+                            
+                            # Get only the latest assessment for each day and assessment type
+                            skill_history["assessment_day"] = skill_history["assessment_date"].dt.date
+                            
+                            # Group by date and type, keeping the latest assessment for each
+                            latest_day_assessments = []
+                            for (day, assess_type), group in skill_history.groupby(["assessment_day", "assessment_type"]):
+                                # Get the one with highest assessment_id within the group (most recent)
+                                latest_day_assessments.append(group.iloc[0])
+                            
+                            # Convert to DataFrame and sort by date (most recent first)
+                            latest_history_df = pd.DataFrame(latest_day_assessments).sort_values("assessment_date", ascending=False)
+                            
+                            if not latest_history_df.empty:
+                                # Select and format columns for display
+                                history_table = latest_history_df[["assessment_date", "assessment_type", "score", "notes"]]
+                                history_table["assessment_date"] = history_table["assessment_date"].dt.strftime("%Y-%m-%d")
+                                st.dataframe(history_table)
+                            else:
+                                st.info("No assessment history found after processing.")
                         else:
                             st.info("No assessment history found for this skill.")
                     else:

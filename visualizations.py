@@ -420,13 +420,29 @@ def skill_improvement_chart(employee_id, competency, skill):
     if skill_assessments.empty:
         return None, f"No assessments found for {competency} - {skill}."
     
-    # Convert dates and sort
+    # Convert dates
     skill_assessments["assessment_date"] = pd.to_datetime(skill_assessments["assessment_date"])
-    skill_assessments = skill_assessments.sort_values("assessment_date")
+    
+    # Group by date and assessment_type, keeping only the latest assessment for each day
+    skill_assessments = skill_assessments.sort_values(["assessment_date", "assessment_id"], ascending=[True, False])
+    
+    # Create a date-only column for grouping by day
+    skill_assessments["assessment_day"] = skill_assessments["assessment_date"].dt.date
+    
+    # Get the latest assessment for each day and assessment type
+    latest_assessments = []
+    for (day, assess_type), group in skill_assessments.groupby(["assessment_day", "assessment_type"]):
+        latest_assessments.append(group.iloc[0])
+    
+    # Convert back to DataFrame and sort by date
+    latest_assessments_df = pd.DataFrame(latest_assessments).sort_values("assessment_date")
+    
+    if latest_assessments_df.empty:
+        return None, f"No assessments found for {competency} - {skill} after processing."
     
     # Create line chart
     fig = px.line(
-        skill_assessments,
+        latest_assessments_df,
         x="assessment_date",
         y="score",
         color="assessment_type",
