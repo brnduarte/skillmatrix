@@ -8,7 +8,8 @@ from data_manager import (
 )
 from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
 from visualizations import (
-    employee_skill_radar, employee_competency_radar, comparison_radar_chart, skill_improvement_chart
+    employee_skill_radar, employee_competency_radar, comparison_radar_chart, 
+    skill_improvement_chart, combined_skill_radar, combined_competency_radar
 )
 
 # Page configuration
@@ -109,60 +110,28 @@ if employee_id:
                 # Show competency-based radar charts
                 st.subheader("Competency Overview")
                 
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    # Self assessment competency radar
-                    if not self_assessments.empty:
-                        st.subheader("Self Assessment - Competencies")
-                        fig, error = employee_competency_radar(employee_id, "self")
-                        if fig:
-                            st.plotly_chart(fig, use_container_width=True)
-                        else:
-                            st.info(error or "No self assessment data available.")
+                # Combined competency radar chart
+                if not self_assessments.empty or not manager_assessments.empty:
+                    fig, error = combined_competency_radar(employee_id)
+                    if fig:
+                        st.plotly_chart(fig, use_container_width=True)
                     else:
-                        st.info("No self assessments completed yet.")
-                
-                with col2:
-                    # Manager assessment competency radar
-                    if not manager_assessments.empty:
-                        st.subheader("Manager Assessment - Competencies")
-                        fig, error = employee_competency_radar(employee_id, "manager")
-                        if fig:
-                            st.plotly_chart(fig, use_container_width=True)
-                        else:
-                            st.info(error or "No manager assessment data available.")
-                    else:
-                        st.info("No manager assessments completed yet.")
+                        st.info(error or "No competency assessment data available.")
+                else:
+                    st.info("No assessments completed yet.")
             else:
                 # Show skill-based radar charts
                 st.subheader("Skills Overview")
                 
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    # Self assessment radar
-                    if not self_assessments.empty:
-                        st.subheader("Self Assessment - Skills")
-                        fig, error = employee_skill_radar(employee_id, "self")
-                        if fig:
-                            st.plotly_chart(fig, use_container_width=True)
-                        else:
-                            st.info(error or "No self assessment data available.")
+                # Combined skill radar chart
+                if not self_assessments.empty or not manager_assessments.empty:
+                    fig, error = combined_skill_radar(employee_id)
+                    if fig:
+                        st.plotly_chart(fig, use_container_width=True)
                     else:
-                        st.info("No self assessments completed yet.")
-                
-                with col2:
-                    # Manager assessment radar
-                    if not manager_assessments.empty:
-                        st.subheader("Manager Assessment - Skills")
-                        fig, error = employee_skill_radar(employee_id, "manager")
-                        if fig:
-                            st.plotly_chart(fig, use_container_width=True)
-                        else:
-                            st.info(error or "No manager assessment data available.")
-                    else:
-                        st.info("No manager assessments completed yet.")
+                        st.info(error or "No skill assessment data available.")
+                else:
+                    st.info("No assessments completed yet.")
             
             # Comparison to expected levels
             st.markdown("---")

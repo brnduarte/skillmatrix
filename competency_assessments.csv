@@ -116,3 +116,12 @@ assessment_id,employee_id,competency,score,assessment_type,assessment_date,notes
 115,8,Collaboration,2.2,manager,2025-03-21,Manager assessment for Collaboration
 116,8,Communication,1.0,manager,2025-03-21,Manager assessment for Communication
 117,8,Open Minded,1.0,manager,2025-03-21,Manager assessment for Open Minded
+118,5,Expertise,3.0,manager,2025-03-21,
+119,5,Decision Making,3.0,manager,2025-03-21,
+120,5,Continuous Improvement,3.5,manager,2025-03-21,
+121,5,Accountability,3.5,manager,2025-03-21,
+122,5,Initiative,2.5,manager,2025-03-21,
+123,5,Personal Development,4.0,manager,2025-03-21,
+124,5,Collaboration,4.0,manager,2025-03-21,
+125,5,Communication,4.5,manager,2025-03-21,
+126,5,Open Minded,4.0,manager,2025-03-21,

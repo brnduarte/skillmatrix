@@ -116,3 +116,12 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 115,8,Collaboration,Cross-Functional Collaboration,2.8,manager,2025-03-21,Manager assessment for Cross-Functional Collaboration
 116,8,Communication,Competitive Analysis,1.0,manager,2025-03-21,Manager assessment for Competitive Analysis
 117,8,Open Minded,Resource Management and Operations,1.0,manager,2025-03-21,Manager assessment for Resource Management and Operations
+118,5,Expertise,Visual Design,3.0,manager,2025-03-21,
+119,5,Decision Making,Interaction Design,3.0,manager,2025-03-21,
+120,5,Continuous Improvement,Design Systems and A11y,3.0,manager,2025-03-21,
+121,5,Accountability,UX Strategy,3.5,manager,2025-03-21,
+122,5,Initiative,User Testing and Validation,3.5,manager,2025-03-21,
+123,5,Personal Development,Influence,3.5,manager,2025-03-21,
+124,5,Collaboration,Cross-Functional Collaboration,3.5,manager,2025-03-21,
+125,5,Communication,Competitive Analysis,3.5,manager,2025-03-21,
+126,5,Open Minded,Resource Management and Operations,3.5,manager,2025-03-21,

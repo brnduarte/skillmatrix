@@ -118,6 +118,121 @@ def employee_skill_radar(employee_id, assessment_type="self"):
     
     return fig, None
 
+def combined_skill_radar(employee_id):
+    """Create a combined radar chart showing both self and manager assessments for an employee's skills"""
+    # Get skill data
+    skills_df = load_data("skills")
+    competencies_df = load_data("competencies")
+    
+    if skills_df.empty or competencies_df.empty:
+        return None, "No skills or competencies found."
+    
+    # Create lists for chart data
+    labels = []
+    self_values = []
+    manager_values = []
+    
+    # Get unique skill identifier combinations
+    skill_identifiers = []
+    
+    # First gather all possible competency-skill combinations for this employee
+    for _, comp_row in competencies_df.iterrows():
+        comp_skills = skills_df[skills_df["competency_id"] == comp_row["competency_id"]]
+        
+        for _, skill_row in comp_skills.iterrows():
+            # Check if either self or manager assessment exists
+            self_assessment = get_latest_assessment(
+                employee_id, 
+                comp_row["name"], 
+                skill_row["name"], 
+                "self"
+            )
+            
+            manager_assessment = get_latest_assessment(
+                employee_id, 
+                comp_row["name"], 
+                skill_row["name"], 
+                "manager"
+            )
+            
+            if self_assessment is not None or manager_assessment is not None:
+                label = f"{comp_row['name']} - {skill_row['name']}"
+                skill_identifiers.append((comp_row["name"], skill_row["name"], label))
+    
+    # Then populate the data arrays
+    for comp_name, skill_name, label in skill_identifiers:
+        labels.append(label)
+        
+        # Get latest self assessment
+        self_assessment = get_latest_assessment(
+            employee_id, 
+            comp_name, 
+            skill_name, 
+            "self"
+        )
+        if self_assessment is not None:
+            self_values.append(float(self_assessment["score"]))
+        else:
+            self_values.append(None)
+        
+        # Get latest manager assessment
+        manager_assessment = get_latest_assessment(
+            employee_id, 
+            comp_name, 
+            skill_name, 
+            "manager"
+        )
+        if manager_assessment is not None:
+            manager_values.append(float(manager_assessment["score"]))
+        else:
+            manager_values.append(None)
+    
+    if not labels:
+        return None, "No assessments found for this employee."
+    
+    # Create combined radar chart
+    fig = go.Figure()
+    
+    # Add self assessment data
+    if any(v is not None for v in self_values):
+        # Replace None with 0 for visualization purposes
+        self_values_visual = [v if v is not None else 0 for v in self_values]
+        
+        fig.add_trace(go.Scatterpolar(
+            r=self_values_visual,
+            theta=labels,
+            fill='toself',
+            name='Self Assessment',
+            line=dict(color='blue')
+        ))
+    
+    # Add manager assessment data
+    if any(v is not None for v in manager_values):
+        # Replace None with 0 for visualization purposes
+        manager_values_visual = [v if v is not None else 0 for v in manager_values]
+        
+        fig.add_trace(go.Scatterpolar(
+            r=manager_values_visual,
+            theta=labels,
+            fill='toself',
+            name='Manager Assessment',
+            line=dict(color='green')
+        ))
+    
+    # Set layout
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 5]
+            )
+        ),
+        title="Combined Skills Assessment",
+        showlegend=True
+    )
+    
+    return fig, None
+
 def comparison_radar_chart(employee_id, job_level, assessment_type="self"):
     """Create a radar chart comparing actual vs expected skills"""
     # Load necessary data
@@ -340,6 +455,112 @@ def employee_competency_radar(employee_id, assessment_type="self"):
         categories=labels,
         title=f"Competency Assessment ({assessment_type.capitalize()})",
         scale=5
+    )
+    
+    return fig, None
+
+def combined_competency_radar(employee_id):
+    """Create a combined radar chart showing both self and manager assessments for an employee's competencies"""
+    # Get competency data
+    competencies_df = load_data("competencies")
+    
+    if competencies_df.empty:
+        return None, "No competencies found."
+    
+    # Create lists for chart data
+    labels = []
+    self_values = []
+    manager_values = []
+    
+    # Get unique competency identifiers
+    comp_identifiers = []
+    
+    # First gather all possible competencies for this employee
+    for _, comp_row in competencies_df.iterrows():
+        # Check if either self or manager assessment exists
+        self_assessment = get_latest_competency_assessment(
+            employee_id, 
+            comp_row["name"], 
+            "self"
+        )
+        
+        manager_assessment = get_latest_competency_assessment(
+            employee_id, 
+            comp_row["name"], 
+            "manager"
+        )
+        
+        if self_assessment is not None or manager_assessment is not None:
+            comp_identifiers.append(comp_row["name"])
+    
+    # Then populate the data arrays
+    for comp_name in comp_identifiers:
+        labels.append(comp_name)
+        
+        # Get latest self assessment
+        self_assessment = get_latest_competency_assessment(
+            employee_id, 
+            comp_name, 
+            "self"
+        )
+        if self_assessment is not None:
+            self_values.append(float(self_assessment["score"]))
+        else:
+            self_values.append(None)
+        
+        # Get latest manager assessment
+        manager_assessment = get_latest_competency_assessment(
+            employee_id, 
+            comp_name, 
+            "manager"
+        )
+        if manager_assessment is not None:
+            manager_values.append(float(manager_assessment["score"]))
+        else:
+            manager_values.append(None)
+    
+    if not labels:
+        return None, "No competency assessments found for this employee."
+    
+    # Create combined radar chart
+    fig = go.Figure()
+    
+    # Add self assessment data
+    if any(v is not None for v in self_values):
+        # Replace None with 0 for visualization purposes
+        self_values_visual = [v if v is not None else 0 for v in self_values]
+        
+        fig.add_trace(go.Scatterpolar(
+            r=self_values_visual,
+            theta=labels,
+            fill='toself',
+            name='Self Assessment',
+            line=dict(color='blue')
+        ))
+    
+    # Add manager assessment data
+    if any(v is not None for v in manager_values):
+        # Replace None with 0 for visualization purposes
+        manager_values_visual = [v if v is not None else 0 for v in manager_values]
+        
+        fig.add_trace(go.Scatterpolar(
+            r=manager_values_visual,
+            theta=labels,
+            fill='toself',
+            name='Manager Assessment',
+            line=dict(color='green')
+        ))
+    
+    # Set layout
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 5]
+            )
+        ),
+        title="Combined Competency Assessment",
+        showlegend=True
     )
     
     return fig, None
