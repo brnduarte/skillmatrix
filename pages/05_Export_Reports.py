@@ -526,7 +526,7 @@ with tab2:
                     if not filtered_assessments.empty:
                         # Allow selecting competency
                         competencies = sorted(filtered_assessments["competency"].unique())
-                        selected_comp = st.selectbox("Select Competency", competencies)
+                        selected_comp = st.selectbox("Select Competency", competencies, key="export_comp_select")
                         
                         # Filter by competency
                         comp_assessments = filtered_assessments[filtered_assessments["competency"] == selected_comp]

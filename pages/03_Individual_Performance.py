@@ -195,7 +195,7 @@ if employee_id:
             if not competencies_df.empty:
                 # Select competency to view
                 comp_options = competencies_df["name"].tolist()
-                selected_comp = st.selectbox("Select Competency", comp_options)
+                selected_comp = st.selectbox("Select Competency", comp_options, key="individual_comp_select")
                 
                 # Get competency ID
                 selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
@@ -258,7 +258,7 @@ if employee_id:
                     # Show select skill for detailed view
                     if skill_data:
                         st.subheader("Select Skill for Detailed View")
-                        selected_skill = st.selectbox("Select Skill", [s["Skill"] for s in skill_data])
+                        selected_skill = st.selectbox("Select Skill", [s["Skill"] for s in skill_data], key="individual_skill_detail_select")
                         
                         col1, col2 = st.columns(2)
                         

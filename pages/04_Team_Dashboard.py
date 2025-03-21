@@ -353,7 +353,7 @@ with tab3:
         with col2:
             # Select competency to compare
             comp_options = ["Overall Mean"] + competencies
-            selected_comp = st.selectbox("Select Competency", comp_options)
+            selected_comp = st.selectbox("Select Competency", comp_options, key="team_dashboard_comp_select")
         
         # Create comparison chart
         if selected_employees and selected_comp:
