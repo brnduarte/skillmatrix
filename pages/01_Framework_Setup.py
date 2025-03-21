@@ -71,14 +71,54 @@ with tab1:
         if st.session_state.show_add_skill_form:
             st.session_state.show_add_competency_form = False
     
-    # Display add competency form if active
+    # Display add competency form as a modal if active
     if st.session_state.show_add_competency_form:
-        with st.container(border=True):
+        # Create a modal-like overlay
+        # First, we add CSS for the modal
+        modal_css = """
+        <style>
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 2rem;
+            border-radius: 5px;
+            z-index: 999;
+            width: 80%;
+            max-width: 500px;
+        }
+        </style>
+        <div class="modal-backdrop"></div>
+        """
+        st.markdown(modal_css, unsafe_allow_html=True)
+        
+        # Create modal content
+        modal_content = f"""
+        <div class="modal-content">
+            <h3>Add New Competency</h3>
+        </div>
+        """
+        st.markdown(modal_content, unsafe_allow_html=True)
+        
+        # We need to use an inner container to place the form content
+        # inside our modal that was created with HTML/CSS
+        with st.container():
             st.subheader("Add New Competency")
             comp_name = st.text_input("Competency Name", key="comp_name_input")
             comp_desc = st.text_area("Description", key="comp_desc_input")
             
-            col1, col2 = st.columns([1, 5])
+            col1, col2 = st.columns([1, 1])
             with col1:
                 submit_comp = st.button("Save", type="primary", key="submit_comp_btn")
             with col2:
@@ -90,6 +130,7 @@ with tab1:
                     if success:
                         st.success(message)
                         st.session_state.show_add_competency_form = False
+                        st.rerun()
                     else:
                         st.error(message)
                 else:
@@ -99,7 +140,7 @@ with tab1:
                 st.session_state.show_add_competency_form = False
                 st.rerun()
     
-    # Display add skill form if active
+    # Display add skill form as a modal if active
     if st.session_state.show_add_skill_form:
         competencies_df = load_data("competencies")
         
@@ -107,7 +148,47 @@ with tab1:
             st.warning("You need to add competencies first.")
             st.session_state.show_add_skill_form = False
         else:
-            with st.container(border=True):
+            # Create a modal-like overlay
+            # First, we add CSS for the modal
+            modal_css = """
+            <style>
+            .modal-backdrop {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 998;
+            }
+            .modal-content {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: white;
+                padding: 2rem;
+                border-radius: 5px;
+                z-index: 999;
+                width: 80%;
+                max-width: 500px;
+            }
+            </style>
+            <div class="modal-backdrop"></div>
+            """
+            st.markdown(modal_css, unsafe_allow_html=True)
+            
+            # Create modal content
+            modal_content = f"""
+            <div class="modal-content">
+                <h3>Add New Skill</h3>
+            </div>
+            """
+            st.markdown(modal_content, unsafe_allow_html=True)
+            
+            # We need to use an inner container to place the form content
+            # inside our modal that was created with HTML/CSS
+            with st.container():
                 st.subheader("Add New Skill")
                 
                 comp_options = competencies_df["name"].tolist()
@@ -119,7 +200,7 @@ with tab1:
                 skill_name = st.text_input("Skill Name", key="skill_name_input")
                 skill_desc = st.text_area("Skill Description", key="skill_desc_input")
                 
-                col1, col2 = st.columns([1, 5])
+                col1, col2 = st.columns([1, 1])
                 with col1:
                     submit_skill = st.button("Save", type="primary", key="submit_skill_btn")
                 with col2:
@@ -131,6 +212,7 @@ with tab1:
                         if success:
                             st.success(message)
                             st.session_state.show_add_skill_form = False
+                            st.rerun()
                         else:
                             st.error(message)
                     else:
@@ -206,14 +288,52 @@ with tab1:
                     else:
                         st.error(message)
             
-            # Display edit form if the edit button was clicked
+            # Display edit form as a modal if the edit button was clicked
             if st.session_state.get(f"edit_comp_id_{comp_id}", False):
-                with st.container(border=True):
+                # Create a modal-like overlay
+                modal_css = """
+                <style>
+                .modal-backdrop {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    z-index: 998;
+                }
+                .modal-content {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    padding: 2rem;
+                    border-radius: 5px;
+                    z-index: 999;
+                    width: 80%;
+                    max-width: 500px;
+                }
+                </style>
+                <div class="modal-backdrop"></div>
+                """
+                st.markdown(modal_css, unsafe_allow_html=True)
+                
+                # Create modal content header
+                modal_content = f"""
+                <div class="modal-content">
+                    <h3>Edit Competency</h3>
+                </div>
+                """
+                st.markdown(modal_content, unsafe_allow_html=True)
+                
+                # Add the form inside a container
+                with st.container():
                     st.markdown("### Edit Competency")
                     new_name = st.text_input("Name", value=comp_row["name"], key=f"comp_name_{comp_id}")
                     new_desc = st.text_area("Description", value=comp_row["description"], key=f"comp_desc_{comp_id}")
                     
-                    edit_col1, edit_col2 = st.columns([1, 5])
+                    edit_col1, edit_col2 = st.columns([1, 1])
                     with edit_col1:
                         if st.button("Save", type="primary", key=f"save_comp_{comp_id}"):
                             success, message = update_competency(comp_id, new_name, new_desc)
@@ -320,14 +440,52 @@ with tab1:
                         else:
                             st.error(message)
                 
-                # Display edit form if the edit button was clicked
+                # Display edit form as a modal if the edit button was clicked
                 if st.session_state.get(f"edit_skill_id_{skill_id}", False):
-                    with st.container(border=True):
+                    # Create a modal-like overlay
+                    modal_css = """
+                    <style>
+                    .modal-backdrop {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        z-index: 998;
+                    }
+                    .modal-content {
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background-color: white;
+                        padding: 2rem;
+                        border-radius: 5px;
+                        z-index: 999;
+                        width: 80%;
+                        max-width: 500px;
+                    }
+                    </style>
+                    <div class="modal-backdrop"></div>
+                    """
+                    st.markdown(modal_css, unsafe_allow_html=True)
+                    
+                    # Create modal content header
+                    modal_content = f"""
+                    <div class="modal-content">
+                        <h3>Edit Skill</h3>
+                    </div>
+                    """
+                    st.markdown(modal_content, unsafe_allow_html=True)
+                    
+                    # Add the form inside a container
+                    with st.container():
                         st.markdown("### Edit Skill")
                         new_skill_name = st.text_input("Name", value=skill_row["name"], key=f"skill_name_{skill_id}")
                         new_skill_desc = st.text_area("Description", value=skill_row["description"], key=f"skill_desc_{skill_id}")
                         
-                        skill_edit_col1, skill_edit_col2 = st.columns([1, 5])
+                        skill_edit_col1, skill_edit_col2 = st.columns([1, 1])
                         with skill_edit_col1:
                             if st.button("Save", type="primary", key=f"save_skill_{skill_id}"):
                                 success, message = update_skill(skill_id, new_skill_name, new_skill_desc)
@@ -364,14 +522,52 @@ with tab2:
     if show_add_level:
         st.session_state.show_add_level_form = not st.session_state.show_add_level_form
     
-    # Display add job level form if active
+    # Display add job level form as a modal if active
     if st.session_state.show_add_level_form:
-        with st.container(border=True):
+        # Create a modal-like overlay
+        modal_css = """
+        <style>
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+        .modal-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 2rem;
+            border-radius: 5px;
+            z-index: 999;
+            width: 80%;
+            max-width: 500px;
+        }
+        </style>
+        <div class="modal-backdrop"></div>
+        """
+        st.markdown(modal_css, unsafe_allow_html=True)
+        
+        # Create modal content header
+        modal_content = f"""
+        <div class="modal-content">
+            <h3>Add New Job Level</h3>
+        </div>
+        """
+        st.markdown(modal_content, unsafe_allow_html=True)
+        
+        # Add the form inside a container
+        with st.container():
             st.subheader("Add New Job Level")
             level_name = st.text_input("Level Name", key="level_name_input")
             level_desc = st.text_area("Level Description", key="level_desc_input")
             
-            col1, col2 = st.columns([1, 5])
+            col1, col2 = st.columns([1, 1])
             with col1:
                 submit_level = st.button("Save", type="primary", key="submit_level_btn")
             with col2:
@@ -383,6 +579,7 @@ with tab2:
                     if success:
                         st.success(message)
                         st.session_state.show_add_level_form = False
+                        st.rerun()
                     else:
                         st.error(message)
                 else:
@@ -482,14 +679,52 @@ with tab2:
                     else:
                         st.error(message)
             
-            # Display edit form if the edit button was clicked
+            # Display edit form as a modal if the edit button was clicked
             if st.session_state.get(f"edit_level_id_{level_id}", False):
-                with st.container(border=True):
+                # Create a modal-like overlay
+                modal_css = """
+                <style>
+                .modal-backdrop {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    z-index: 998;
+                }
+                .modal-content {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    padding: 2rem;
+                    border-radius: 5px;
+                    z-index: 999;
+                    width: 80%;
+                    max-width: 500px;
+                }
+                </style>
+                <div class="modal-backdrop"></div>
+                """
+                st.markdown(modal_css, unsafe_allow_html=True)
+                
+                # Create modal content header
+                modal_content = f"""
+                <div class="modal-content">
+                    <h3>Edit Job Level</h3>
+                </div>
+                """
+                st.markdown(modal_content, unsafe_allow_html=True)
+                
+                # Add the form inside a container
+                with st.container():
                     st.markdown("### Edit Job Level")
                     new_name = st.text_input("Name", value=level_row["name"], key=f"level_name_{level_id}")
                     new_desc = st.text_area("Description", value=level_row["description"], key=f"level_desc_{level_id}")
                     
-                    edit_col1, edit_col2 = st.columns([1, 5])
+                    edit_col1, edit_col2 = st.columns([1, 1])
                     with edit_col1:
                         if st.button("Save", type="primary", key=f"save_level_{level_id}"):
                             success, message = update_job_level(level_id, new_name, new_desc)
