@@ -181,20 +181,32 @@ def comparison_radar_chart(employee_id, job_level, assessment_type="self"):
     
     return fig, None
 
-def team_skill_radar(team_employees, assessment_type="self", title="Team Skills Assessment"):
-    """Create a radar chart for a team's skills using latest assessments"""
+def team_skill_radar(team_assessments, assessment_type="self", title="Team Skills Assessment"):
+    """Create a radar chart for a team's skills using latest assessments
+    
+    Args:
+        team_assessments: DataFrame containing team assessment data
+        assessment_type: Type of assessment to use (should be pre-filtered)
+        title: Title for the chart
+    """
     # Load necessary data
     skills_df = load_data("skills")
     competencies_df = load_data("competencies")
     
-    if not team_employees or skills_df.empty or competencies_df.empty:
+    # Check if dataframes are empty
+    if skills_df.empty or competencies_df.empty or team_assessments.empty:
         return None, "No team members or skills/competencies found."
+    
+    # Get unique employee IDs from the assessments
+    team_employee_ids = team_assessments["employee_id"].unique().tolist()
+    if not team_employee_ids:
+        return None, "No team members found in the assessments."
     
     # Dictionary to store cumulative skill scores and counts for averaging
     skill_data = {}  # {(competency, skill): [total_score, count]}
     
     # Process each employee's latest assessments
-    for employee_id in team_employees:
+    for employee_id in team_employee_ids:
         # Loop through all competencies and skills
         for _, comp_row in competencies_df.iterrows():
             comp_skills = skills_df[skills_df["competency_id"] == comp_row["competency_id"]]
@@ -237,19 +249,25 @@ def team_skill_radar(team_employees, assessment_type="self", title="Team Skills 
     
     return fig, None
 
-def team_competency_radar(team_employees, assessment_type="self", title="Team Competency Assessment"):
+def team_competency_radar(team_assessments, assessment_type="self", title="Team Competency Assessment"):
     """Create a radar chart for a team's competencies using latest assessments"""
     # Load necessary data
     competencies_df = load_data("competencies")
     
-    if not team_employees or competencies_df.empty:
+    # Check if dataframes are empty
+    if competencies_df.empty or team_assessments.empty:
         return None, "No team members or competencies found."
+    
+    # Get unique employee IDs from the assessments
+    team_employee_ids = team_assessments["employee_id"].unique().tolist()
+    if not team_employee_ids:
+        return None, "No team members found in the assessments."
     
     # Dictionary to store cumulative competency scores and counts for averaging
     comp_data = {}  # {competency: [total_score, count]}
     
     # Process each employee's latest assessments
-    for employee_id in team_employees:
+    for employee_id in team_employee_ids:
         # Loop through all competencies
         for _, comp_row in competencies_df.iterrows():
             # Get latest assessment for this competency
@@ -458,14 +476,20 @@ def skill_improvement_chart(employee_id, competency, skill):
     
     return fig, None
 
-def team_heatmap(team_employees, assessment_type="self"):
+def team_heatmap(team_assessments, assessment_type="self"):
     """Create a heatmap of team skills by competency using latest assessments"""
     # Load necessary data
     skills_df = load_data("skills")
     competencies_df = load_data("competencies")
     
-    if not team_employees or skills_df.empty or competencies_df.empty:
+    # Check if dataframes are empty
+    if skills_df.empty or competencies_df.empty or team_assessments.empty:
         return None, "No team members or skills/competencies found."
+    
+    # Get unique employee IDs from the assessments
+    team_employee_ids = team_assessments["employee_id"].unique().tolist()
+    if not team_employee_ids:
+        return None, "No team members found in the assessments."
     
     # Get all unique competencies and skills
     competencies = sorted(competencies_df["name"].unique())
@@ -492,7 +516,7 @@ def team_heatmap(team_employees, assessment_type="self"):
     skill_data = {}  # {(competency, skill): [total_score, count]}
     
     # Process each employee's latest assessments
-    for employee_id in team_employees:
+    for employee_id in team_employee_ids:
         # Loop through all competencies and skills
         for i, comp in enumerate(competencies):
             comp_id = competencies_df[competencies_df["name"] == comp]["competency_id"].iloc[0]
