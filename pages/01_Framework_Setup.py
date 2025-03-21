@@ -234,32 +234,39 @@ with tab1:
         # Skills section
         st.subheader("Skills by Competency")
         
-        # Create selection for competency
-        selected_comp_id = st.selectbox(
-            "Select Competency to View Skills", 
-            competencies_df["competency_id"].tolist(),
-            format_func=lambda x: competencies_df[competencies_df["competency_id"] == x]["name"].iloc[0]
-        )
+        # Filter options
+        filter_col1, filter_col2 = st.columns(2)
         
-        # Get selected competency name
-        selected_comp_name = competencies_df[competencies_df["competency_id"] == selected_comp_id]["name"].iloc[0]
+        with filter_col1:
+            # Create selection for competency with "All Competencies" option
+            comp_options = ["All Competencies"] + competencies_df["competency_id"].tolist()
+            selected_comp = st.selectbox(
+                "Select Competency", 
+                comp_options,
+                format_func=lambda x: "All Competencies" if x == "All Competencies" else competencies_df[competencies_df["competency_id"] == x]["name"].iloc[0],
+                key="skill_comp_filter"
+            )
         
-        st.markdown(f"#### Skills for: {selected_comp_name}")
-        
-        # Get skills for selected competency
-        comp_skills = get_competency_skills(selected_comp_id)
-        
-        # Add skill filter
-        if not comp_skills.empty:
-            search_skill = st.text_input("Search skills by name", key="skill_search")
-            if search_skill:
-                filtered_skills = comp_skills[comp_skills["name"].str.contains(search_skill, case=False)]
-            else:
-                filtered_skills = comp_skills
+        # Set the title based on selection
+        if selected_comp == "All Competencies":
+            st.markdown("#### All Skills")
+            # Get all skills
+            filtered_skills = skills_df
         else:
-            filtered_skills = comp_skills
+            # Get selected competency name
+            selected_comp_name = competencies_df[competencies_df["competency_id"] == selected_comp]["name"].iloc[0]
+            st.markdown(f"#### Skills for: {selected_comp_name}")
+            # Get skills for selected competency
+            filtered_skills = get_competency_skills(selected_comp)
         
-        if not comp_skills.empty:
+        # Add skill name filter
+        with filter_col2:
+            if not filtered_skills.empty:
+                search_skill = st.text_input("Search skills by name", key="skill_search")
+                if search_skill:
+                    filtered_skills = filtered_skills[filtered_skills["name"].str.contains(search_skill, case=False)]
+        
+        if not filtered_skills.empty:
             # Display skills in a table format
             
             # Display headers
@@ -327,7 +334,11 @@ with tab1:
                                 st.session_state.pop(f"edit_skill_id_{skill_id}", None)
                                 st.rerun()
         else:
-            st.info(f"No skills added yet for the {selected_comp_name} competency.")
+            if selected_comp == "All Competencies":
+                st.info("No skills have been added yet.")
+            else:
+                selected_comp_name = competencies_df[competencies_df["competency_id"] == selected_comp]["name"].iloc[0]
+                st.info(f"No skills added yet for the {selected_comp_name} competency.")
     else:
         st.info("No competencies added yet.")
 
