@@ -14,6 +14,17 @@ DATA_FILES = {
     "assessments": "skill_assessments.csv"
 }
 
+# Define the ID columns for each data type
+ID_COLUMNS = {
+    "users": "username",
+    "employees": "employee_id",
+    "competencies": "competency_id",
+    "skills": "skill_id",
+    "levels": "level_id",
+    "expectations": None,  # Composite key
+    "assessments": None    # Composite key
+}
+
 def load_data(data_type):
     """Load data from a CSV file"""
     if data_type not in DATA_FILES:
@@ -331,3 +342,365 @@ def get_team_skill_means(manager_id):
     means = team_assessments.groupby(["competency", "skill", "assessment_type"])["score"].mean().reset_index()
     
     return means
+
+# Delete functions for each data type
+def delete_record(data_type, record_id):
+    """Delete a record from the specified data type by ID"""
+    if data_type not in DATA_FILES:
+        return False, f"Unknown data type: {data_type}"
+    
+    df = load_data(data_type)
+    
+    if df.empty:
+        return False, f"No {data_type} data found"
+    
+    # Get the ID column name
+    id_column = ID_COLUMNS.get(data_type)
+    if id_column is None:
+        return False, f"Cannot delete from {data_type} using a simple ID"
+    
+    # Check if the record exists
+    if record_id not in df[id_column].values:
+        return False, f"{data_type} record with ID {record_id} not found"
+    
+    # Delete the record
+    df = df[df[id_column] != record_id]
+    save_data(data_type, df)
+    
+    return True, f"{data_type} record deleted successfully"
+
+def delete_competency(competency_id):
+    """Delete a competency and all associated skills and expectations"""
+    # First check if there are any skills using this competency
+    skills_df = load_data("skills")
+    has_skills = not skills_df.empty and any(skills_df["competency_id"] == competency_id)
+    
+    # Also check if there are expectations using this competency's name
+    expectations_df = load_data("expectations")
+    competency_name = ""
+    
+    competencies_df = load_data("competencies")
+    if not competencies_df.empty:
+        competency = competencies_df[competencies_df["competency_id"] == competency_id]
+        if not competency.empty:
+            competency_name = competency.iloc[0]["name"]
+    
+    has_expectations = not expectations_df.empty and any(expectations_df["competency"] == competency_name)
+    
+    # Also check if there are assessments using this competency's name
+    assessments_df = load_data("assessments")
+    has_assessments = not assessments_df.empty and any(assessments_df["competency"] == competency_name)
+    
+    # First delete associated skills
+    if has_skills:
+        skills_to_delete = skills_df[skills_df["competency_id"] == competency_id]
+        for _, skill in skills_to_delete.iterrows():
+            delete_skill(skill["skill_id"])
+    
+    # Then delete expectations
+    if has_expectations:
+        expectations_df = expectations_df[expectations_df["competency"] != competency_name]
+        save_data("expectations", expectations_df)
+    
+    # Handle assessments
+    if has_assessments:
+        assessments_df = assessments_df[assessments_df["competency"] != competency_name]
+        save_data("assessments", assessments_df)
+    
+    # Finally delete the competency
+    competencies_df = competencies_df[competencies_df["competency_id"] != competency_id]
+    save_data("competencies", competencies_df)
+    
+    return True, "Competency and related data deleted successfully"
+
+def delete_skill(skill_id):
+    """Delete a skill and all associated expectations and assessments"""
+    skills_df = load_data("skills")
+    if skills_df.empty:
+        return False, "No skills data found"
+    
+    # Get the skill name and competency
+    skill = skills_df[skills_df["skill_id"] == skill_id]
+    if skill.empty:
+        return False, f"Skill with ID {skill_id} not found"
+    
+    skill_name = skill.iloc[0]["name"]
+    
+    # Check for expectations and assessments using this skill's name
+    expectations_df = load_data("expectations")
+    has_expectations = not expectations_df.empty and any(expectations_df["skill"] == skill_name)
+    
+    assessments_df = load_data("assessments")
+    has_assessments = not assessments_df.empty and any(assessments_df["skill"] == skill_name)
+    
+    # Delete expectations
+    if has_expectations:
+        expectations_df = expectations_df[expectations_df["skill"] != skill_name]
+        save_data("expectations", expectations_df)
+    
+    # Delete assessments
+    if has_assessments:
+        assessments_df = assessments_df[assessments_df["skill"] != skill_name]
+        save_data("assessments", assessments_df)
+    
+    # Delete the skill
+    skills_df = skills_df[skills_df["skill_id"] != skill_id]
+    save_data("skills", skills_df)
+    
+    return True, "Skill and related data deleted successfully"
+
+def delete_job_level(level_id):
+    """Delete a job level and all associated expectations"""
+    levels_df = load_data("levels")
+    if levels_df.empty:
+        return False, "No job levels data found"
+    
+    # Get the level name
+    level = levels_df[levels_df["level_id"] == level_id]
+    if level.empty:
+        return False, f"Job level with ID {level_id} not found"
+    
+    level_name = level.iloc[0]["name"]
+    
+    # Check for expectations using this level's name
+    expectations_df = load_data("expectations")
+    has_expectations = not expectations_df.empty and any(expectations_df["job_level"] == level_name)
+    
+    # Also check for employees with this job level
+    employees_df = load_data("employees")
+    has_employees = not employees_df.empty and any(employees_df["job_level"] == level_name)
+    
+    # Warn if there are employees using this level
+    if has_employees:
+        return False, f"Cannot delete job level '{level_name}' because it is assigned to employees"
+    
+    # Delete expectations
+    if has_expectations:
+        expectations_df = expectations_df[expectations_df["job_level"] != level_name]
+        save_data("expectations", expectations_df)
+    
+    # Delete the level
+    levels_df = levels_df[levels_df["level_id"] != level_id]
+    save_data("levels", levels_df)
+    
+    return True, "Job level and related data deleted successfully"
+
+def delete_employee(employee_id):
+    """Delete an employee and all associated assessments"""
+    employees_df = load_data("employees")
+    if employees_df.empty:
+        return False, "No employees data found"
+    
+    # Check if employee exists
+    employee = employees_df[employees_df["employee_id"] == employee_id]
+    if employee.empty:
+        return False, f"Employee with ID {employee_id} not found"
+    
+    # Check if there are other employees with this as manager
+    has_subordinates = not employees_df.empty and any(employees_df["manager_id"] == employee_id)
+    if has_subordinates:
+        return False, f"Cannot delete employee because they are assigned as a manager"
+    
+    # Delete assessments
+    assessments_df = load_data("assessments")
+    if not assessments_df.empty:
+        assessments_df = assessments_df[assessments_df["employee_id"] != employee_id]
+        save_data("assessments", assessments_df)
+    
+    # Delete the employee
+    employees_df = employees_df[employees_df["employee_id"] != employee_id]
+    save_data("employees", employees_df)
+    
+    return True, "Employee and related data deleted successfully"
+
+def delete_expectation(job_level, competency, skill):
+    """Delete a specific skill expectation"""
+    expectations_df = load_data("expectations")
+    if expectations_df.empty:
+        return False, "No expectations data found"
+    
+    # Find the specific expectation
+    filtered = expectations_df[
+        (expectations_df["job_level"] == job_level) & 
+        (expectations_df["competency"] == competency) & 
+        (expectations_df["skill"] == skill)
+    ]
+    
+    if filtered.empty:
+        return False, "Expectation not found"
+    
+    # Delete the expectation
+    expectations_df = expectations_df.drop(filtered.index)
+    save_data("expectations", expectations_df)
+    
+    return True, "Expectation deleted successfully"
+
+def delete_assessment(assessment_id):
+    """Delete a specific assessment"""
+    assessments_df = load_data("assessments")
+    if assessments_df.empty:
+        return False, "No assessments data found"
+    
+    # Check if assessment exists
+    assessment = assessments_df[assessments_df["assessment_id"] == assessment_id]
+    if assessment.empty:
+        return False, f"Assessment with ID {assessment_id} not found"
+    
+    # Delete the assessment
+    assessments_df = assessments_df[assessments_df["assessment_id"] != assessment_id]
+    save_data("assessments", assessments_df)
+    
+    return True, "Assessment deleted successfully"
+
+def update_competency(competency_id, name=None, description=None):
+    """Update a competency's details"""
+    competencies_df = load_data("competencies")
+    if competencies_df.empty:
+        return False, "No competencies data found"
+    
+    # Check if competency exists
+    competency = competencies_df[competencies_df["competency_id"] == competency_id]
+    if competency.empty:
+        return False, f"Competency with ID {competency_id} not found"
+    
+    # Get the current name for reference
+    old_name = competency.iloc[0]["name"]
+    
+    # Update the competency
+    if name is not None:
+        competencies_df.loc[competency.index, "name"] = name
+    
+    if description is not None:
+        competencies_df.loc[competency.index, "description"] = description
+    
+    save_data("competencies", competencies_df)
+    
+    # If name changed, update related records
+    if name is not None and name != old_name:
+        # Update expectations
+        expectations_df = load_data("expectations")
+        if not expectations_df.empty:
+            expectations_df.loc[expectations_df["competency"] == old_name, "competency"] = name
+            save_data("expectations", expectations_df)
+        
+        # Update assessments
+        assessments_df = load_data("assessments")
+        if not assessments_df.empty:
+            assessments_df.loc[assessments_df["competency"] == old_name, "competency"] = name
+            save_data("assessments", assessments_df)
+    
+    return True, "Competency updated successfully"
+
+def update_skill(skill_id, name=None, description=None):
+    """Update a skill's details"""
+    skills_df = load_data("skills")
+    if skills_df.empty:
+        return False, "No skills data found"
+    
+    # Check if skill exists
+    skill = skills_df[skills_df["skill_id"] == skill_id]
+    if skill.empty:
+        return False, f"Skill with ID {skill_id} not found"
+    
+    # Get the current name for reference
+    old_name = skill.iloc[0]["name"]
+    
+    # Update the skill
+    if name is not None:
+        skills_df.loc[skill.index, "name"] = name
+    
+    if description is not None:
+        skills_df.loc[skill.index, "description"] = description
+    
+    save_data("skills", skills_df)
+    
+    # If name changed, update related records
+    if name is not None and name != old_name:
+        # Update expectations
+        expectations_df = load_data("expectations")
+        if not expectations_df.empty:
+            expectations_df.loc[expectations_df["skill"] == old_name, "skill"] = name
+            save_data("expectations", expectations_df)
+        
+        # Update assessments
+        assessments_df = load_data("assessments")
+        if not assessments_df.empty:
+            assessments_df.loc[assessments_df["skill"] == old_name, "skill"] = name
+            save_data("assessments", assessments_df)
+    
+    return True, "Skill updated successfully"
+
+def update_job_level(level_id, name=None, description=None):
+    """Update a job level's details"""
+    levels_df = load_data("levels")
+    if levels_df.empty:
+        return False, "No job levels data found"
+    
+    # Check if level exists
+    level = levels_df[levels_df["level_id"] == level_id]
+    if level.empty:
+        return False, f"Job level with ID {level_id} not found"
+    
+    # Get the current name for reference
+    old_name = level.iloc[0]["name"]
+    
+    # Update the level
+    if name is not None:
+        levels_df.loc[level.index, "name"] = name
+    
+    if description is not None:
+        levels_df.loc[level.index, "description"] = description
+    
+    save_data("levels", levels_df)
+    
+    # If name changed, update related records
+    if name is not None and name != old_name:
+        # Update expectations
+        expectations_df = load_data("expectations")
+        if not expectations_df.empty:
+            expectations_df.loc[expectations_df["job_level"] == old_name, "job_level"] = name
+            save_data("expectations", expectations_df)
+        
+        # Update employees
+        employees_df = load_data("employees")
+        if not employees_df.empty:
+            employees_df.loc[employees_df["job_level"] == old_name, "job_level"] = name
+            save_data("employees", employees_df)
+    
+    return True, "Job level updated successfully"
+
+def update_employee(employee_id, name=None, email=None, job_title=None, job_level=None, department=None, manager_id=None):
+    """Update an employee's details"""
+    employees_df = load_data("employees")
+    if employees_df.empty:
+        return False, "No employees data found"
+    
+    # Check if employee exists
+    employee = employees_df[employees_df["employee_id"] == employee_id]
+    if employee.empty:
+        return False, f"Employee with ID {employee_id} not found"
+    
+    # Update the employee fields that are provided
+    if name is not None:
+        employees_df.loc[employee.index, "name"] = name
+    
+    if email is not None:
+        employees_df.loc[employee.index, "email"] = email
+    
+    if job_title is not None:
+        employees_df.loc[employee.index, "job_title"] = job_title
+    
+    if job_level is not None:
+        employees_df.loc[employee.index, "job_level"] = job_level
+    
+    if department is not None:
+        employees_df.loc[employee.index, "department"] = department
+    
+    if manager_id is not None:
+        # Check that we're not creating a circular management relationship
+        if manager_id == employee_id:
+            return False, "An employee cannot be their own manager"
+        employees_df.loc[employee.index, "manager_id"] = manager_id
+    
+    save_data("employees", employees_df)
+    return True, "Employee updated successfully"
