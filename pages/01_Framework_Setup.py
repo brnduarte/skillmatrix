@@ -4,7 +4,7 @@ from data_manager import (
     load_data, save_data, add_competency, add_skill, 
     add_job_level, set_skill_expectation, set_competency_expectation, get_competency_skills,
     delete_competency, delete_skill, delete_job_level, delete_employee,
-    delete_expectation, update_competency, update_skill, update_job_level,
+    delete_expectation, delete_competency_expectation, update_competency, update_skill, update_job_level,
     update_employee
 )
 from utils import check_permission
@@ -490,12 +490,15 @@ with tab4:
                             
                             with exp_cols[1]:
                                 if st.button("Delete", key=f"del_comp_exp_{i}"):
-                                    # Create delete_competency_expectation function implementation
-                                    # For now we'll handle it directly
-                                    comp_expectations_df = comp_expectations_df.drop(i)
-                                    save_data("comp_expectations", comp_expectations_df)
-                                    st.success("Competency expectation deleted successfully")
-                                    st.rerun()
+                                    success, message = delete_competency_expectation(
+                                        row["job_level"],
+                                        row["competency"]
+                                    )
+                                    if success:
+                                        st.success(message)
+                                        st.rerun()
+                                    else:
+                                        st.error(message)
                                         
                         # Also show a table for reference
                         st.markdown("### All Competency Expectations for this Level")
@@ -524,11 +527,15 @@ with tab4:
                         
                         # Create action button
                         if st.button("Delete Selected Competency Expectation"):
-                            # Handle deletion directly
-                            comp_expectations_df = comp_expectations_df.drop(selected_exp_idx)
-                            save_data("comp_expectations", comp_expectations_df)
-                            st.success("Competency expectation deleted successfully")
-                            st.rerun()
+                            success, message = delete_competency_expectation(
+                                selected_exp["job_level"],
+                                selected_exp["competency"]
+                            )
+                            if success:
+                                st.success(message)
+                                st.rerun()
+                            else:
+                                st.error(message)
                     
                     # Also show all expectations in a table
                     st.markdown("### All Competency Expectations")
