@@ -11,6 +11,7 @@ DATA_FILES = {
     "skills": "skills.csv",
     "levels": "job_levels.csv",
     "expectations": "skill_expectations.csv",
+    "comp_expectations": "competency_expectations.csv",
     "assessments": "skill_assessments.csv"
 }
 
@@ -22,7 +23,8 @@ ID_COLUMNS = {
     "skills": "skill_id",
     "levels": "level_id",
     "expectations": None,  # Composite key
-    "assessments": None    # Composite key
+    "comp_expectations": None,  # Composite key
+    "assessments": "assessment_id"
 }
 
 def load_data(data_type):
@@ -48,6 +50,8 @@ def load_data(data_type):
             return pd.DataFrame(columns=["level_id", "name", "description"])
         elif data_type == "expectations":
             return pd.DataFrame(columns=["job_level", "competency", "skill", "expected_score"])
+        elif data_type == "comp_expectations":
+            return pd.DataFrame(columns=["job_level", "competency", "expected_score"])
         elif data_type == "assessments":
             return pd.DataFrame(columns=["assessment_id", "employee_id", "competency", "skill", "score", "assessment_type", "assessment_date", "notes"])
         else:
@@ -445,6 +449,7 @@ def delete_competency(competency_id):
     
     # Also check if there are expectations using this competency's name
     expectations_df = load_data("expectations")
+    comp_expectations_df = load_data("comp_expectations")
     competency_name = ""
     
     competencies_df = load_data("competencies")
@@ -454,6 +459,7 @@ def delete_competency(competency_id):
             competency_name = competency.iloc[0]["name"]
     
     has_expectations = not expectations_df.empty and any(expectations_df["competency"] == competency_name)
+    has_comp_expectations = not comp_expectations_df.empty and any(comp_expectations_df["competency"] == competency_name)
     
     # Also check if there are assessments using this competency's name
     assessments_df = load_data("assessments")
@@ -465,10 +471,15 @@ def delete_competency(competency_id):
         for _, skill in skills_to_delete.iterrows():
             delete_skill(skill["skill_id"])
     
-    # Then delete expectations
+    # Then delete skill expectations
     if has_expectations:
         expectations_df = expectations_df[expectations_df["competency"] != competency_name]
         save_data("expectations", expectations_df)
+    
+    # Delete competency expectations
+    if has_comp_expectations:
+        comp_expectations_df = comp_expectations_df[comp_expectations_df["competency"] != competency_name]
+        save_data("comp_expectations", comp_expectations_df)
     
     # Handle assessments
     if has_assessments:
@@ -532,7 +543,9 @@ def delete_job_level(level_id):
     
     # Check for expectations using this level's name
     expectations_df = load_data("expectations")
+    comp_expectations_df = load_data("comp_expectations")
     has_expectations = not expectations_df.empty and any(expectations_df["job_level"] == level_name)
+    has_comp_expectations = not comp_expectations_df.empty and any(comp_expectations_df["job_level"] == level_name)
     
     # Also check for employees with this job level
     employees_df = load_data("employees")
@@ -542,10 +555,15 @@ def delete_job_level(level_id):
     if has_employees:
         return False, f"Cannot delete job level '{level_name}' because it is assigned to employees"
     
-    # Delete expectations
+    # Delete skill expectations
     if has_expectations:
         expectations_df = expectations_df[expectations_df["job_level"] != level_name]
         save_data("expectations", expectations_df)
+    
+    # Delete competency expectations
+    if has_comp_expectations:
+        comp_expectations_df = comp_expectations_df[comp_expectations_df["job_level"] != level_name]
+        save_data("comp_expectations", comp_expectations_df)
     
     # Delete the level
     levels_df = levels_df[levels_df["level_id"] != level_id]
@@ -645,11 +663,17 @@ def update_competency(competency_id, name=None, description=None):
     
     # If name changed, update related records
     if name is not None and name != old_name:
-        # Update expectations
+        # Update skill expectations
         expectations_df = load_data("expectations")
         if not expectations_df.empty:
             expectations_df.loc[expectations_df["competency"] == old_name, "competency"] = name
             save_data("expectations", expectations_df)
+        
+        # Update competency expectations
+        comp_expectations_df = load_data("comp_expectations")
+        if not comp_expectations_df.empty:
+            comp_expectations_df.loc[comp_expectations_df["competency"] == old_name, "competency"] = name
+            save_data("comp_expectations", comp_expectations_df)
         
         # Update assessments
         assessments_df = load_data("assessments")
@@ -723,11 +747,17 @@ def update_job_level(level_id, name=None, description=None):
     
     # If name changed, update related records
     if name is not None and name != old_name:
-        # Update expectations
+        # Update skill expectations
         expectations_df = load_data("expectations")
         if not expectations_df.empty:
             expectations_df.loc[expectations_df["job_level"] == old_name, "job_level"] = name
             save_data("expectations", expectations_df)
+        
+        # Update competency expectations
+        comp_expectations_df = load_data("comp_expectations")
+        if not comp_expectations_df.empty:
+            comp_expectations_df.loc[comp_expectations_df["job_level"] == old_name, "job_level"] = name
+            save_data("comp_expectations", comp_expectations_df)
         
         # Update employees
         employees_df = load_data("employees")
