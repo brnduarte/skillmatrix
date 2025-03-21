@@ -276,7 +276,7 @@ if employee_id:
                 with col2:
                     if not comp_skills.empty:
                         skill_options = comp_skills["name"].tolist()
-                        selected_skill = st.selectbox("Select Skill", skill_options)
+                        selected_skill = st.selectbox("Select Skill", skill_options, key="performance_skill")
                     else:
                         st.info(f"No skills found for {selected_comp}.")
                         selected_skill = None
