@@ -554,13 +554,29 @@ with tab3:
         expectations_df = load_data("expectations")
         
         if not expectations_df.empty:
-            # Show dropdown to filter by level
-            level_options = ["All Levels"] + levels_df["name"].tolist()
-            filter_level = st.selectbox("Filter by Job Level", level_options, key="filter_expectations_level")
+            # Show filter options
+            filter_col1, filter_col2 = st.columns(2)
+            
+            with filter_col1:
+                level_options = ["All Levels"] + levels_df["name"].tolist()
+                filter_level = st.selectbox("Filter by Job Level", level_options, key="filter_expectations_level")
+                
+            with filter_col2:
+                comp_options = ["All Competencies"] + competencies_df["name"].tolist()
+                filter_comp = st.selectbox("Filter by Competency", comp_options, key="filter_skill_expectations_comp")
+            
+            # Apply filters
+            filtered_exp = expectations_df.copy()
             
             if filter_level != "All Levels":
                 # Filter by selected level
-                filtered_exp = expectations_df[expectations_df["job_level"] == filter_level]
+                filtered_exp = filtered_exp[filtered_exp["job_level"] == filter_level]
+                
+            if filter_comp != "All Competencies":
+                # Filter by selected competency
+                filtered_exp = filtered_exp[filtered_exp["competency"] == filter_comp]
+                
+            if (filter_level != "All Levels" or filter_comp != "All Competencies"):
                 if not filtered_exp.empty:
                     # Display expectations in a table format
                     st.info("Use the table below to manage skill expectations.")
@@ -644,10 +660,16 @@ with tab3:
                                         st.session_state[f"edit_exp_{i}"] = False
                                         st.rerun()
                 else:
-                    st.info(f"No expectations set for {filter_level} yet.")
+                    # Show appropriate info message based on what was filtered
+                    if filter_level != "All Levels" and filter_comp != "All Competencies":
+                        st.info(f"No skill expectations set for {filter_level} and {filter_comp}.")
+                    elif filter_level != "All Levels":
+                        st.info(f"No skill expectations set for {filter_level}.")
+                    else:
+                        st.info(f"No skill expectations set for {filter_comp}.")
             else:
                 # Show all expectations in a table format
-                st.info("Showing all skill expectations. Select a specific job level to filter.")
+                st.info("Showing all skill expectations. Use filters above to narrow down the results.")
                 
                 # Display headers
                 header_cols = st.columns([2, 2, 2, 1, 1, 1])
