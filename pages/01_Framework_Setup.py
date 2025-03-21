@@ -1034,6 +1034,26 @@ with tab5:
         # Create a mapping of employee IDs to names for manager display
         emp_id_to_name = dict(zip(employees_df["employee_id"], employees_df["name"]))
         
+        # Create filter options
+        departments = sorted(employees_df["department"].unique().tolist())
+        job_levels = sorted(employees_df["job_level"].unique().tolist())
+        
+        # Show filter controls
+        filter_col1, filter_col2, filter_col3 = st.columns([1, 1, 1])
+        
+        with filter_col1:
+            filter_type = st.selectbox("Filter By", ["All Employees", "Department", "Job Level"], key="employee_filter_type")
+        
+        with filter_col2:
+            if filter_type == "Department":
+                filter_value = st.selectbox("Select Department", departments, key="employee_filter_dept")
+                filtered_df = employees_df[employees_df["department"] == filter_value]
+            elif filter_type == "Job Level":
+                filter_value = st.selectbox("Select Job Level", job_levels, key="employee_filter_level")
+                filtered_df = employees_df[employees_df["job_level"] == filter_value]
+            else:
+                filtered_df = employees_df
+        
         # Display a table of all employees with edit and delete buttons
         st.info("Use the table below to manage employees.")
         
@@ -1054,8 +1074,8 @@ with tab5:
         
         st.markdown("---")
         
-        # Display each employee in a row
-        for i, row in employees_df.iterrows():
+        # Display each employee in a row (filtered)
+        for i, row in filtered_df.iterrows():
             emp_id = row["employee_id"]
             
             # Create session state for edit if doesn't exist
@@ -1163,45 +1183,6 @@ with tab5:
                             # Clear the editing state
                             st.session_state[f"edit_emp_{emp_id}"] = False
                             st.rerun()
-        
-        # Display employee details section
-        st.markdown("---")
-        st.subheader("Employee Details")
-        
-        # Create a selection box for employees
-        employee_options = [
-            (row["employee_id"], f"{row['name']} (ID: {row['employee_id']})") 
-            for _, row in employees_df.iterrows()
-        ]
-        employee_labels = [e[1] for e in employee_options]
-        employee_ids = [e[0] for e in employee_options]
-        
-        if employee_labels:
-            selected_emp_label = st.selectbox("Select Employee for Details", employee_labels, key="select_employee_details")
-            selected_idx = employee_labels.index(selected_emp_label)
-            selected_emp_id = employee_ids[selected_idx]
-            
-            # Get the selected employee details
-            selected_emp = employees_df[employees_df["employee_id"] == selected_emp_id].iloc[0]
-            
-            # Get manager name
-            manager_name = emp_id_to_name.get(selected_emp["manager_id"], "None") if pd.notna(selected_emp["manager_id"]) else "None"
-            
-            # Display details in an organized, compact format
-            with st.container(border=True):
-                detail_col1, detail_col2 = st.columns(2)
-                
-                with detail_col1:
-                    st.write(f"**ID:** {selected_emp['employee_id']}")
-                    st.write(f"**Name:** {selected_emp['name']}")
-                    st.write(f"**Email:** {selected_emp['email']}")
-                    st.write(f"**Hire Date:** {selected_emp['hire_date']}")
-                
-                with detail_col2:
-                    st.write(f"**Job Title:** {selected_emp['job_title']}")
-                    st.write(f"**Job Level:** {selected_emp['job_level']}")
-                    st.write(f"**Department:** {selected_emp['department']}")
-                    st.write(f"**Manager:** {manager_name}")
     else:
         st.info("No employees added yet.")
 
