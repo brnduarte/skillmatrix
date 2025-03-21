@@ -42,48 +42,103 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 with tab1:
     st.header("Competencies & Skills")
     
+    # Action buttons row
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st.subheader("Add New Competency")
-        comp_name = st.text_input("Competency Name")
-        comp_desc = st.text_area("Description")
-        
-        if st.button("Add Competency"):
-            if comp_name:
-                success, message, _ = add_competency(comp_name, comp_desc)
-                if success:
-                    st.success(message)
-                else:
-                    st.error(message)
-            else:
-                st.warning("Please enter a competency name")
+        show_add_competency = st.button("➕ Add New Competency", type="primary", key="show_add_comp_btn")
     
     with col2:
-        st.subheader("Add New Skill")
+        show_add_skill = st.button("➕ Add New Skill", type="primary", key="show_add_skill_btn")
+    
+    # Create session state variables if they don't exist
+    if "show_add_competency_form" not in st.session_state:
+        st.session_state.show_add_competency_form = False
+    
+    if "show_add_skill_form" not in st.session_state:
+        st.session_state.show_add_skill_form = False
+    
+    # Toggle form visibility when buttons are clicked
+    if show_add_competency:
+        st.session_state.show_add_competency_form = not st.session_state.show_add_competency_form
+        # Close the other form when this one is opened
+        if st.session_state.show_add_competency_form:
+            st.session_state.show_add_skill_form = False
+    
+    if show_add_skill:
+        st.session_state.show_add_skill_form = not st.session_state.show_add_skill_form
+        # Close the other form when this one is opened
+        if st.session_state.show_add_skill_form:
+            st.session_state.show_add_competency_form = False
+    
+    # Display add competency form if active
+    if st.session_state.show_add_competency_form:
+        with st.container(border=True):
+            st.subheader("Add New Competency")
+            comp_name = st.text_input("Competency Name", key="comp_name_input")
+            comp_desc = st.text_area("Description", key="comp_desc_input")
+            
+            col1, col2 = st.columns([1, 5])
+            with col1:
+                submit_comp = st.button("Save", type="primary", key="submit_comp_btn")
+            with col2:
+                cancel_comp = st.button("Cancel", key="cancel_comp_btn")
+            
+            if submit_comp:
+                if comp_name:
+                    success, message, _ = add_competency(comp_name, comp_desc)
+                    if success:
+                        st.success(message)
+                        st.session_state.show_add_competency_form = False
+                    else:
+                        st.error(message)
+                else:
+                    st.warning("Please enter a competency name")
+            
+            if cancel_comp:
+                st.session_state.show_add_competency_form = False
+                st.rerun()
+    
+    # Display add skill form if active
+    if st.session_state.show_add_skill_form:
         competencies_df = load_data("competencies")
         
         if competencies_df.empty:
             st.warning("You need to add competencies first.")
+            st.session_state.show_add_skill_form = False
         else:
-            comp_options = competencies_df["name"].tolist()
-            selected_comp = st.selectbox("Select Competency", comp_options, key="add_skill_comp")
-            
-            # Get the competency ID
-            selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
-            
-            skill_name = st.text_input("Skill Name")
-            skill_desc = st.text_area("Skill Description")
-            
-            if st.button("Add Skill"):
-                if skill_name:
-                    success, message, _ = add_skill(selected_comp_id, skill_name, skill_desc)
-                    if success:
-                        st.success(message)
+            with st.container(border=True):
+                st.subheader("Add New Skill")
+                
+                comp_options = competencies_df["name"].tolist()
+                selected_comp = st.selectbox("Select Competency", comp_options, key="add_skill_comp_select")
+                
+                # Get the competency ID
+                selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
+                
+                skill_name = st.text_input("Skill Name", key="skill_name_input")
+                skill_desc = st.text_area("Skill Description", key="skill_desc_input")
+                
+                col1, col2 = st.columns([1, 5])
+                with col1:
+                    submit_skill = st.button("Save", type="primary", key="submit_skill_btn")
+                with col2:
+                    cancel_skill = st.button("Cancel", key="cancel_skill_btn")
+                
+                if submit_skill:
+                    if skill_name:
+                        success, message, _ = add_skill(selected_comp_id, skill_name, skill_desc)
+                        if success:
+                            st.success(message)
+                            st.session_state.show_add_skill_form = False
+                        else:
+                            st.error(message)
                     else:
-                        st.error(message)
-                else:
-                    st.warning("Please enter a skill name")
+                        st.warning("Please enter a skill name")
+                
+                if cancel_skill:
+                    st.session_state.show_add_skill_form = False
+                    st.rerun()
     
     # View existing competencies and skills with edit/delete options
     st.subheader("Existing Competencies & Skills")
@@ -205,37 +260,59 @@ with tab1:
 with tab2:
     st.header("Job Levels")
     
-    col1, col2 = st.columns([1, 1])
+    # Add button for new job level
+    show_add_level = st.button("➕ Add New Job Level", type="primary", key="show_add_level_btn")
     
-    with col1:
-        st.subheader("Add New Job Level")
-        level_name = st.text_input("Level Name")
-        level_desc = st.text_area("Level Description")
-        
-        if st.button("Add Job Level"):
-            if level_name:
-                success, message, _ = add_job_level(level_name, level_desc)
-                if success:
-                    st.success(message)
+    # Create session state variable if it doesn't exist
+    if "show_add_level_form" not in st.session_state:
+        st.session_state.show_add_level_form = False
+    
+    # Toggle form visibility when button is clicked
+    if show_add_level:
+        st.session_state.show_add_level_form = not st.session_state.show_add_level_form
+    
+    # Display add job level form if active
+    if st.session_state.show_add_level_form:
+        with st.container(border=True):
+            st.subheader("Add New Job Level")
+            level_name = st.text_input("Level Name", key="level_name_input")
+            level_desc = st.text_area("Level Description", key="level_desc_input")
+            
+            col1, col2 = st.columns([1, 5])
+            with col1:
+                submit_level = st.button("Save", type="primary", key="submit_level_btn")
+            with col2:
+                cancel_level = st.button("Cancel", key="cancel_level_btn")
+            
+            if submit_level:
+                if level_name:
+                    success, message, _ = add_job_level(level_name, level_desc)
+                    if success:
+                        st.success(message)
+                        st.session_state.show_add_level_form = False
+                    else:
+                        st.error(message)
                 else:
-                    st.error(message)
-            else:
-                st.warning("Please enter a job level name")
+                    st.warning("Please enter a job level name")
+            
+            if cancel_level:
+                st.session_state.show_add_level_form = False
+                st.rerun()
     
-    with col2:
-        st.subheader("Existing Job Levels")
-        levels_df = load_data("levels")
+    # Display existing job levels
+    st.subheader("Existing Job Levels")
+    levels_df = load_data("levels")
+    
+    if not levels_df.empty:
+        # Display management instructions
+        st.info("Select a job level to edit or delete")
         
-        if not levels_df.empty:
-            # Display management instructions
-            st.info("Select a job level to edit or delete")
-            
-            # Create a selection box for job levels
-            level_options = [(row["level_id"], f"{row['name']} (ID: {row['level_id']})") for _, row in levels_df.iterrows()]
-            level_labels = [l[1] for l in level_options]
-            level_ids = [l[0] for l in level_options]
-            
-            if level_labels:
+        # Create a selection box for job levels
+        level_options = [(row["level_id"], f"{row['name']} (ID: {row['level_id']})") for _, row in levels_df.iterrows()]
+        level_labels = [l[1] for l in level_options]
+        level_ids = [l[0] for l in level_options]
+        
+        if level_labels:
                 selected_level_label = st.selectbox("Select Job Level", level_labels, key="select_level_to_manage")
                 selected_idx = level_labels.index(selected_level_label)
                 selected_level_id = level_ids[selected_idx]
