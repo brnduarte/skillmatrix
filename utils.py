@@ -107,6 +107,10 @@ def check_permission(required_role):
     if user_role == "employee" and required_role == "employee":
         return True
     
+    # Email users have access to self-assessment only
+    if user_role == "email_user" and required_role == "employee":
+        return True
+    
     return False
 
 def format_date(date_str):
