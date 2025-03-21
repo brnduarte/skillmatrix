@@ -7,6 +7,7 @@ from data_manager import (
     load_data, 
     get_employee_assessments, 
     get_latest_assessment,
+    get_latest_competency_assessment,
     calculate_employee_competency_means,
     calculate_employee_skill_means,
     get_team_competency_means
@@ -76,17 +77,36 @@ def create_comparison_radar_chart(actual_data, expected_data, categories, title=
 
 def employee_skill_radar(employee_id, assessment_type="self"):
     """Create a radar chart for an employee's skills"""
-    assessments_df = get_employee_assessments(employee_id, assessment_type)
+    # Get skill data
+    skills_df = load_data("skills")
+    competencies_df = load_data("competencies")
     
-    if assessments_df.empty:
-        return None, "No assessments found for this employee."
+    if skills_df.empty or competencies_df.empty:
+        return None, "No skills or competencies found."
     
-    # Group by competency and skill and get mean scores
-    skill_means = assessments_df.groupby(["competency", "skill"])["score"].mean().reset_index()
+    # Create lists for chart data
+    labels = []
+    values = []
     
-    # Create labels and values for radar chart
-    labels = [f"{row['competency']} - {row['skill']}" for _, row in skill_means.iterrows()]
-    values = skill_means["score"].tolist()
+    # Loop through all competencies and skills to get latest assessments
+    for _, comp_row in competencies_df.iterrows():
+        comp_skills = skills_df[skills_df["competency_id"] == comp_row["competency_id"]]
+        
+        for _, skill_row in comp_skills.iterrows():
+            # Get latest assessment for this skill
+            latest = get_latest_assessment(
+                employee_id, 
+                comp_row["name"], 
+                skill_row["name"], 
+                assessment_type
+            )
+            
+            if latest is not None:
+                labels.append(f"{comp_row['name']} - {skill_row['name']}")
+                values.append(latest["score"])
+    
+    if not labels:
+        return None, f"No {assessment_type} assessments found for this employee."
     
     # Create radar chart
     fig = create_radar_chart(
@@ -100,11 +120,13 @@ def employee_skill_radar(employee_id, assessment_type="self"):
 
 def comparison_radar_chart(employee_id, job_level, assessment_type="self"):
     """Create a radar chart comparing actual vs expected skills"""
-    assessments_df = get_employee_assessments(employee_id, assessment_type)
+    # Load necessary data
+    skills_df = load_data("skills")
+    competencies_df = load_data("competencies")
     expectations_df = load_data("expectations")
     
-    if assessments_df.empty:
-        return None, "No assessments found for this employee."
+    if skills_df.empty or competencies_df.empty:
+        return None, "No skills or competencies found."
     
     if expectations_df.empty:
         return None, "No skill expectations defined."
@@ -120,21 +142,30 @@ def comparison_radar_chart(employee_id, job_level, assessment_type="self"):
     actual_values = []
     expected_values = []
     
-    # Iterate through assessments and find matching expectations
-    for _, assessment_row in assessments_df.iterrows():
-        competency = assessment_row["competency"]
-        skill = assessment_row["skill"]
+    # Loop through all competencies and skills
+    for _, comp_row in competencies_df.iterrows():
+        comp_skills = skills_df[skills_df["competency_id"] == comp_row["competency_id"]]
         
-        # Find matching expectation
-        expectation = level_expectations[
-            (level_expectations["competency"] == competency) &
-            (level_expectations["skill"] == skill)
-        ]
-        
-        if not expectation.empty:
-            labels.append(f"{competency} - {skill}")
-            actual_values.append(assessment_row["score"])
-            expected_values.append(expectation.iloc[0]["expected_score"])
+        for _, skill_row in comp_skills.iterrows():
+            # Get latest assessment for this skill
+            latest = get_latest_assessment(
+                employee_id, 
+                comp_row["name"], 
+                skill_row["name"], 
+                assessment_type
+            )
+            
+            # Find matching expectation
+            expectation = level_expectations[
+                (level_expectations["competency"] == comp_row["name"]) &
+                (level_expectations["skill"] == skill_row["name"])
+            ]
+            
+            # Only include if both assessment and expectation exist
+            if latest is not None and not expectation.empty:
+                labels.append(f"{comp_row['name']} - {skill_row['name']}")
+                actual_values.append(latest["score"])
+                expected_values.append(expectation.iloc[0]["expected_score"])
     
     if not labels:
         return None, "No matching skill expectations found for this employee's assessments."
@@ -150,17 +181,51 @@ def comparison_radar_chart(employee_id, job_level, assessment_type="self"):
     
     return fig, None
 
-def team_skill_radar(team_assessments, title="Team Skills Assessment"):
-    """Create a radar chart for a team's skills"""
-    if team_assessments.empty:
-        return None, "No assessments found for this team."
+def team_skill_radar(team_employees, assessment_type="self", title="Team Skills Assessment"):
+    """Create a radar chart for a team's skills using latest assessments"""
+    # Load necessary data
+    skills_df = load_data("skills")
+    competencies_df = load_data("competencies")
     
-    # Group by competency and skill and get mean scores
-    skill_means = team_assessments.groupby(["competency", "skill"])["score"].mean().reset_index()
+    if not team_employees or skills_df.empty or competencies_df.empty:
+        return None, "No team members or skills/competencies found."
     
-    # Create labels and values for radar chart
-    labels = [f"{row['competency']} - {row['skill']}" for _, row in skill_means.iterrows()]
-    values = skill_means["score"].tolist()
+    # Dictionary to store cumulative skill scores and counts for averaging
+    skill_data = {}  # {(competency, skill): [total_score, count]}
+    
+    # Process each employee's latest assessments
+    for employee_id in team_employees:
+        # Loop through all competencies and skills
+        for _, comp_row in competencies_df.iterrows():
+            comp_skills = skills_df[skills_df["competency_id"] == comp_row["competency_id"]]
+            
+            for _, skill_row in comp_skills.iterrows():
+                # Get latest assessment for this skill
+                latest = get_latest_assessment(
+                    employee_id, 
+                    comp_row["name"], 
+                    skill_row["name"], 
+                    assessment_type
+                )
+                
+                if latest is not None:
+                    key = (comp_row["name"], skill_row["name"])
+                    if key not in skill_data:
+                        skill_data[key] = [latest["score"], 1]
+                    else:
+                        skill_data[key][0] += latest["score"]
+                        skill_data[key][1] += 1
+    
+    if not skill_data:
+        return None, f"No {assessment_type} assessments found for this team."
+    
+    # Calculate means and create chart data
+    labels = []
+    values = []
+    
+    for (comp, skill), (total, count) in skill_data.items():
+        labels.append(f"{comp} - {skill}")
+        values.append(total / count)  # Calculate mean
     
     # Create radar chart
     fig = create_radar_chart(
@@ -172,17 +237,46 @@ def team_skill_radar(team_assessments, title="Team Skills Assessment"):
     
     return fig, None
 
-def team_competency_radar(team_assessments, title="Team Competency Assessment"):
-    """Create a radar chart for a team's competencies"""
-    if team_assessments.empty:
-        return None, "No assessments found for this team."
+def team_competency_radar(team_employees, assessment_type="self", title="Team Competency Assessment"):
+    """Create a radar chart for a team's competencies using latest assessments"""
+    # Load necessary data
+    competencies_df = load_data("competencies")
     
-    # Group by competency and get mean scores
-    competency_means = team_assessments.groupby(["competency"])["score"].mean().reset_index()
+    if not team_employees or competencies_df.empty:
+        return None, "No team members or competencies found."
     
-    # Create labels and values for radar chart
-    labels = competency_means["competency"].tolist()
-    values = competency_means["score"].tolist()
+    # Dictionary to store cumulative competency scores and counts for averaging
+    comp_data = {}  # {competency: [total_score, count]}
+    
+    # Process each employee's latest assessments
+    for employee_id in team_employees:
+        # Loop through all competencies
+        for _, comp_row in competencies_df.iterrows():
+            # Get latest assessment for this competency
+            latest = get_latest_competency_assessment(
+                employee_id, 
+                comp_row["name"], 
+                assessment_type
+            )
+            
+            if latest is not None:
+                key = comp_row["name"]
+                if key not in comp_data:
+                    comp_data[key] = [latest["score"], 1]
+                else:
+                    comp_data[key][0] += latest["score"]
+                    comp_data[key][1] += 1
+    
+    if not comp_data:
+        return None, f"No {assessment_type} competency assessments found for this team."
+    
+    # Calculate means and create chart data
+    labels = []
+    values = []
+    
+    for comp, (total, count) in comp_data.items():
+        labels.append(comp)
+        values.append(total / count)  # Calculate mean
     
     # Create radar chart
     fig = create_radar_chart(
@@ -196,21 +290,31 @@ def team_competency_radar(team_assessments, title="Team Competency Assessment"):
 
 def employee_competency_radar(employee_id, assessment_type="self"):
     """Create a radar chart for an employee's competencies (not skills)"""
-    # Get competency means directly using the new function
-    comp_means = calculate_employee_competency_means(employee_id)
+    # Get competency data
+    competencies_df = load_data("competencies")
     
-    if comp_means.empty:
-        return None, "No assessments found for this employee."
+    if competencies_df.empty:
+        return None, "No competencies found."
     
-    # Filter by assessment type
-    filtered_means = comp_means[comp_means["assessment_type"] == assessment_type]
+    # Create lists for chart data
+    labels = []
+    values = []
     
-    if filtered_means.empty:
-        return None, f"No {assessment_type} assessments found for this employee."
+    # Loop through all competencies to get latest assessments
+    for _, comp_row in competencies_df.iterrows():
+        # Get latest competency assessment
+        latest = get_latest_competency_assessment(
+            employee_id, 
+            comp_row["name"], 
+            assessment_type
+        )
+        
+        if latest is not None:
+            labels.append(comp_row["name"])
+            values.append(latest["score"])
     
-    # Create labels and values for radar chart
-    labels = filtered_means["competency"].tolist()
-    values = filtered_means["score"].tolist()
+    if not labels:
+        return None, f"No {assessment_type} competency assessments found for this employee."
     
     # Create radar chart
     fig = create_radar_chart(
@@ -222,39 +326,69 @@ def employee_competency_radar(employee_id, assessment_type="self"):
     
     return fig, None
 
-def competency_bar_chart(assessments_df, comparison_df=None, title="Competency Assessment"):
-    """Create a bar chart for competencies"""
-    if assessments_df.empty:
-        return None, "No assessments found."
+def competency_bar_chart(employee_id, job_level=None, assessment_type="self", title="Competency Assessment"):
+    """Create a bar chart for competencies using latest assessments"""
+    # Load necessary data
+    competencies_df = load_data("competencies")
+    comp_expectations_df = load_data("comp_expectations") if job_level else None
     
-    # Group by competency and get mean scores
-    competency_means = assessments_df.groupby(["competency"])["score"].mean().reset_index()
+    if competencies_df.empty:
+        return None, "No competencies found."
+    
+    if job_level and comp_expectations_df is not None:
+        # Filter expectations for the employee's job level
+        level_expectations = comp_expectations_df[comp_expectations_df["job_level"] == job_level]
+        
+        if level_expectations.empty:
+            job_level = None  # Don't show expectations if none are defined for this level
+    
+    # Create lists for chart data
+    labels = []
+    actual_values = []
+    expected_values = []
+    
+    # Loop through all competencies to get latest assessments
+    for _, comp_row in competencies_df.iterrows():
+        # Get latest competency assessment
+        latest = get_latest_competency_assessment(
+            employee_id, 
+            comp_row["name"], 
+            assessment_type
+        )
+        
+        if latest is not None:
+            labels.append(comp_row["name"])
+            actual_values.append(latest["score"])
+            
+            # Get expectation if available
+            if job_level and level_expectations is not None:
+                expectation = level_expectations[level_expectations["competency"] == comp_row["name"]]
+                if not expectation.empty:
+                    expected_values.append(expectation.iloc[0]["expected_score"])
+                else:
+                    expected_values.append(None)  # No expectation for this competency
+    
+    if not labels:
+        return None, f"No {assessment_type} competency assessments found."
     
     # Create bar chart
     fig = go.Figure()
     
     # Add actual data
     fig.add_trace(go.Bar(
-        x=competency_means["competency"],
-        y=competency_means["score"],
+        x=labels,
+        y=actual_values,
         name="Actual Score"
     ))
     
-    # Add comparison data if provided
-    if comparison_df is not None and not comparison_df.empty:
-        comparison_means = comparison_df.groupby(["competency"])["score"].mean().reset_index()
-        
-        # Make sure we're comparing the same competencies
-        merged = competency_means.merge(
-            comparison_means,
-            on="competency",
-            how="left",
-            suffixes=("", "_expected")
-        )
+    # Add expectation data if available
+    if job_level and expected_values and any(v is not None for v in expected_values):
+        # Replace None values with NaN for plotting
+        expected_values = [v if v is not None else float('nan') for v in expected_values]
         
         fig.add_trace(go.Bar(
-            x=merged["competency"],
-            y=merged["score_expected"],
+            x=labels,
+            y=expected_values,
             name="Expected Score"
         ))
     
@@ -308,33 +442,76 @@ def skill_improvement_chart(employee_id, competency, skill):
     
     return fig, None
 
-def team_heatmap(team_assessments):
-    """Create a heatmap of team skills by competency"""
-    if team_assessments.empty:
-        return None, "No assessments found for this team."
+def team_heatmap(team_employees, assessment_type="self"):
+    """Create a heatmap of team skills by competency using latest assessments"""
+    # Load necessary data
+    skills_df = load_data("skills")
+    competencies_df = load_data("competencies")
+    
+    if not team_employees or skills_df.empty or competencies_df.empty:
+        return None, "No team members or skills/competencies found."
     
     # Get all unique competencies and skills
-    competencies = sorted(team_assessments["competency"].unique())
-    skills = sorted(team_assessments["skill"].unique())
+    competencies = sorted(competencies_df["name"].unique())
     
-    # Create 2D array for heatmap
-    heatmap_data = np.zeros((len(competencies), len(skills)))
+    # Get all skills organized by competency
+    skill_by_comp = {}
+    all_skills = []
     
-    # Fill in data
-    for i, comp in enumerate(competencies):
-        for j, skill in enumerate(skills):
-            filtered = team_assessments[
-                (team_assessments["competency"] == comp) &
-                (team_assessments["skill"] == skill)
-            ]
+    for comp in competencies:
+        comp_id = competencies_df[competencies_df["name"] == comp]["competency_id"].iloc[0]
+        comp_skills = skills_df[skills_df["competency_id"] == comp_id]["name"].tolist()
+        skill_by_comp[comp] = comp_skills
+        all_skills.extend(comp_skills)
+    
+    all_skills = sorted(set(all_skills))  # Remove duplicates and sort
+    
+    if not all_skills:
+        return None, "No skills found for this team."
+    
+    # Create 2D array for heatmap with default values of NaN (will display as blank in heatmap)
+    heatmap_data = np.full((len(competencies), len(all_skills)), np.nan)
+    
+    # Dictionary to store cumulative skill scores and counts
+    skill_data = {}  # {(competency, skill): [total_score, count]}
+    
+    # Process each employee's latest assessments
+    for employee_id in team_employees:
+        # Loop through all competencies and skills
+        for i, comp in enumerate(competencies):
+            comp_id = competencies_df[competencies_df["name"] == comp]["competency_id"].iloc[0]
+            comp_skills = skills_df[skills_df["competency_id"] == comp_id]
             
-            if not filtered.empty:
-                heatmap_data[i, j] = filtered["score"].mean()
+            for _, skill_row in comp_skills.iterrows():
+                # Get latest assessment for this skill
+                latest = get_latest_assessment(
+                    employee_id, 
+                    comp, 
+                    skill_row["name"], 
+                    assessment_type
+                )
+                
+                if latest is not None:
+                    key = (comp, skill_row["name"])
+                    if key not in skill_data:
+                        skill_data[key] = [latest["score"], 1]
+                    else:
+                        skill_data[key][0] += latest["score"]
+                        skill_data[key][1] += 1
+    
+    if not skill_data:
+        return None, f"No {assessment_type} assessments found for this team."
+    
+    # Fill in the heatmap data with calculated means
+    for (comp, skill), (total, count) in skill_data.items():
+        i = competencies.index(comp)
+        j = all_skills.index(skill)
+        heatmap_data[i, j] = total / count  # Calculate mean
     
     # Create heatmap
     fig = go.Figure(data=go.Heatmap(
         z=heatmap_data,
-        x=skills,
+        x=all_skills,
         y=competencies,
         colorscale="Viridis",
         zmin=0,
@@ -343,7 +520,7 @@ def team_heatmap(team_assessments):
     
     # Set layout
     fig.update_layout(
-        title="Team Skills Heatmap",
+        title=f"Team Skills Heatmap ({assessment_type.capitalize()})",
         xaxis_title="Skills",
         yaxis_title="Competencies"
     )
