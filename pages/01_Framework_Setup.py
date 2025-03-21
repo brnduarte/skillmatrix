@@ -1028,8 +1028,141 @@ with tab5:
         employees_df = load_data("employees")
         
         if not employees_df.empty:
-            # Display management instructions
-            st.info("Select an employee to edit or delete")
+            # Create a mapping of employee IDs to names for manager display
+            emp_id_to_name = dict(zip(employees_df["employee_id"], employees_df["name"]))
+            
+            # Display a table of all employees with edit and delete buttons
+            st.info("Use the table below to manage employees.")
+            
+            # Display headers
+            header_cols = st.columns([2, 2, 2, 1, 1, 1])
+            with header_cols[0]:
+                st.markdown("**Name**")
+            with header_cols[1]:
+                st.markdown("**Job Title**")
+            with header_cols[2]:
+                st.markdown("**Department**")
+            with header_cols[3]:
+                st.markdown("**Level**")
+            with header_cols[4]:
+                st.markdown("**Edit**")
+            with header_cols[5]:
+                st.markdown("**Delete**")
+            
+            st.markdown("---")
+            
+            # Display each employee in a row
+            for i, row in employees_df.iterrows():
+                emp_id = row["employee_id"]
+                
+                # Create session state for edit if doesn't exist
+                if f"edit_emp_{emp_id}" not in st.session_state:
+                    st.session_state[f"edit_emp_{emp_id}"] = False
+                
+                emp_cols = st.columns([2, 2, 2, 1, 1, 1])
+                with emp_cols[0]:
+                    st.write(f"{row['name']}")
+                with emp_cols[1]:
+                    st.write(f"{row['job_title']}")
+                with emp_cols[2]:
+                    st.write(f"{row['department']}")
+                with emp_cols[3]:
+                    st.write(f"{row['job_level']}")
+                with emp_cols[4]:
+                    if st.button("✏️", key=f"edit_btn_emp_{emp_id}"):
+                        st.session_state[f"edit_emp_{emp_id}"] = True
+                with emp_cols[5]:
+                    if st.button("🗑️", key=f"del_emp_btn_{emp_id}"):
+                        success, message = delete_employee(emp_id)
+                        if success:
+                            st.success(message)
+                            st.rerun()
+                        else:
+                            st.error(message)
+                
+                # Display edit form if edit button was clicked
+                if st.session_state[f"edit_emp_{emp_id}"]:
+                    with st.container(border=True):
+                        st.markdown("### Edit Employee")
+                        
+                        # Get job levels for dropdown
+                        levels_df = load_data("levels")
+                        level_options = levels_df["name"].tolist() if not levels_df.empty else []
+                        
+                        # Get managers for dropdown (exclude the current employee)
+                        manager_options = [("", "None")] + [
+                            (str(row2["employee_id"]), row2["name"]) 
+                            for _, row2 in employees_df.iterrows() 
+                            if row2["employee_id"] != emp_id
+                        ]
+                        
+                        manager_names = [m[1] for m in manager_options]
+                        manager_ids = [m[0] for m in manager_options]
+                        
+                        # Find the current manager in the options
+                        current_manager_id = row["manager_id"] if pd.notna(row["manager_id"]) else ""
+                        current_manager_idx = 0  # Default to "None"
+                        for j, m_id in enumerate(manager_ids):
+                            if str(current_manager_id) == str(m_id):
+                                current_manager_idx = j
+                                break
+                        
+                        # Create two columns for compacter layout
+                        edit_field_col1, edit_field_col2 = st.columns(2)
+                        
+                        # Input fields in first column
+                        with edit_field_col1:
+                            new_name = st.text_input("Name", value=row["name"], key=f"emp_name_{emp_id}")
+                            new_email = st.text_input("Email", value=row["email"], key=f"emp_email_{emp_id}")
+                            new_title = st.text_input("Job Title", value=row["job_title"], key=f"emp_title_{emp_id}")
+                            
+                        # Input fields in second column
+                        with edit_field_col2:
+                            # Job level dropdown
+                            level_idx = level_options.index(row["job_level"]) if row["job_level"] in level_options else 0
+                            new_level = st.selectbox("Job Level", level_options, index=level_idx, key=f"emp_level_{emp_id}")
+                            
+                            new_dept = st.text_input("Department", value=row["department"], key=f"emp_dept_{emp_id}")
+                            
+                            # Manager dropdown
+                            new_manager_name = st.selectbox("Manager", manager_names, index=current_manager_idx, key=f"emp_manager_{emp_id}")
+                        
+                        # Get manager ID from selection
+                        manager_idx = manager_names.index(new_manager_name)
+                        new_manager_id = manager_ids[manager_idx]
+                        
+                        # Convert manager ID to integer if it's not empty
+                        new_manager_id = int(new_manager_id) if new_manager_id else None
+                        
+                        # Action buttons
+                        action_col1, action_col2 = st.columns([1, 5])
+                        with action_col1:
+                            if st.button("Save", type="primary", key=f"save_emp_{emp_id}"):
+                                success, message = update_employee(
+                                    emp_id,
+                                    new_name,
+                                    new_email,
+                                    new_title,
+                                    new_level,
+                                    new_dept,
+                                    new_manager_id
+                                )
+                                if success:
+                                    st.success(message)
+                                    # Clear the editing state
+                                    st.session_state[f"edit_emp_{emp_id}"] = False
+                                    st.rerun()
+                                else:
+                                    st.error(message)
+                        
+                        with action_col2:
+                            if st.button("Cancel", key=f"cancel_emp_{emp_id}"):
+                                # Clear the editing state
+                                st.session_state[f"edit_emp_{emp_id}"] = False
+                                st.rerun()
+            
+            # Display employee details section
+            st.markdown("### Employee Details")
             
             # Create a selection box for employees
             employee_options = [
@@ -1040,125 +1173,31 @@ with tab5:
             employee_ids = [e[0] for e in employee_options]
             
             if employee_labels:
-                selected_emp_label = st.selectbox("Select Employee", employee_labels, key="select_employee_to_manage")
+                selected_emp_label = st.selectbox("Select Employee for Details", employee_labels, key="select_employee_details")
                 selected_idx = employee_labels.index(selected_emp_label)
                 selected_emp_id = employee_ids[selected_idx]
                 
                 # Get the selected employee details
                 selected_emp = employees_df[employees_df["employee_id"] == selected_emp_id].iloc[0]
                 
-                # Create a mapping of employee IDs to names for manager display
-                emp_id_to_name = dict(zip(employees_df["employee_id"], employees_df["name"]))
+                # Get manager name
                 manager_name = emp_id_to_name.get(selected_emp["manager_id"], "None") if pd.notna(selected_emp["manager_id"]) else "None"
                 
-                # Display the employee details
-                st.write(f"**Name:** {selected_emp['name']}")
-                st.write(f"**Email:** {selected_emp['email']}")
-                st.write(f"**Job Title:** {selected_emp['job_title']}")
-                st.write(f"**Job Level:** {selected_emp['job_level']}")
-                st.write(f"**Department:** {selected_emp['department']}")
-                st.write(f"**Manager:** {manager_name}")
-                st.write(f"**Hire Date:** {selected_emp['hire_date']}")
-                
-                # Create action buttons
-                action_col1, action_col2 = st.columns([1, 1])
-                
-                with action_col1:
-                    if st.button("Edit Employee", key=f"edit_emp_{selected_emp_id}"):
-                        st.session_state[f"edit_emp_id_{selected_emp_id}"] = True
-                
-                with action_col2:
-                    if st.button("Delete Employee", key=f"del_emp_{selected_emp_id}"):
-                        success, message = delete_employee(selected_emp_id)
-                        if success:
-                            st.success(message)
-                            st.rerun()
-                        else:
-                            st.error(message)
-                
-                # Edit form
-                if st.session_state.get(f"edit_emp_id_{selected_emp_id}", False):
-                    st.markdown("### Edit Employee")
+                # Display details in an organized, compact format
+                with st.container(border=True):
+                    detail_col1, detail_col2 = st.columns(2)
                     
-                    # Get job levels for dropdown
-                    levels_df = load_data("levels")
-                    level_options = levels_df["name"].tolist() if not levels_df.empty else []
+                    with detail_col1:
+                        st.write(f"**ID:** {selected_emp['employee_id']}")
+                        st.write(f"**Name:** {selected_emp['name']}")
+                        st.write(f"**Email:** {selected_emp['email']}")
+                        st.write(f"**Hire Date:** {selected_emp['hire_date']}")
                     
-                    # Get managers for dropdown (exclude the current employee)
-                    manager_options = [("", "None")] + [
-                        (str(row["employee_id"]), row["name"]) 
-                        for _, row in employees_df.iterrows() 
-                        if row["employee_id"] != selected_emp_id
-                    ]
-                    
-                    manager_names = [m[1] for m in manager_options]
-                    manager_ids = [m[0] for m in manager_options]
-                    
-                    # Find the current manager in the options
-                    current_manager_id = selected_emp["manager_id"] if pd.notna(selected_emp["manager_id"]) else ""
-                    current_manager_idx = 0  # Default to "None"
-                    for i, m_id in enumerate(manager_ids):
-                        if str(current_manager_id) == str(m_id):
-                            current_manager_idx = i
-                            break
-                    
-                    # Input fields
-                    new_name = st.text_input("Name", value=selected_emp["name"], key=f"emp_name_{selected_emp_id}")
-                    new_email = st.text_input("Email", value=selected_emp["email"], key=f"emp_email_{selected_emp_id}")
-                    new_title = st.text_input("Job Title", value=selected_emp["job_title"], key=f"emp_title_{selected_emp_id}")
-                    
-                    # Job level dropdown
-                    level_idx = level_options.index(selected_emp["job_level"]) if selected_emp["job_level"] in level_options else 0
-                    new_level = st.selectbox("Job Level", level_options, index=level_idx, key=f"emp_level_{selected_emp_id}")
-                    
-                    new_dept = st.text_input("Department", value=selected_emp["department"], key=f"emp_dept_{selected_emp_id}")
-                    
-                    # Manager dropdown
-                    new_manager_name = st.selectbox("Manager", manager_names, index=current_manager_idx, key=f"emp_manager_{selected_emp_id}")
-                    manager_idx = manager_names.index(new_manager_name)
-                    new_manager_id = manager_ids[manager_idx]
-                    
-                    # Convert manager ID to integer if it's not empty
-                    new_manager_id = int(new_manager_id) if new_manager_id else None
-                    
-                    edit_col1, edit_col2 = st.columns([1, 1])
-                    with edit_col1:
-                        if st.button("Save Changes", key=f"save_emp_{selected_emp_id}"):
-                            success, message = update_employee(
-                                selected_emp_id,
-                                new_name,
-                                new_email,
-                                new_title,
-                                new_level,
-                                new_dept,
-                                new_manager_id
-                            )
-                            if success:
-                                st.success(message)
-                                # Clear the editing state
-                                st.session_state.pop(f"edit_emp_id_{selected_emp_id}", None)
-                                st.rerun()
-                            else:
-                                st.error(message)
-                    
-                    with edit_col2:
-                        if st.button("Cancel", key=f"cancel_emp_{selected_emp_id}"):
-                            # Clear the editing state
-                            st.session_state.pop(f"edit_emp_id_{selected_emp_id}", None)
-                            st.rerun()
-            
-            # Also show a table of all employees for reference
-            st.markdown("### All Employees")
-            display_df = employees_df.copy()
-            
-            # Join with manager names
-            if "manager_id" in display_df.columns:
-                # Map manager IDs to names
-                display_df["manager"] = display_df["manager_id"].map(
-                    lambda x: emp_id_to_name.get(x, "None") if pd.notna(x) else "None"
-                )
-            
-            st.dataframe(display_df[["employee_id", "name", "email", "job_title", "job_level", "department", "manager", "hire_date"]])
+                    with detail_col2:
+                        st.write(f"**Job Title:** {selected_emp['job_title']}")
+                        st.write(f"**Job Level:** {selected_emp['job_level']}")
+                        st.write(f"**Department:** {selected_emp['department']}")
+                        st.write(f"**Manager:** {manager_name}")
         else:
             st.info("No employees added yet.")
 
