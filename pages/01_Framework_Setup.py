@@ -437,133 +437,118 @@ with tab3:
     if levels_df.empty or competencies_df.empty or skills_df.empty:
         st.warning("You need to set up job levels, competencies, and skills first.")
     else:
-        col1, col2 = st.columns([1, 1])
+        # Add button for new skill expectation
+        show_add_expectation = st.button("➕ Add New Expected Score", type="primary", key="show_add_expectation_btn")
         
-        with col1:
-            st.subheader("Set Expected Scores")
-            
-            # Select job level
-            level_options = levels_df["name"].tolist()
-            selected_level = st.selectbox("Select Job Level", level_options, key="expectations_level")
-            
-            # Select competency
-            comp_options = competencies_df["name"].tolist()
-            selected_comp = st.selectbox("Select Competency", comp_options, key="expectations_comp")
-            
-            # Get competency ID
-            selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
-            
-            # Get skills for selected competency
-            comp_skills = get_competency_skills(selected_comp_id)
-            
-            if not comp_skills.empty:
-                # Select skill
-                skill_options = comp_skills["name"].tolist()
-                selected_skill = st.selectbox("Select Skill", skill_options, key="expectations_skill")
+        # Create session state variable if it doesn't exist
+        if "show_add_expectation_form" not in st.session_state:
+            st.session_state.show_add_expectation_form = False
+        
+        # Toggle form visibility when button is clicked
+        if show_add_expectation:
+            st.session_state.show_add_expectation_form = not st.session_state.show_add_expectation_form
+        
+        # Display add form if active
+        if st.session_state.show_add_expectation_form:
+            with st.container(border=True):
+                st.subheader("Add New Expected Score")
                 
-                # Set expected score
-                expected_score = st.slider(
-                    "Expected Score", 
-                    min_value=1.0, 
-                    max_value=5.0, 
-                    step=0.5, 
-                    value=3.0
-                )
+                # Select job level
+                level_options = levels_df["name"].tolist()
+                selected_level = st.selectbox("Select Job Level", level_options, key="expectations_level")
                 
-                if st.button("Set Expectation"):
-                    success, message = set_skill_expectation(
-                        selected_level, 
-                        selected_comp, 
-                        selected_skill, 
-                        expected_score
+                # Select competency
+                comp_options = competencies_df["name"].tolist()
+                selected_comp = st.selectbox("Select Competency", comp_options, key="expectations_comp")
+                
+                # Get competency ID
+                selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
+                
+                # Get skills for selected competency
+                comp_skills = get_competency_skills(selected_comp_id)
+                
+                if not comp_skills.empty:
+                    # Select skill
+                    skill_options = comp_skills["name"].tolist()
+                    selected_skill = st.selectbox("Select Skill", skill_options, key="expectations_skill")
+                    
+                    # Set expected score
+                    expected_score = st.slider(
+                        "Expected Score", 
+                        min_value=1.0, 
+                        max_value=5.0, 
+                        step=0.5, 
+                        value=3.0
                     )
-                    if success:
-                        st.success(message)
-                    else:
-                        st.error(message)
-            else:
-                st.warning("No skills found for the selected competency.")
-        
-        with col2:
-            st.subheader("Current Expectations")
-            expectations_df = load_data("expectations")
-            
-            if not expectations_df.empty:
-                # Filter for selected level if one is chosen
-                if selected_level:
-                    filtered_exp = expectations_df[expectations_df["job_level"] == selected_level]
-                    if not filtered_exp.empty:
-                        # Display expectations in a table format
-                        st.info("Use the table below to manage skill expectations.")
-                        
-                        # Display headers
-                        header_cols = st.columns([2, 2, 1, 1])
-                        with header_cols[0]:
-                            st.markdown("**Competency**")
-                        with header_cols[1]:
-                            st.markdown("**Skill**")
-                        with header_cols[2]:
-                            st.markdown("**Expected Score**")
-                        with header_cols[3]:
-                            st.markdown("**Delete**")
-                        
-                        st.markdown("---")
-                        
-                        # Display each expectation row
-                        for i, row in filtered_exp.iterrows():
-                            exp_cols = st.columns([2, 2, 1, 1])
-                            with exp_cols[0]:
-                                st.write(f"{row['competency']}")
-                            with exp_cols[1]:
-                                st.write(f"{row['skill']}")
-                            with exp_cols[2]:
-                                st.write(f"{row['expected_score']}")
-                            with exp_cols[3]:
-                                if st.button("🗑️", key=f"del_exp_{i}"):
-                                    success, message = delete_expectation(
-                                        row["job_level"], 
-                                        row["competency"], 
-                                        row["skill"]
-                                    )
-                                    if success:
-                                        st.success(message)
-                                        st.rerun()
-                                    else:
-                                        st.error(message)
-                    else:
-                        st.info(f"No expectations set for {selected_level} yet.")
+                    
+                    col1, col2 = st.columns([1, 5])
+                    with col1:
+                        submit_expectation = st.button("Save", type="primary", key="submit_expectation_btn")
+                    with col2:
+                        cancel_expectation = st.button("Cancel", key="cancel_expectation_btn")
+                    
+                    if submit_expectation:
+                        success, message = set_skill_expectation(
+                            selected_level, 
+                            selected_comp, 
+                            selected_skill, 
+                            expected_score
+                        )
+                        if success:
+                            st.success(message)
+                            st.session_state.show_add_expectation_form = False
+                            st.rerun()
+                        else:
+                            st.error(message)
+                    
+                    if cancel_expectation:
+                        st.session_state.show_add_expectation_form = False
+                        st.rerun()
                 else:
-                    # Show all expectations in a table format
-                    st.info("Select a job level above to see expectations for that level.")
+                    st.warning("No skills found for the selected competency.")
+        
+        st.markdown("---")
+        
+        # Display Current Expectations section
+        st.subheader("Current Expectations")
+        expectations_df = load_data("expectations")
+        
+        if not expectations_df.empty:
+            # Show dropdown to filter by level
+            level_options = ["All Levels"] + levels_df["name"].tolist()
+            filter_level = st.selectbox("Filter by Job Level", level_options, key="filter_expectations_level")
+            
+            if filter_level != "All Levels":
+                # Filter by selected level
+                filtered_exp = expectations_df[expectations_df["job_level"] == filter_level]
+                if not filtered_exp.empty:
+                    # Display expectations in a table format
+                    st.info("Use the table below to manage skill expectations.")
                     
                     # Display headers
-                    header_cols = st.columns([2, 2, 2, 1, 1])
+                    header_cols = st.columns([2, 2, 1, 1])
                     with header_cols[0]:
-                        st.markdown("**Job Level**")
-                    with header_cols[1]:
                         st.markdown("**Competency**")
-                    with header_cols[2]:
+                    with header_cols[1]:
                         st.markdown("**Skill**")
-                    with header_cols[3]:
+                    with header_cols[2]:
                         st.markdown("**Expected Score**")
-                    with header_cols[4]:
+                    with header_cols[3]:
                         st.markdown("**Delete**")
                     
                     st.markdown("---")
                     
                     # Display each expectation row
-                    for i, row in expectations_df.iterrows():
-                        exp_cols = st.columns([2, 2, 2, 1, 1])
+                    for i, row in filtered_exp.iterrows():
+                        exp_cols = st.columns([2, 2, 1, 1])
                         with exp_cols[0]:
-                            st.write(f"{row['job_level']}")
-                        with exp_cols[1]:
                             st.write(f"{row['competency']}")
-                        with exp_cols[2]:
+                        with exp_cols[1]:
                             st.write(f"{row['skill']}")
-                        with exp_cols[3]:
+                        with exp_cols[2]:
                             st.write(f"{row['expected_score']}")
-                        with exp_cols[4]:
-                            if st.button("🗑️", key=f"del_exp_all_{i}"):
+                        with exp_cols[3]:
+                            if st.button("🗑️", key=f"del_exp_{i}"):
                                 success, message = delete_expectation(
                                     row["job_level"], 
                                     row["competency"], 
@@ -574,8 +559,52 @@ with tab3:
                                     st.rerun()
                                 else:
                                     st.error(message)
+                else:
+                    st.info(f"No expectations set for {filter_level} yet.")
             else:
-                st.info("No skill expectations set yet.")
+                # Show all expectations in a table format
+                st.info("Showing all skill expectations. Select a specific job level to filter.")
+                
+                # Display headers
+                header_cols = st.columns([2, 2, 2, 1, 1])
+                with header_cols[0]:
+                    st.markdown("**Job Level**")
+                with header_cols[1]:
+                    st.markdown("**Competency**")
+                with header_cols[2]:
+                    st.markdown("**Skill**")
+                with header_cols[3]:
+                    st.markdown("**Expected Score**")
+                with header_cols[4]:
+                    st.markdown("**Delete**")
+                
+                st.markdown("---")
+                
+                # Display each expectation row
+                for i, row in expectations_df.iterrows():
+                    exp_cols = st.columns([2, 2, 2, 1, 1])
+                    with exp_cols[0]:
+                        st.write(f"{row['job_level']}")
+                    with exp_cols[1]:
+                        st.write(f"{row['competency']}")
+                    with exp_cols[2]:
+                        st.write(f"{row['skill']}")
+                    with exp_cols[3]:
+                        st.write(f"{row['expected_score']}")
+                    with exp_cols[4]:
+                        if st.button("🗑️", key=f"del_exp_all_{i}"):
+                            success, message = delete_expectation(
+                                row["job_level"], 
+                                row["competency"], 
+                                row["skill"]
+                            )
+                            if success:
+                                st.success(message)
+                                st.rerun()
+                            else:
+                                st.error(message)
+        else:
+            st.info("No skill expectations set yet.")
 
 # Competency Expectations Tab
 with tab4:
@@ -588,111 +617,101 @@ with tab4:
     if levels_df.empty or competencies_df.empty:
         st.warning("You need to set up job levels and competencies first.")
     else:
-        col1, col2 = st.columns([1, 1])
+        # Add button for new competency expectation
+        show_add_comp_expectation = st.button("➕ Add New Competency Expected Score", type="primary", key="show_add_comp_expectation_btn")
         
-        with col1:
-            st.subheader("Set Competency Expected Scores")
-            
-            # Select job level
-            level_options = levels_df["name"].tolist()
-            selected_level = st.selectbox("Select Job Level", level_options, key="comp_expectations_level")
-            
-            # Select competency
-            comp_options = competencies_df["name"].tolist()
-            selected_comp = st.selectbox("Select Competency", comp_options, key="comp_expectations_comp")
-            
-            # Set expected score
-            expected_score = st.slider(
-                "Expected Score", 
-                min_value=1.0, 
-                max_value=5.0, 
-                step=0.5, 
-                value=3.0,
-                key="comp_expected_score"
-            )
-            
-            if st.button("Set Competency Expectation"):
-                success, message = set_competency_expectation(
-                    selected_level, 
-                    selected_comp, 
-                    expected_score
+        # Create session state variable if it doesn't exist
+        if "show_add_comp_expectation_form" not in st.session_state:
+            st.session_state.show_add_comp_expectation_form = False
+        
+        # Toggle form visibility when button is clicked
+        if show_add_comp_expectation:
+            st.session_state.show_add_comp_expectation_form = not st.session_state.show_add_comp_expectation_form
+        
+        # Display add form if active
+        if st.session_state.show_add_comp_expectation_form:
+            with st.container(border=True):
+                st.subheader("Add New Competency Expected Score")
+                
+                # Select job level
+                level_options = levels_df["name"].tolist()
+                selected_level = st.selectbox("Select Job Level", level_options, key="comp_expectations_level")
+                
+                # Select competency
+                comp_options = competencies_df["name"].tolist()
+                selected_comp = st.selectbox("Select Competency", comp_options, key="comp_expectations_comp")
+                
+                # Set expected score
+                expected_score = st.slider(
+                    "Expected Score", 
+                    min_value=1.0, 
+                    max_value=5.0, 
+                    step=0.5, 
+                    value=3.0,
+                    key="comp_expected_score"
                 )
-                if success:
-                    st.success(message)
-                else:
-                    st.error(message)
-        
-        with col2:
-            st.subheader("Current Competency Expectations")
-            comp_expectations_df = load_data("comp_expectations")
-            
-            if not comp_expectations_df.empty:
-                # Filter for selected level if one is chosen
-                if selected_level:
-                    filtered_exp = comp_expectations_df[comp_expectations_df["job_level"] == selected_level]
-                    if not filtered_exp.empty:
-                        # Display expectations in a table format
-                        st.info("Use the table below to manage competency expectations.")
-                        
-                        # Display headers
-                        header_cols = st.columns([3, 1, 1])
-                        with header_cols[0]:
-                            st.markdown("**Competency**")
-                        with header_cols[1]:
-                            st.markdown("**Expected Score**")
-                        with header_cols[2]:
-                            st.markdown("**Delete**")
-                        
-                        st.markdown("---")
-                        
-                        # Display each expectation row
-                        for i, row in filtered_exp.iterrows():
-                            exp_cols = st.columns([3, 1, 1])
-                            with exp_cols[0]:
-                                st.write(f"{row['competency']}")
-                            with exp_cols[1]:
-                                st.write(f"{row['expected_score']}")
-                            with exp_cols[2]:
-                                if st.button("🗑️", key=f"del_comp_exp_{i}"):
-                                    success, message = delete_competency_expectation(
-                                        row["job_level"],
-                                        row["competency"]
-                                    )
-                                    if success:
-                                        st.success(message)
-                                        st.rerun()
-                                    else:
-                                        st.error(message)
+                
+                col1, col2 = st.columns([1, 5])
+                with col1:
+                    submit_comp_expectation = st.button("Save", type="primary", key="submit_comp_expectation_btn")
+                with col2:
+                    cancel_comp_expectation = st.button("Cancel", key="cancel_comp_expectation_btn")
+                
+                if submit_comp_expectation:
+                    success, message = set_competency_expectation(
+                        selected_level, 
+                        selected_comp, 
+                        expected_score
+                    )
+                    if success:
+                        st.success(message)
+                        st.session_state.show_add_comp_expectation_form = False
+                        st.rerun()
                     else:
-                        st.info(f"No competency expectations set for {selected_level} yet.")
-                else:
-                    # Show all expectations in a table format
-                    st.info("Select a job level above to see competency expectations for that level.")
+                        st.error(message)
+                
+                if cancel_comp_expectation:
+                    st.session_state.show_add_comp_expectation_form = False
+                    st.rerun()
+        
+        st.markdown("---")
+        
+        # Display Current Competency Expectations section
+        st.subheader("Current Competency Expectations")
+        comp_expectations_df = load_data("comp_expectations")
+        
+        if not comp_expectations_df.empty:
+            # Show dropdown to filter by level
+            level_options = ["All Levels"] + levels_df["name"].tolist()
+            filter_level = st.selectbox("Filter by Job Level", level_options, key="filter_comp_expectations_level")
+            
+            if filter_level != "All Levels":
+                # Filter by selected level
+                filtered_exp = comp_expectations_df[comp_expectations_df["job_level"] == filter_level]
+                if not filtered_exp.empty:
+                    # Display expectations in a table format
+                    st.info("Use the table below to manage competency expectations.")
                     
                     # Display headers
-                    header_cols = st.columns([2, 3, 1, 1])
+                    header_cols = st.columns([3, 1, 1])
                     with header_cols[0]:
-                        st.markdown("**Job Level**")
-                    with header_cols[1]:
                         st.markdown("**Competency**")
-                    with header_cols[2]:
+                    with header_cols[1]:
                         st.markdown("**Expected Score**")
-                    with header_cols[3]:
+                    with header_cols[2]:
                         st.markdown("**Delete**")
                     
                     st.markdown("---")
                     
                     # Display each expectation row
-                    for i, row in comp_expectations_df.iterrows():
-                        exp_cols = st.columns([2, 3, 1, 1])
+                    for i, row in filtered_exp.iterrows():
+                        exp_cols = st.columns([3, 1, 1])
                         with exp_cols[0]:
-                            st.write(f"{row['job_level']}")
-                        with exp_cols[1]:
                             st.write(f"{row['competency']}")
-                        with exp_cols[2]:
+                        with exp_cols[1]:
                             st.write(f"{row['expected_score']}")
-                        with exp_cols[3]:
-                            if st.button("🗑️", key=f"del_comp_exp_all_{i}"):
+                        with exp_cols[2]:
+                            if st.button("🗑️", key=f"del_comp_exp_{i}"):
                                 success, message = delete_competency_expectation(
                                     row["job_level"],
                                     row["competency"]
@@ -702,8 +721,47 @@ with tab4:
                                     st.rerun()
                                 else:
                                     st.error(message)
+                else:
+                    st.info(f"No competency expectations set for {filter_level} yet.")
             else:
-                st.info("No competency expectations set yet.")
+                # Show all expectations in a table format
+                st.info("Showing all competency expectations. Select a specific job level to filter.")
+                
+                # Display headers
+                header_cols = st.columns([2, 3, 1, 1])
+                with header_cols[0]:
+                    st.markdown("**Job Level**")
+                with header_cols[1]:
+                    st.markdown("**Competency**")
+                with header_cols[2]:
+                    st.markdown("**Expected Score**")
+                with header_cols[3]:
+                    st.markdown("**Delete**")
+                
+                st.markdown("---")
+                
+                # Display each expectation row
+                for i, row in comp_expectations_df.iterrows():
+                    exp_cols = st.columns([2, 3, 1, 1])
+                    with exp_cols[0]:
+                        st.write(f"{row['job_level']}")
+                    with exp_cols[1]:
+                        st.write(f"{row['competency']}")
+                    with exp_cols[2]:
+                        st.write(f"{row['expected_score']}")
+                    with exp_cols[3]:
+                        if st.button("🗑️", key=f"del_comp_exp_all_{i}"):
+                            success, message = delete_competency_expectation(
+                                row["job_level"],
+                                row["competency"]
+                            )
+                            if success:
+                                st.success(message)
+                                st.rerun()
+                            else:
+                                st.error(message)
+        else:
+            st.info("No competency expectations set yet.")
 
 # Manage Employees Tab
 with tab5:
