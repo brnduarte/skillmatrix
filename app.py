@@ -20,17 +20,39 @@ def display_login():
     st.title("Skill Matrix & Competency Framework")
     st.subheader("Login")
     
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+    login_tab1, login_tab2 = st.tabs(["Account Login", "Email Self-Assessment"])
     
-    if st.button("Login"):
-        if authenticate_user(username, password):
-            st.session_state.authenticated = True
-            st.session_state.username = username
-            st.session_state.user_role = get_user_role(username)
-            st.rerun()
-        else:
-            st.error("Invalid username or password")
+    with login_tab1:
+        username = st.text_input("Username", key="username_login")
+        password = st.text_input("Password", type="password", key="password_login")
+        
+        if st.button("Login", key="login_button"):
+            if authenticate_user(username, password):
+                st.session_state.authenticated = True
+                st.session_state.username = username
+                st.session_state.user_role = get_user_role(username)
+                st.rerun()
+            else:
+                st.error("Invalid username or password")
+    
+    with login_tab2:
+        st.write("Access your self-assessment using your email address")
+        email = st.text_input("Your Email", key="email_login", placeholder="name@company.com") 
+        
+        if st.button("Access Self-Assessment", key="email_login_button"):
+            # Check if email exists in the employees database
+            employees_df = load_data("employees")
+            employee = employees_df[employees_df["email"] == email]
+            
+            if not employee.empty:
+                # Create a temporary user session for self-assessment only
+                st.session_state.authenticated = True
+                st.session_state.username = f"email_{email}"  # Special format to identify email login
+                st.session_state.user_role = "email_user"  # Special role with limited access
+                st.session_state.employee_email = email
+                st.rerun()
+            else:
+                st.error("Email not found. Please contact your manager or administrator.")
 
 # Main application
 def main_app():
@@ -86,6 +108,24 @@ def main_app():
         
         Navigate using the pages in the sidebar.
         """)
+    
+    elif st.session_state.user_role == "email_user":
+        # Display email user dashboard
+        employee_email = st.session_state.employee_email
+        employees_df = load_data("employees")
+        employee = employees_df[employees_df["email"] == employee_email]
+        
+        if not employee.empty:
+            employee_name = employee.iloc[0]["name"]
+            st.info(f"""
+            ### Self-Assessment Portal for {employee_name}
+            
+            Welcome to your self-assessment portal. Here you can:
+            - Complete skill self-assessments
+            - View your current skills and ratings
+            
+            Please go to the Employee Assessment page in the sidebar to complete your assessment.
+            """)
     
     # Key metrics overview
     st.header("Overview")

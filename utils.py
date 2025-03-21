@@ -15,6 +15,8 @@ def initialize_session_state():
         st.session_state.user_role = None
     if "current_employee_id" not in st.session_state:
         st.session_state.current_employee_id = None
+    if "employee_email" not in st.session_state:
+        st.session_state.employee_email = None
 
 def authenticate_user(username, password):
     """
@@ -60,17 +62,25 @@ def create_default_admin():
     users_df.to_csv("users.csv", index=False)
 
 def get_user_id(username):
-    """Get the employee ID associated with a username"""
+    """Get the employee ID associated with a username or email login"""
     try:
-        users_df = pd.read_csv("users.csv")
         employees_df = pd.read_csv("employees.csv")
         
-        user = users_df[users_df["username"] == username]
-        if not user.empty:
-            user_email = user.iloc[0]["email"]
-            employee = employees_df[employees_df["email"] == user_email]
+        # Check if this is an email login
+        if username.startswith("email_"):
+            email = username.replace("email_", "")
+            employee = employees_df[employees_df["email"] == email]
             if not employee.empty:
                 return employee.iloc[0]["employee_id"]
+        else:
+            # Regular user login
+            users_df = pd.read_csv("users.csv")
+            user = users_df[users_df["username"] == username]
+            if not user.empty:
+                user_email = user.iloc[0]["email"]
+                employee = employees_df[employees_df["email"] == user_email]
+                if not employee.empty:
+                    return employee.iloc[0]["employee_id"]
     except Exception as e:
         pass
     return None
