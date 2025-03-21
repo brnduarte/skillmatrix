@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from data_manager import (
     load_data, save_data, add_competency, add_skill, 
-    add_job_level, set_skill_expectation, get_competency_skills,
+    add_job_level, set_skill_expectation, set_competency_expectation, get_competency_skills,
     delete_competency, delete_skill, delete_job_level, delete_employee,
     delete_expectation, update_competency, update_skill, update_job_level,
     update_employee
@@ -30,10 +30,11 @@ st.title("Competency Framework Setup")
 st.write("Configure competencies, skills, job levels, and expected scores for your organization.")
 
 # Create tabs for different setup sections
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "Competencies & Skills", 
     "Job Levels", 
-    "Skill Expectations", 
+    "Skill Expectations",
+    "Competency Expectations",
     "Manage Employees"
 ])
 
@@ -425,8 +426,118 @@ with tab3:
             else:
                 st.info("No skill expectations set yet.")
 
-# Manage Employees Tab
+# Competency Expectations Tab
 with tab4:
+    st.header("Competency Expectations")
+    st.write("Set the expected competency scores for each job level (separate from skills).")
+    
+    levels_df = load_data("levels")
+    competencies_df = load_data("competencies")
+    
+    if levels_df.empty or competencies_df.empty:
+        st.warning("You need to set up job levels and competencies first.")
+    else:
+        col1, col2 = st.columns([1, 1])
+        
+        with col1:
+            st.subheader("Set Competency Expected Scores")
+            
+            # Select job level
+            level_options = levels_df["name"].tolist()
+            selected_level = st.selectbox("Select Job Level", level_options, key="comp_expectations_level")
+            
+            # Select competency
+            comp_options = competencies_df["name"].tolist()
+            selected_comp = st.selectbox("Select Competency", comp_options, key="comp_expectations_comp")
+            
+            # Set expected score
+            expected_score = st.slider(
+                "Expected Score", 
+                min_value=1.0, 
+                max_value=5.0, 
+                step=0.5, 
+                value=3.0,
+                key="comp_expected_score"
+            )
+            
+            if st.button("Set Competency Expectation"):
+                success, message = set_competency_expectation(
+                    selected_level, 
+                    selected_comp, 
+                    expected_score
+                )
+                if success:
+                    st.success(message)
+                else:
+                    st.error(message)
+        
+        with col2:
+            st.subheader("Current Competency Expectations")
+            comp_expectations_df = load_data("comp_expectations")
+            
+            if not comp_expectations_df.empty:
+                # Filter for selected level if one is chosen
+                if selected_level:
+                    filtered_exp = comp_expectations_df[comp_expectations_df["job_level"] == selected_level]
+                    if not filtered_exp.empty:
+                        # Display a table with delete buttons
+                        st.info("Click Delete to remove a competency expectation")
+                        
+                        for i, row in filtered_exp.iterrows():
+                            exp_cols = st.columns([3, 1])
+                            with exp_cols[0]:
+                                st.write(f"**{row['competency']}**: Expected score {row['expected_score']}")
+                            
+                            with exp_cols[1]:
+                                if st.button("Delete", key=f"del_comp_exp_{i}"):
+                                    # Create delete_competency_expectation function implementation
+                                    # For now we'll handle it directly
+                                    comp_expectations_df = comp_expectations_df.drop(i)
+                                    save_data("comp_expectations", comp_expectations_df)
+                                    st.success("Competency expectation deleted successfully")
+                                    st.rerun()
+                                        
+                        # Also show a table for reference
+                        st.markdown("### All Competency Expectations for this Level")
+                        st.dataframe(filtered_exp)
+                    else:
+                        st.info(f"No competency expectations set for {selected_level} yet.")
+                else:
+                    # Show all expectations with a select box to choose which one to delete
+                    st.info("Select a competency expectation to delete")
+                    
+                    # Create a selection box for expectations
+                    exp_options = [
+                        (i, f"{row['job_level']} - {row['competency']}: {row['expected_score']}") 
+                        for i, row in comp_expectations_df.iterrows()
+                    ]
+                    exp_labels = [e[1] for e in exp_options]
+                    exp_indices = [e[0] for e in exp_options]
+                    
+                    if exp_labels:
+                        selected_exp_label = st.selectbox("Select Expectation", exp_labels, key="select_comp_expectation_to_manage")
+                        selected_idx = exp_labels.index(selected_exp_label)
+                        selected_exp_idx = exp_indices[selected_idx]
+                        
+                        # Get the selected expectation
+                        selected_exp = comp_expectations_df.iloc[selected_exp_idx]
+                        
+                        # Create action button
+                        if st.button("Delete Selected Competency Expectation"):
+                            # Handle deletion directly
+                            comp_expectations_df = comp_expectations_df.drop(selected_exp_idx)
+                            save_data("comp_expectations", comp_expectations_df)
+                            st.success("Competency expectation deleted successfully")
+                            st.rerun()
+                    
+                    # Also show all expectations in a table
+                    st.markdown("### All Competency Expectations")
+                    st.dataframe(comp_expectations_df)
+            else:
+                st.info("No competency expectations set yet.")
+
+# Manage Employees Tab
+with tab5:
     st.header("Manage Employees")
     
     col1, col2 = st.columns([1, 1])
@@ -633,7 +744,9 @@ st.markdown("""
 2. Add specific skills under each competency.
 3. Define job levels or roles in your organization.
 4. Set expected scores for each skill at each job level.
-5. Add employees and assign them to appropriate job levels and managers.
+5. Set expected scores for each competency at each job level (separate from skills).
+6. Add employees and assign them to appropriate job levels and managers.
 
-This framework will be used as the basis for skill assessments and visualizations throughout the application.
+This framework will be used as the basis for skill and competency assessments and visualizations throughout the application.
+The system allows you to evaluate both individual skills and overall competency areas separately.
 """)

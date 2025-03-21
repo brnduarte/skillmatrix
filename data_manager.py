@@ -621,6 +621,27 @@ def delete_expectation(job_level, competency, skill):
     
     return True, "Expectation deleted successfully"
 
+def delete_competency_expectation(job_level, competency):
+    """Delete a specific competency expectation"""
+    comp_expectations_df = load_data("comp_expectations")
+    if comp_expectations_df.empty:
+        return False, "No competency expectations data found"
+    
+    # Find the specific expectation
+    filtered = comp_expectations_df[
+        (comp_expectations_df["job_level"] == job_level) & 
+        (comp_expectations_df["competency"] == competency)
+    ]
+    
+    if filtered.empty:
+        return False, "Competency expectation not found"
+    
+    # Delete the expectation
+    comp_expectations_df = comp_expectations_df.drop(filtered.index)
+    save_data("comp_expectations", comp_expectations_df)
+    
+    return True, "Competency expectation deleted successfully"
+
 def delete_assessment(assessment_id):
     """Delete a specific assessment"""
     assessments_df = load_data("assessments")
