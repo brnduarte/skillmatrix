@@ -299,6 +299,14 @@ def calculate_employee_skill_means(employee_id):
     
     return means
 
+def get_employees_for_manager(manager_id):
+    """Get all employees reporting to a manager"""
+    try:
+        employees_df = load_data("employees")
+        return employees_df[employees_df["manager_id"] == manager_id]
+    except Exception:
+        return pd.DataFrame()
+
 def get_team_skill_means(manager_id):
     """Calculate team skill means for a manager's team"""
     employees_df = load_data("employees")
