@@ -63,7 +63,7 @@ with tab1:
             st.warning("You need to add competencies first.")
         else:
             comp_options = competencies_df["name"].tolist()
-            selected_comp = st.selectbox("Select Competency", comp_options)
+            selected_comp = st.selectbox("Select Competency", comp_options, key="add_skill_comp")
             
             # Get the competency ID
             selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
@@ -150,11 +150,11 @@ with tab3:
             
             # Select job level
             level_options = levels_df["name"].tolist()
-            selected_level = st.selectbox("Select Job Level", level_options)
+            selected_level = st.selectbox("Select Job Level", level_options, key="expectations_level")
             
             # Select competency
             comp_options = competencies_df["name"].tolist()
-            selected_comp = st.selectbox("Select Competency", comp_options)
+            selected_comp = st.selectbox("Select Competency", comp_options, key="expectations_comp")
             
             # Get competency ID
             selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
@@ -165,7 +165,7 @@ with tab3:
             if not comp_skills.empty:
                 # Select skill
                 skill_options = comp_skills["name"].tolist()
-                selected_skill = st.selectbox("Select Skill", skill_options)
+                selected_skill = st.selectbox("Select Skill", skill_options, key="expectations_skill")
                 
                 # Set expected score
                 expected_score = st.slider(
@@ -234,9 +234,9 @@ with tab4:
         emp_name = st.text_input("Employee Name")
         emp_email = st.text_input("Email")
         emp_title = st.text_input("Job Title")
-        emp_level = st.selectbox("Job Level", level_options)
+        emp_level = st.selectbox("Job Level", level_options, key="emp_level")
         emp_dept = st.text_input("Department")
-        selected_manager = st.selectbox("Manager", manager_names)
+        selected_manager = st.selectbox("Manager", manager_names, key="emp_manager")
         
         # Get manager ID from selection
         selected_manager_idx = manager_names.index(selected_manager)
