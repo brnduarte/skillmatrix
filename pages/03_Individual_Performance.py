@@ -1,0 +1,333 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+from datetime import datetime
+from data_manager import (
+    load_data, get_employee_assessments, calculate_employee_skill_means,
+    get_competency_skills, get_latest_assessment
+)
+from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
+from visualizations import (
+    employee_skill_radar, comparison_radar_chart, skill_improvement_chart
+)
+
+# Page configuration
+st.set_page_config(
+    page_title="Individual Performance - Skill Matrix",
+    page_icon="📈",
+    layout="wide"
+)
+
+# Check if user is authenticated
+if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
+    st.warning("Please login from the Home page.")
+    st.stop()
+
+st.title("Individual Performance")
+
+# Select employee to view
+employee_id = None
+if st.session_state.user_role == "employee":
+    # Employees can only view themselves
+    employee_id = get_user_id(st.session_state.username)
+    if employee_id is None:
+        st.warning("Your user account is not linked to an employee record. Please contact an administrator.")
+        st.stop()
+else:
+    # Managers and admins can view employees
+    employees_df = load_data("employees")
+    
+    if employees_df.empty:
+        st.warning("No employees found in the system.")
+        st.stop()
+    
+    if st.session_state.user_role == "admin":
+        # Admins can view anyone
+        available_employees = employees_df
+    else:
+        # Managers can view their team members
+        manager_id = get_user_id(st.session_state.username)
+        available_employees = get_employees_for_manager(manager_id)
+        if available_employees.empty:
+            st.info("You don't have any team members to view.")
+            # Managers can also view themselves
+            employee_id = manager_id
+    
+    if employee_id is None and not available_employees.empty:
+        employee_options = [(row["employee_id"], row["name"]) for _, row in available_employees.iterrows()]
+        employee_names = [e[1] for e in employee_options]
+        employee_ids = [e[0] for e in employee_options]
+        
+        selected_emp_name = st.selectbox("Select Employee", employee_names)
+        selected_emp_idx = employee_names.index(selected_emp_name)
+        employee_id = employee_ids[selected_emp_idx]
+
+# If we have a valid employee ID, show their performance
+if employee_id:
+    employees_df = load_data("employees")
+    employee_info = employees_df[employees_df["employee_id"] == employee_id]
+    
+    if not employee_info.empty:
+        # Show employee details
+        employee_name = employee_info.iloc[0]["name"]
+        employee_job = employee_info.iloc[0]["job_title"]
+        employee_level = employee_info.iloc[0]["job_level"]
+        employee_dept = employee_info.iloc[0]["department"]
+        
+        st.write(f"### {employee_name}")
+        st.write(f"**Job Title:** {employee_job}")
+        st.write(f"**Job Level:** {employee_level}")
+        st.write(f"**Department:** {employee_dept}")
+        
+        # Get assessments for this employee
+        self_assessments = get_employee_assessments(employee_id, "self")
+        manager_assessments = get_employee_assessments(employee_id, "manager")
+        
+        if self_assessments.empty and manager_assessments.empty:
+            st.info("No assessments found for this employee. Complete assessments to view performance.")
+            st.stop()
+        
+        # Create tabs for different views
+        tab1, tab2, tab3 = st.tabs([
+            "Overall Performance", 
+            "Skill Details", 
+            "Development Progress"
+        ])
+        
+        # Overall Performance Tab
+        with tab1:
+            st.header("Overall Performance")
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Self assessment radar
+                if not self_assessments.empty:
+                    st.subheader("Self Assessment")
+                    fig, error = employee_skill_radar(employee_id, "self")
+                    if fig:
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info(error or "No self assessment data available.")
+                else:
+                    st.info("No self assessments completed yet.")
+            
+            with col2:
+                # Manager assessment radar
+                if not manager_assessments.empty:
+                    st.subheader("Manager Assessment")
+                    fig, error = employee_skill_radar(employee_id, "manager")
+                    if fig:
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info(error or "No manager assessment data available.")
+                else:
+                    st.info("No manager assessments completed yet.")
+            
+            # Comparison to expected levels
+            st.subheader("Performance vs. Expected Level")
+            
+            if not self_assessments.empty or not manager_assessments.empty:
+                assessment_type = st.radio(
+                    "Assessment Type to Compare", 
+                    ["self", "manager"], 
+                    horizontal=True,
+                    format_func=lambda x: "Self Assessment" if x == "self" else "Manager Assessment"
+                )
+                
+                fig, error = comparison_radar_chart(employee_id, employee_level, assessment_type)
+                if fig:
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info(error or f"Cannot create comparison chart. Check that skill expectations are defined for level {employee_level}.")
+            else:
+                st.info("No assessments available to compare with expected levels.")
+        
+        # Skill Details Tab
+        with tab2:
+            st.header("Skill Details")
+            
+            # Load data
+            competencies_df = load_data("competencies")
+            skills_df = load_data("skills")
+            
+            if not competencies_df.empty:
+                # Select competency to view
+                comp_options = competencies_df["name"].tolist()
+                selected_comp = st.selectbox("Select Competency", comp_options)
+                
+                # Get competency ID
+                selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
+                
+                # Get skills for this competency
+                comp_skills = get_competency_skills(selected_comp_id)
+                
+                if not comp_skills.empty:
+                    # Get expected scores
+                    expectations_df = load_data("expectations")
+                    
+                    # Create a table with skill details and assessments
+                    skill_data = []
+                    
+                    for _, skill_row in comp_skills.iterrows():
+                        skill_name = skill_row["name"]
+                        
+                        # Get the latest assessments
+                        self_assessment = get_latest_assessment(employee_id, selected_comp, skill_name, "self")
+                        manager_assessment = get_latest_assessment(employee_id, selected_comp, skill_name, "manager")
+                        
+                        # Get expected score for this skill
+                        expected_score = None
+                        if not expectations_df.empty:
+                            exp_row = expectations_df[
+                                (expectations_df["job_level"] == employee_level) &
+                                (expectations_df["competency"] == selected_comp) &
+                                (expectations_df["skill"] == skill_name)
+                            ]
+                            if not exp_row.empty:
+                                expected_score = exp_row.iloc[0]["expected_score"]
+                        
+                        skill_data.append({
+                            "Skill": skill_name,
+                            "Description": skill_row["description"],
+                            "Self Score": float(self_assessment["score"]) if self_assessment is not None else None,
+                            "Manager Score": float(manager_assessment["score"]) if manager_assessment is not None else None,
+                            "Expected Score": expected_score,
+                            "Gap to Expected (Self)": (float(self_assessment["score"]) - expected_score) if self_assessment is not None and expected_score is not None else None,
+                            "Gap to Expected (Manager)": (float(manager_assessment["score"]) - expected_score) if manager_assessment is not None and expected_score is not None else None,
+                        })
+                    
+                    # Convert to DataFrame for display
+                    skills_table = pd.DataFrame(skill_data)
+                    
+                    # Style the table to highlight gaps
+                    def highlight_gaps(val):
+                        if isinstance(val, (int, float)) and "Gap" in skills_table.columns[skills_table.loc[skills_table.index[0]] == val].tolist():
+                            if val < -1:
+                                return 'background-color: #ffcccc' # red for significant gap
+                            elif val < 0:
+                                return 'background-color: #ffffcc' # yellow for small gap
+                            elif val >= 0:
+                                return 'background-color: #ccffcc' # green for meeting or exceeding
+                        return ''
+                    
+                    # Show the table with styling
+                    st.dataframe(skills_table.style.applymap(highlight_gaps))
+                    
+                    # Show select skill for detailed view
+                    if skill_data:
+                        st.subheader("Select Skill for Detailed View")
+                        selected_skill = st.selectbox("Select Skill", [s["Skill"] for s in skill_data])
+                        
+                        col1, col2 = st.columns(2)
+                        
+                        with col1:
+                            # Self assessment details
+                            st.subheader("Self Assessment")
+                            self_assessment = get_latest_assessment(employee_id, selected_comp, selected_skill, "self")
+                            
+                            if self_assessment is not None:
+                                st.write(f"**Score:** {self_assessment['score']}")
+                                st.write(f"**Date:** {pd.to_datetime(self_assessment['assessment_date']).strftime('%Y-%m-%d')}")
+                                st.write(f"**Notes:** {self_assessment['notes']}")
+                            else:
+                                st.info("No self assessment available for this skill.")
+                        
+                        with col2:
+                            # Manager assessment details
+                            st.subheader("Manager Assessment")
+                            manager_assessment = get_latest_assessment(employee_id, selected_comp, selected_skill, "manager")
+                            
+                            if manager_assessment is not None:
+                                st.write(f"**Score:** {manager_assessment['score']}")
+                                st.write(f"**Date:** {pd.to_datetime(manager_assessment['assessment_date']).strftime('%Y-%m-%d')}")
+                                st.write(f"**Feedback:** {manager_assessment['notes']}")
+                            else:
+                                st.info("No manager assessment available for this skill.")
+                    else:
+                        st.info("No skill data available.")
+                else:
+                    st.info(f"No skills found for {selected_comp}.")
+            else:
+                st.warning("No competencies found in the system.")
+        
+        # Development Progress Tab
+        with tab3:
+            st.header("Development Progress")
+            
+            # Load competencies and skills
+            competencies_df = load_data("competencies")
+            skills_df = load_data("skills")
+            
+            if not competencies_df.empty and not skills_df.empty:
+                # Select competency and skill
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    comp_options = competencies_df["name"].tolist()
+                    selected_comp = st.selectbox("Select Competency", comp_options, key="prog_comp")
+                
+                # Get competency ID
+                selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
+                
+                # Get skills for this competency
+                comp_skills = get_competency_skills(selected_comp_id)
+                
+                with col2:
+                    if not comp_skills.empty:
+                        skill_options = comp_skills["name"].tolist()
+                        selected_skill = st.selectbox("Select Skill", skill_options)
+                    else:
+                        st.info(f"No skills found for {selected_comp}.")
+                        selected_skill = None
+                
+                if selected_skill:
+                    # Show progress chart
+                    fig, error = skill_improvement_chart(employee_id, selected_comp, selected_skill)
+                    if fig:
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.info(error or "No progress data available for this skill.")
+                    
+                    # Show assessment history
+                    st.subheader("Assessment History")
+                    assessments_df = load_data("assessments")
+                    
+                    if not assessments_df.empty:
+                        skill_history = assessments_df[
+                            (assessments_df["employee_id"] == employee_id) &
+                            (assessments_df["competency"] == selected_comp) &
+                            (assessments_df["skill"] == selected_skill)
+                        ].sort_values("assessment_date", ascending=False)
+                        
+                        if not skill_history.empty:
+                            history_table = skill_history[["assessment_date", "assessment_type", "score", "notes"]]
+                            history_table["assessment_date"] = pd.to_datetime(history_table["assessment_date"]).dt.strftime("%Y-%m-%d")
+                            st.dataframe(history_table)
+                        else:
+                            st.info("No assessment history found for this skill.")
+                    else:
+                        st.info("No assessment data available.")
+            else:
+                st.warning("Competency framework not fully set up.")
+    else:
+        st.warning("Employee record not found.")
+else:
+    st.info("Please select an employee to view their performance.")
+
+# Add explanatory text at the bottom
+st.markdown("---")
+st.markdown("""
+### Understanding Performance Data
+
+- **Overall Performance:** Radar charts showing self and manager assessments across all skills, and comparison with expected levels
+- **Skill Details:** Detailed breakdown of individual skills with self and manager ratings, expected scores, and gaps
+- **Development Progress:** Track progress over time for specific skills and view assessment history
+
+Performance gaps highlighted in colors:
+- 🟢 Green: Meeting or exceeding expectations
+- 🟡 Yellow: Small gap (less than 1 point)
+- 🔴 Red: Significant gap (1 point or more)
+
+Use this data to identify strengths, areas for development, and track progress over time.
+""")
