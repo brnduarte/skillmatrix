@@ -526,7 +526,7 @@ with tab3:
                     st.info("Use the table below to manage skill expectations.")
                     
                     # Display headers
-                    header_cols = st.columns([2, 2, 1, 1])
+                    header_cols = st.columns([2, 2, 1, 1, 1])
                     with header_cols[0]:
                         st.markdown("**Competency**")
                     with header_cols[1]:
@@ -534,13 +534,20 @@ with tab3:
                     with header_cols[2]:
                         st.markdown("**Expected Score**")
                     with header_cols[3]:
+                        st.markdown("**Edit**")
+                    with header_cols[4]:
                         st.markdown("**Delete**")
                     
                     st.markdown("---")
                     
                     # Display each expectation row
                     for i, row in filtered_exp.iterrows():
-                        exp_cols = st.columns([2, 2, 1, 1])
+                        # Create session state for edit if doesn't exist
+                        if f"edit_exp_{i}" not in st.session_state:
+                            st.session_state[f"edit_exp_{i}"] = False
+                        
+                        # Display row content
+                        exp_cols = st.columns([2, 2, 1, 1, 1])
                         with exp_cols[0]:
                             st.write(f"{row['competency']}")
                         with exp_cols[1]:
@@ -548,6 +555,9 @@ with tab3:
                         with exp_cols[2]:
                             st.write(f"{row['expected_score']}")
                         with exp_cols[3]:
+                            if st.button("✏️", key=f"edit_btn_exp_{i}"):
+                                st.session_state[f"edit_exp_{i}"] = True
+                        with exp_cols[4]:
                             if st.button("🗑️", key=f"del_exp_{i}"):
                                 success, message = delete_expectation(
                                     row["job_level"], 
@@ -559,6 +569,40 @@ with tab3:
                                     st.rerun()
                                 else:
                                     st.error(message)
+                        
+                        # Display edit form if edit button was clicked
+                        if st.session_state[f"edit_exp_{i}"]:
+                            with st.container(border=True):
+                                st.markdown("### Edit Skill Expectation")
+                                new_score = st.slider(
+                                    "Expected Score", 
+                                    min_value=1.0, 
+                                    max_value=5.0, 
+                                    step=0.5, 
+                                    value=float(row['expected_score']),
+                                    key=f"edit_score_exp_{i}"
+                                )
+                                
+                                edit_col1, edit_col2 = st.columns([1, 5])
+                                with edit_col1:
+                                    if st.button("Save", type="primary", key=f"save_exp_{i}"):
+                                        success, message = set_skill_expectation(
+                                            row["job_level"],
+                                            row["competency"],
+                                            row["skill"],
+                                            new_score
+                                        )
+                                        if success:
+                                            st.success(message)
+                                            st.session_state[f"edit_exp_{i}"] = False
+                                            st.rerun()
+                                        else:
+                                            st.error(message)
+                                
+                                with edit_col2:
+                                    if st.button("Cancel", key=f"cancel_exp_{i}"):
+                                        st.session_state[f"edit_exp_{i}"] = False
+                                        st.rerun()
                 else:
                     st.info(f"No expectations set for {filter_level} yet.")
             else:
@@ -566,7 +610,7 @@ with tab3:
                 st.info("Showing all skill expectations. Select a specific job level to filter.")
                 
                 # Display headers
-                header_cols = st.columns([2, 2, 2, 1, 1])
+                header_cols = st.columns([2, 2, 2, 1, 1, 1])
                 with header_cols[0]:
                     st.markdown("**Job Level**")
                 with header_cols[1]:
@@ -576,13 +620,19 @@ with tab3:
                 with header_cols[3]:
                     st.markdown("**Expected Score**")
                 with header_cols[4]:
+                    st.markdown("**Edit**")
+                with header_cols[5]:
                     st.markdown("**Delete**")
                 
                 st.markdown("---")
                 
                 # Display each expectation row
                 for i, row in expectations_df.iterrows():
-                    exp_cols = st.columns([2, 2, 2, 1, 1])
+                    # Create session state for edit if doesn't exist
+                    if f"edit_exp_all_{i}" not in st.session_state:
+                        st.session_state[f"edit_exp_all_{i}"] = False
+                    
+                    exp_cols = st.columns([2, 2, 2, 1, 1, 1])
                     with exp_cols[0]:
                         st.write(f"{row['job_level']}")
                     with exp_cols[1]:
@@ -592,6 +642,9 @@ with tab3:
                     with exp_cols[3]:
                         st.write(f"{row['expected_score']}")
                     with exp_cols[4]:
+                        if st.button("✏️", key=f"edit_btn_exp_all_{i}"):
+                            st.session_state[f"edit_exp_all_{i}"] = True
+                    with exp_cols[5]:
                         if st.button("🗑️", key=f"del_exp_all_{i}"):
                             success, message = delete_expectation(
                                 row["job_level"], 
@@ -603,6 +656,40 @@ with tab3:
                                 st.rerun()
                             else:
                                 st.error(message)
+                    
+                    # Display edit form if edit button was clicked
+                    if st.session_state[f"edit_exp_all_{i}"]:
+                        with st.container(border=True):
+                            st.markdown("### Edit Skill Expectation")
+                            new_score = st.slider(
+                                "Expected Score", 
+                                min_value=1.0, 
+                                max_value=5.0, 
+                                step=0.5, 
+                                value=float(row['expected_score']),
+                                key=f"edit_score_exp_all_{i}"
+                            )
+                            
+                            edit_col1, edit_col2 = st.columns([1, 5])
+                            with edit_col1:
+                                if st.button("Save", type="primary", key=f"save_exp_all_{i}"):
+                                    success, message = set_skill_expectation(
+                                        row["job_level"],
+                                        row["competency"],
+                                        row["skill"],
+                                        new_score
+                                    )
+                                    if success:
+                                        st.success(message)
+                                        st.session_state[f"edit_exp_all_{i}"] = False
+                                        st.rerun()
+                                    else:
+                                        st.error(message)
+                            
+                            with edit_col2:
+                                if st.button("Cancel", key=f"cancel_exp_all_{i}"):
+                                    st.session_state[f"edit_exp_all_{i}"] = False
+                                    st.rerun()
         else:
             st.info("No skill expectations set yet.")
 
@@ -693,24 +780,33 @@ with tab4:
                     st.info("Use the table below to manage competency expectations.")
                     
                     # Display headers
-                    header_cols = st.columns([3, 1, 1])
+                    header_cols = st.columns([3, 1, 1, 1])
                     with header_cols[0]:
                         st.markdown("**Competency**")
                     with header_cols[1]:
                         st.markdown("**Expected Score**")
                     with header_cols[2]:
+                        st.markdown("**Edit**")
+                    with header_cols[3]:
                         st.markdown("**Delete**")
                     
                     st.markdown("---")
                     
                     # Display each expectation row
                     for i, row in filtered_exp.iterrows():
-                        exp_cols = st.columns([3, 1, 1])
+                        # Create session state for edit if doesn't exist
+                        if f"edit_comp_exp_{i}" not in st.session_state:
+                            st.session_state[f"edit_comp_exp_{i}"] = False
+                        
+                        exp_cols = st.columns([3, 1, 1, 1])
                         with exp_cols[0]:
                             st.write(f"{row['competency']}")
                         with exp_cols[1]:
                             st.write(f"{row['expected_score']}")
                         with exp_cols[2]:
+                            if st.button("✏️", key=f"edit_btn_comp_exp_{i}"):
+                                st.session_state[f"edit_comp_exp_{i}"] = True
+                        with exp_cols[3]:
                             if st.button("🗑️", key=f"del_comp_exp_{i}"):
                                 success, message = delete_competency_expectation(
                                     row["job_level"],
@@ -721,6 +817,39 @@ with tab4:
                                     st.rerun()
                                 else:
                                     st.error(message)
+                        
+                        # Display edit form if edit button was clicked
+                        if st.session_state[f"edit_comp_exp_{i}"]:
+                            with st.container(border=True):
+                                st.markdown("### Edit Competency Expectation")
+                                new_score = st.slider(
+                                    "Expected Score", 
+                                    min_value=1.0, 
+                                    max_value=5.0, 
+                                    step=0.5, 
+                                    value=float(row['expected_score']),
+                                    key=f"edit_score_comp_exp_{i}"
+                                )
+                                
+                                edit_col1, edit_col2 = st.columns([1, 5])
+                                with edit_col1:
+                                    if st.button("Save", type="primary", key=f"save_comp_exp_{i}"):
+                                        success, message = set_competency_expectation(
+                                            row["job_level"],
+                                            row["competency"],
+                                            new_score
+                                        )
+                                        if success:
+                                            st.success(message)
+                                            st.session_state[f"edit_comp_exp_{i}"] = False
+                                            st.rerun()
+                                        else:
+                                            st.error(message)
+                                
+                                with edit_col2:
+                                    if st.button("Cancel", key=f"cancel_comp_exp_{i}"):
+                                        st.session_state[f"edit_comp_exp_{i}"] = False
+                                        st.rerun()
                 else:
                     st.info(f"No competency expectations set for {filter_level} yet.")
             else:
@@ -728,7 +857,7 @@ with tab4:
                 st.info("Showing all competency expectations. Select a specific job level to filter.")
                 
                 # Display headers
-                header_cols = st.columns([2, 3, 1, 1])
+                header_cols = st.columns([2, 3, 1, 1, 1])
                 with header_cols[0]:
                     st.markdown("**Job Level**")
                 with header_cols[1]:
@@ -736,13 +865,19 @@ with tab4:
                 with header_cols[2]:
                     st.markdown("**Expected Score**")
                 with header_cols[3]:
+                    st.markdown("**Edit**")
+                with header_cols[4]:
                     st.markdown("**Delete**")
                 
                 st.markdown("---")
                 
                 # Display each expectation row
                 for i, row in comp_expectations_df.iterrows():
-                    exp_cols = st.columns([2, 3, 1, 1])
+                    # Create session state for edit if doesn't exist
+                    if f"edit_comp_exp_all_{i}" not in st.session_state:
+                        st.session_state[f"edit_comp_exp_all_{i}"] = False
+                    
+                    exp_cols = st.columns([2, 3, 1, 1, 1])
                     with exp_cols[0]:
                         st.write(f"{row['job_level']}")
                     with exp_cols[1]:
@@ -750,6 +885,9 @@ with tab4:
                     with exp_cols[2]:
                         st.write(f"{row['expected_score']}")
                     with exp_cols[3]:
+                        if st.button("✏️", key=f"edit_btn_comp_exp_all_{i}"):
+                            st.session_state[f"edit_comp_exp_all_{i}"] = True
+                    with exp_cols[4]:
                         if st.button("🗑️", key=f"del_comp_exp_all_{i}"):
                             success, message = delete_competency_expectation(
                                 row["job_level"],
@@ -760,6 +898,39 @@ with tab4:
                                 st.rerun()
                             else:
                                 st.error(message)
+                    
+                    # Display edit form if edit button was clicked
+                    if st.session_state[f"edit_comp_exp_all_{i}"]:
+                        with st.container(border=True):
+                            st.markdown("### Edit Competency Expectation")
+                            new_score = st.slider(
+                                "Expected Score", 
+                                min_value=1.0, 
+                                max_value=5.0, 
+                                step=0.5, 
+                                value=float(row['expected_score']),
+                                key=f"edit_score_comp_exp_all_{i}"
+                            )
+                            
+                            edit_col1, edit_col2 = st.columns([1, 5])
+                            with edit_col1:
+                                if st.button("Save", type="primary", key=f"save_comp_exp_all_{i}"):
+                                    success, message = set_competency_expectation(
+                                        row["job_level"],
+                                        row["competency"],
+                                        new_score
+                                    )
+                                    if success:
+                                        st.success(message)
+                                        st.session_state[f"edit_comp_exp_all_{i}"] = False
+                                        st.rerun()
+                                    else:
+                                        st.error(message)
+                            
+                            with edit_col2:
+                                if st.button("Cancel", key=f"cancel_comp_exp_all_{i}"):
+                                    st.session_state[f"edit_comp_exp_all_{i}"] = False
+                                    st.rerun()
         else:
             st.info("No competency expectations set yet.")
 
