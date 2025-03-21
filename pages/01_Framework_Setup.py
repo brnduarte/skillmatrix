@@ -401,7 +401,15 @@ with tab2:
         # Add filter options
         filter_col1, filter_col2, filter_col3 = st.columns([1, 1, 1])
         with filter_col1:
-            filter_type = st.selectbox("Filter By", ["All Levels", "Search by Name"], key="level_filter_type")
+            filter_type = st.selectbox("Filter By", ["All Levels", "Search by Name", "Filter by Skill"], key="level_filter_type")
+        
+        # Load skills data and expectations data for filtering
+        skills_df = load_data("skills")
+        competencies_df = load_data("competencies")
+        expectations_df = load_data("expectations")
+        
+        # Define selected_skill with a default value
+        selected_skill = "All Skills"
         
         with filter_col2:
             if filter_type == "Search by Name":
@@ -410,11 +418,29 @@ with tab2:
                     filtered_levels_df = levels_df[levels_df["name"].str.contains(search_term, case=False)]
                 else:
                     filtered_levels_df = levels_df
+            elif filter_type == "Filter by Skill":
+                # If we have skills data, create a dropdown for skills
+                if not skills_df.empty:
+                    skill_options = ["All Skills"] + skills_df["name"].tolist()
+                    selected_skill = st.selectbox("Select Skill", skill_options, key="level_skill_filter")
+                    
+                    if selected_skill != "All Skills" and not expectations_df.empty:
+                        # Get all job levels that have expectations for this skill
+                        job_levels_with_skill = expectations_df[expectations_df["skill"] == selected_skill]["job_level"].unique()
+                        filtered_levels_df = levels_df[levels_df["name"].isin(job_levels_with_skill)]
+                    else:
+                        filtered_levels_df = levels_df
+                else:
+                    st.info("No skills have been added yet.")
+                    filtered_levels_df = levels_df
             else:
                 filtered_levels_df = levels_df
         
         # Display management instructions
-        st.info("Use the table below to manage job levels.")
+        if filter_type == "Filter by Skill" and selected_skill != "All Skills" and not filtered_levels_df.empty:
+            st.info(f"Showing job levels that have expectations for the skill: **{selected_skill}**")
+        else:
+            st.info("Use the table below to manage job levels.")
         
         # Display headers
         header_cols = st.columns([3, 5, 1, 1])
