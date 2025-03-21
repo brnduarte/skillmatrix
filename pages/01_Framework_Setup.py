@@ -73,47 +73,8 @@ with tab1:
     
     # Display add competency form as a modal if active
     if st.session_state.show_add_competency_form:
-        # Create a modal-like overlay
-        # First, we add CSS for the modal
-        modal_css = """
-        <style>
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 998;
-        }
-        .modal-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 2rem;
-            border-radius: 5px;
-            z-index: 999;
-            width: 80%;
-            max-width: 500px;
-        }
-        </style>
-        <div class="modal-backdrop"></div>
-        """
-        st.markdown(modal_css, unsafe_allow_html=True)
-        
-        # Create modal content
-        modal_content = f"""
-        <div class="modal-content">
-            <h3>Add New Competency</h3>
-        </div>
-        """
-        st.markdown(modal_content, unsafe_allow_html=True)
-        
-        # We need to use an inner container to place the form content
-        # inside our modal that was created with HTML/CSS
-        with st.container():
+        # Create a modal using Streamlit's container with border
+        with st.container(border=True):
             st.subheader("Add New Competency")
             comp_name = st.text_input("Competency Name", key="comp_name_input")
             comp_desc = st.text_area("Description", key="comp_desc_input")
@@ -148,47 +109,8 @@ with tab1:
             st.warning("You need to add competencies first.")
             st.session_state.show_add_skill_form = False
         else:
-            # Create a modal-like overlay
-            # First, we add CSS for the modal
-            modal_css = """
-            <style>
-            .modal-backdrop {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                z-index: 998;
-            }
-            .modal-content {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background-color: white;
-                padding: 2rem;
-                border-radius: 5px;
-                z-index: 999;
-                width: 80%;
-                max-width: 500px;
-            }
-            </style>
-            <div class="modal-backdrop"></div>
-            """
-            st.markdown(modal_css, unsafe_allow_html=True)
-            
-            # Create modal content
-            modal_content = f"""
-            <div class="modal-content">
-                <h3>Add New Skill</h3>
-            </div>
-            """
-            st.markdown(modal_content, unsafe_allow_html=True)
-            
-            # We need to use an inner container to place the form content
-            # inside our modal that was created with HTML/CSS
-            with st.container():
+            # Create a modal using Streamlit's container with border
+            with st.container(border=True):
                 st.subheader("Add New Skill")
                 
                 comp_options = competencies_df["name"].tolist()
@@ -290,45 +212,8 @@ with tab1:
             
             # Display edit form as a modal if the edit button was clicked
             if st.session_state.get(f"edit_comp_id_{comp_id}", False):
-                # Create a modal-like overlay
-                modal_css = """
-                <style>
-                .modal-backdrop {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    z-index: 998;
-                }
-                .modal-content {
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background-color: white;
-                    padding: 2rem;
-                    border-radius: 5px;
-                    z-index: 999;
-                    width: 80%;
-                    max-width: 500px;
-                }
-                </style>
-                <div class="modal-backdrop"></div>
-                """
-                st.markdown(modal_css, unsafe_allow_html=True)
-                
-                # Create modal content header
-                modal_content = f"""
-                <div class="modal-content">
-                    <h3>Edit Competency</h3>
-                </div>
-                """
-                st.markdown(modal_content, unsafe_allow_html=True)
-                
-                # Add the form inside a container
-                with st.container():
+                # Create a modal using Streamlit's container with border
+                with st.container(border=True):
                     st.markdown("### Edit Competency")
                     new_name = st.text_input("Name", value=comp_row["name"], key=f"comp_name_{comp_id}")
                     new_desc = st.text_area("Description", value=comp_row["description"], key=f"comp_desc_{comp_id}")
@@ -442,45 +327,8 @@ with tab1:
                 
                 # Display edit form as a modal if the edit button was clicked
                 if st.session_state.get(f"edit_skill_id_{skill_id}", False):
-                    # Create a modal-like overlay
-                    modal_css = """
-                    <style>
-                    .modal-backdrop {
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background-color: rgba(0, 0, 0, 0.5);
-                        z-index: 998;
-                    }
-                    .modal-content {
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background-color: white;
-                        padding: 2rem;
-                        border-radius: 5px;
-                        z-index: 999;
-                        width: 80%;
-                        max-width: 500px;
-                    }
-                    </style>
-                    <div class="modal-backdrop"></div>
-                    """
-                    st.markdown(modal_css, unsafe_allow_html=True)
-                    
-                    # Create modal content header
-                    modal_content = f"""
-                    <div class="modal-content">
-                        <h3>Edit Skill</h3>
-                    </div>
-                    """
-                    st.markdown(modal_content, unsafe_allow_html=True)
-                    
-                    # Add the form inside a container
-                    with st.container():
+                    # Create a modal using Streamlit's container with border
+                    with st.container(border=True):
                         st.markdown("### Edit Skill")
                         new_skill_name = st.text_input("Name", value=skill_row["name"], key=f"skill_name_{skill_id}")
                         new_skill_desc = st.text_area("Description", value=skill_row["description"], key=f"skill_desc_{skill_id}")
@@ -524,45 +372,8 @@ with tab2:
     
     # Display add job level form as a modal if active
     if st.session_state.show_add_level_form:
-        # Create a modal-like overlay
-        modal_css = """
-        <style>
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 998;
-        }
-        .modal-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: white;
-            padding: 2rem;
-            border-radius: 5px;
-            z-index: 999;
-            width: 80%;
-            max-width: 500px;
-        }
-        </style>
-        <div class="modal-backdrop"></div>
-        """
-        st.markdown(modal_css, unsafe_allow_html=True)
-        
-        # Create modal content header
-        modal_content = f"""
-        <div class="modal-content">
-            <h3>Add New Job Level</h3>
-        </div>
-        """
-        st.markdown(modal_content, unsafe_allow_html=True)
-        
-        # Add the form inside a container
-        with st.container():
+        # Create a modal using Streamlit's container with border
+        with st.container(border=True):
             st.subheader("Add New Job Level")
             level_name = st.text_input("Level Name", key="level_name_input")
             level_desc = st.text_area("Level Description", key="level_desc_input")
@@ -681,45 +492,8 @@ with tab2:
             
             # Display edit form as a modal if the edit button was clicked
             if st.session_state.get(f"edit_level_id_{level_id}", False):
-                # Create a modal-like overlay
-                modal_css = """
-                <style>
-                .modal-backdrop {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(0, 0, 0, 0.5);
-                    z-index: 998;
-                }
-                .modal-content {
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background-color: white;
-                    padding: 2rem;
-                    border-radius: 5px;
-                    z-index: 999;
-                    width: 80%;
-                    max-width: 500px;
-                }
-                </style>
-                <div class="modal-backdrop"></div>
-                """
-                st.markdown(modal_css, unsafe_allow_html=True)
-                
-                # Create modal content header
-                modal_content = f"""
-                <div class="modal-content">
-                    <h3>Edit Job Level</h3>
-                </div>
-                """
-                st.markdown(modal_content, unsafe_allow_html=True)
-                
-                # Add the form inside a container
-                with st.container():
+                # Create a modal using Streamlit's container with border
+                with st.container(border=True):
                     st.markdown("### Edit Job Level")
                     new_name = st.text_input("Name", value=level_row["name"], key=f"level_name_{level_id}")
                     new_desc = st.text_area("Description", value=level_row["description"], key=f"level_desc_{level_id}")
