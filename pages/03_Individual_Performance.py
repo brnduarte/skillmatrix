@@ -4,11 +4,11 @@ import numpy as np
 from datetime import datetime
 from data_manager import (
     load_data, get_employee_assessments, calculate_employee_skill_means,
-    get_competency_skills, get_latest_assessment
+    calculate_employee_competency_means, get_competency_skills, get_latest_assessment
 )
 from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
 from visualizations import (
-    employee_skill_radar, comparison_radar_chart, skill_improvement_chart
+    employee_skill_radar, employee_competency_radar, comparison_radar_chart, skill_improvement_chart
 )
 
 # Page configuration
@@ -98,33 +98,74 @@ if employee_id:
         with tab1:
             st.header("Overall Performance")
             
-            col1, col2 = st.columns(2)
+            # Toggle between competency view and skill view
+            view_type = st.radio(
+                "View by:",
+                ["Competencies", "Skills"],
+                horizontal=True
+            )
             
-            with col1:
-                # Self assessment radar
-                if not self_assessments.empty:
-                    st.subheader("Self Assessment")
-                    fig, error = employee_skill_radar(employee_id, "self")
-                    if fig:
-                        st.plotly_chart(fig, use_container_width=True)
+            if view_type == "Competencies":
+                # Show competency-based radar charts
+                st.subheader("Competency Overview")
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    # Self assessment competency radar
+                    if not self_assessments.empty:
+                        st.subheader("Self Assessment - Competencies")
+                        fig, error = employee_competency_radar(employee_id, "self")
+                        if fig:
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.info(error or "No self assessment data available.")
                     else:
-                        st.info(error or "No self assessment data available.")
-                else:
-                    st.info("No self assessments completed yet.")
-            
-            with col2:
-                # Manager assessment radar
-                if not manager_assessments.empty:
-                    st.subheader("Manager Assessment")
-                    fig, error = employee_skill_radar(employee_id, "manager")
-                    if fig:
-                        st.plotly_chart(fig, use_container_width=True)
+                        st.info("No self assessments completed yet.")
+                
+                with col2:
+                    # Manager assessment competency radar
+                    if not manager_assessments.empty:
+                        st.subheader("Manager Assessment - Competencies")
+                        fig, error = employee_competency_radar(employee_id, "manager")
+                        if fig:
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.info(error or "No manager assessment data available.")
                     else:
-                        st.info(error or "No manager assessment data available.")
-                else:
-                    st.info("No manager assessments completed yet.")
+                        st.info("No manager assessments completed yet.")
+            else:
+                # Show skill-based radar charts
+                st.subheader("Skills Overview")
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    # Self assessment radar
+                    if not self_assessments.empty:
+                        st.subheader("Self Assessment - Skills")
+                        fig, error = employee_skill_radar(employee_id, "self")
+                        if fig:
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.info(error or "No self assessment data available.")
+                    else:
+                        st.info("No self assessments completed yet.")
+                
+                with col2:
+                    # Manager assessment radar
+                    if not manager_assessments.empty:
+                        st.subheader("Manager Assessment - Skills")
+                        fig, error = employee_skill_radar(employee_id, "manager")
+                        if fig:
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.info(error or "No manager assessment data available.")
+                    else:
+                        st.info("No manager assessments completed yet.")
             
             # Comparison to expected levels
+            st.markdown("---")
             st.subheader("Performance vs. Expected Level")
             
             if not self_assessments.empty or not manager_assessments.empty:

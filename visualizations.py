@@ -3,7 +3,14 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
-from data_manager import load_data, get_employee_assessments, get_latest_assessment
+from data_manager import (
+    load_data, 
+    get_employee_assessments, 
+    get_latest_assessment,
+    calculate_employee_competency_means,
+    calculate_employee_skill_means,
+    get_team_competency_means
+)
 
 def create_radar_chart(data, categories, title="", scale=5):
     """Create a radar chart for skills visualization"""
@@ -182,6 +189,34 @@ def team_competency_radar(team_assessments, title="Team Competency Assessment"):
         data=values,
         categories=labels,
         title=title,
+        scale=5
+    )
+    
+    return fig, None
+
+def employee_competency_radar(employee_id, assessment_type="self"):
+    """Create a radar chart for an employee's competencies (not skills)"""
+    # Get competency means directly using the new function
+    comp_means = calculate_employee_competency_means(employee_id)
+    
+    if comp_means.empty:
+        return None, "No assessments found for this employee."
+    
+    # Filter by assessment type
+    filtered_means = comp_means[comp_means["assessment_type"] == assessment_type]
+    
+    if filtered_means.empty:
+        return None, f"No {assessment_type} assessments found for this employee."
+    
+    # Create labels and values for radar chart
+    labels = filtered_means["competency"].tolist()
+    values = filtered_means["score"].tolist()
+    
+    # Create radar chart
+    fig = create_radar_chart(
+        data=values,
+        categories=labels,
+        title=f"Competency Assessment ({assessment_type.capitalize()})",
         scale=5
     )
     

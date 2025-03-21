@@ -310,6 +310,23 @@ def calculate_employee_skill_means(employee_id):
     
     return means
 
+def calculate_employee_competency_means(employee_id):
+    """Calculate the mean scores for competencies (separately from skills)"""
+    assessments_df = load_data("assessments")
+    
+    if assessments_df.empty:
+        return pd.DataFrame()
+    
+    employee_assessments = assessments_df[assessments_df["employee_id"] == employee_id]
+    
+    if employee_assessments.empty:
+        return pd.DataFrame()
+    
+    # Group by competency and assessment_type and calculate mean
+    means = employee_assessments.groupby(["competency", "assessment_type"])["score"].mean().reset_index()
+    
+    return means
+
 def get_employees_for_manager(manager_id):
     """Get all employees reporting to a manager"""
     try:
@@ -338,8 +355,33 @@ def get_team_skill_means(manager_id):
     if team_assessments.empty:
         return pd.DataFrame()
     
-    # Group by competency and skill and calculate mean
+    # Group by competency, skill and assessment_type and calculate mean
     means = team_assessments.groupby(["competency", "skill", "assessment_type"])["score"].mean().reset_index()
+    
+    return means
+
+def get_team_competency_means(manager_id):
+    """Calculate team competency means for a manager's team (separate from skills)"""
+    employees_df = load_data("employees")
+    assessments_df = load_data("assessments")
+    
+    if employees_df.empty or assessments_df.empty:
+        return pd.DataFrame()
+    
+    # Get all employees under this manager
+    team_employees = employees_df[employees_df["manager_id"] == manager_id]["employee_id"].tolist()
+    
+    if not team_employees:
+        return pd.DataFrame()
+    
+    # Get assessments for all team members
+    team_assessments = assessments_df[assessments_df["employee_id"].isin(team_employees)]
+    
+    if team_assessments.empty:
+        return pd.DataFrame()
+    
+    # Group by competency only and assessment_type and calculate mean
+    means = team_assessments.groupby(["competency", "assessment_type"])["score"].mean().reset_index()
     
     return means
 

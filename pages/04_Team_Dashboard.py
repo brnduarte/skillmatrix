@@ -2,11 +2,13 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from data_manager import (
-    load_data, get_employees_for_manager, get_employee_assessments
+    load_data, get_employees_for_manager, get_employee_assessments,
+    get_team_competency_means
 )
 from utils import check_permission, get_user_id, calculate_mean
 from visualizations import (
-    team_skill_radar, team_competency_radar, competency_bar_chart, team_heatmap
+    team_skill_radar, team_competency_radar, competency_bar_chart, team_heatmap,
+    create_radar_chart
 )
 
 # Page configuration
@@ -135,11 +137,42 @@ with tab1:
     with col2:
         # Create team competencies radar chart
         st.subheader("Team Competencies")
-        fig, error = team_competency_radar(filtered_assessments)
-        if fig:
-            st.plotly_chart(fig, use_container_width=True)
+        
+        if manager_id and assessment_type != "both":
+            # Use the dedicated competency means function for better accuracy
+            team_comp_means = get_team_competency_means(manager_id)
+            if not team_comp_means.empty:
+                # Filter by assessment type
+                team_comp_filtered = team_comp_means[team_comp_means["assessment_type"] == assessment_type]
+                if not team_comp_filtered.empty:
+                    # Create labels and values for radar chart
+                    labels = team_comp_filtered["competency"].tolist()
+                    values = team_comp_filtered["score"].tolist()
+                    
+                    # Create radar chart using the visualization function
+                    fig = create_radar_chart(
+                        data=values,
+                        categories=labels,
+                        title=f"Team Competency Assessment ({assessment_type.capitalize()})",
+                        scale=5
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info(f"No {assessment_type} assessments found for competencies.")
+            else:
+                # Fallback to the original function
+                fig, error = team_competency_radar(filtered_assessments)
+                if fig:
+                    st.plotly_chart(fig, use_container_width=True)
+                else:
+                    st.info(error or "Could not create team competencies radar chart.")
         else:
-            st.info(error or "Could not create team competencies radar chart.")
+            # Use the original function for department filtering or combined view
+            fig, error = team_competency_radar(filtered_assessments)
+            if fig:
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info(error or "Could not create team competencies radar chart.")
     
     # Team skills heatmap
     st.subheader("Skills Heatmap")
