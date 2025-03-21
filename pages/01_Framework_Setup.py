@@ -299,7 +299,8 @@ with tab2:
                 st.session_state.show_add_level_form = False
                 st.rerun()
     
-    # Display existing job levels
+    # Display existing job levels section
+    st.markdown("---")
     st.subheader("Existing Job Levels")
     levels_df = load_data("levels")
     
@@ -313,14 +314,15 @@ with tab2:
         level_ids = [l[0] for l in level_options]
         
         if level_labels:
-                selected_level_label = st.selectbox("Select Job Level", level_labels, key="select_level_to_manage")
-                selected_idx = level_labels.index(selected_level_label)
-                selected_level_id = level_ids[selected_idx]
-                
-                # Get the selected level details
-                selected_level = levels_df[levels_df["level_id"] == selected_level_id].iloc[0]
-                
-                # Display the level details
+            selected_level_label = st.selectbox("Select Job Level", level_labels, key="select_level_to_manage")
+            selected_idx = level_labels.index(selected_level_label)
+            selected_level_id = level_ids[selected_idx]
+            
+            # Get the selected level details
+            selected_level = levels_df[levels_df["level_id"] == selected_level_id].iloc[0]
+            
+            # Display the level details in a container
+            with st.container(border=True):
                 st.write(f"**Name:** {selected_level['name']}")
                 st.write(f"**Description:** {selected_level['description']}")
                 
@@ -339,16 +341,17 @@ with tab2:
                             st.rerun()
                         else:
                             st.error(message)
-                
-                # Edit form
-                if st.session_state.get(f"edit_level_id_{selected_level_id}", False):
+            
+            # Edit form
+            if st.session_state.get(f"edit_level_id_{selected_level_id}", False):
+                with st.container(border=True):
                     st.markdown("### Edit Job Level")
                     new_name = st.text_input("Name", value=selected_level["name"], key=f"level_name_{selected_level_id}")
                     new_desc = st.text_area("Description", value=selected_level["description"], key=f"level_desc_{selected_level_id}")
                     
-                    edit_col1, edit_col2 = st.columns([1, 1])
+                    edit_col1, edit_col2 = st.columns([1, 5])
                     with edit_col1:
-                        if st.button("Save Changes", key=f"save_level_{selected_level_id}"):
+                        if st.button("Save Changes", type="primary", key=f"save_level_{selected_level_id}"):
                             success, message = update_job_level(selected_level_id, new_name, new_desc)
                             if success:
                                 st.success(message)
@@ -363,12 +366,12 @@ with tab2:
                             # Clear the editing state
                             st.session_state.pop(f"edit_level_id_{selected_level_id}", None)
                             st.rerun()
-            
-            # Also show a table of all levels for reference
-            st.markdown("### All Job Levels")
-            st.dataframe(levels_df[["level_id", "name", "description"]])
-        else:
-            st.info("No job levels added yet.")
+        
+        # Also show a table of all levels for reference
+        st.markdown("### All Job Levels")
+        st.dataframe(levels_df[["level_id", "name", "description"]])
+    else:
+        st.info("No job levels added yet.")
 
 # Skill Expectations Tab
 with tab3:
@@ -624,63 +627,92 @@ with tab4:
 with tab5:
     st.header("Manage Employees")
     
-    col1, col2 = st.columns([1, 1])
+    # Create two columns for layout
+    left_col, right_col = st.columns([1, 1])
     
-    with col1:
-        st.subheader("Add New Employee")
+    with left_col:
+        # Add button for new employee
+        show_add_employee = st.button("➕ Add New Employee", type="primary", key="show_add_employee_btn")
         
-        # Get job levels for dropdown
-        levels_df = load_data("levels")
-        level_options = [""] + levels_df["name"].tolist() if not levels_df.empty else [""]
+        # Create session state variable if it doesn't exist
+        if "show_add_employee_form" not in st.session_state:
+            st.session_state.show_add_employee_form = False
         
-        # Get managers for dropdown
-        employees_df = load_data("employees")
-        manager_options = [("", "None")] + [
-            (str(row["employee_id"]), row["name"]) 
-            for _, row in employees_df.iterrows()
-        ] if not employees_df.empty else [("", "None")]
+        # Toggle form visibility when button is clicked
+        if show_add_employee:
+            st.session_state.show_add_employee_form = not st.session_state.show_add_employee_form
         
-        manager_names = [m[1] for m in manager_options]
-        manager_ids = [m[0] for m in manager_options]
-        
-        # Form for adding new employee
-        emp_name = st.text_input("Employee Name")
-        emp_email = st.text_input("Email")
-        emp_title = st.text_input("Job Title")
-        emp_level = st.selectbox("Job Level", level_options, key="emp_level")
-        emp_dept = st.text_input("Department")
-        selected_manager = st.selectbox("Manager", manager_names, key="emp_manager")
-        
-        # Get manager ID from selection
-        selected_manager_idx = manager_names.index(selected_manager)
-        selected_manager_id = manager_ids[selected_manager_idx]
-        
-        emp_date = st.date_input("Hire Date")
-        
-        if st.button("Add Employee"):
-            if emp_name and emp_email and emp_title and emp_level and emp_dept:
-                from data_manager import add_employee
+        # Display add employee form if active
+        if st.session_state.show_add_employee_form:
+            with st.container(border=True):
+                st.subheader("Add New Employee")
                 
-                # Convert manager ID to integer if it's not empty
-                manager_id = int(selected_manager_id) if selected_manager_id else None
+                # Get job levels for dropdown
+                levels_df = load_data("levels")
+                level_options = [""] + levels_df["name"].tolist() if not levels_df.empty else [""]
                 
-                success, message, _ = add_employee(
-                    emp_name, 
-                    emp_email, 
-                    emp_title, 
-                    emp_level, 
-                    emp_dept, 
-                    manager_id, 
-                    emp_date.strftime("%Y-%m-%d")
-                )
-                if success:
-                    st.success(message)
-                else:
-                    st.error(message)
-            else:
-                st.warning("Please fill in all required fields.")
+                # Get managers for dropdown
+                employees_df = load_data("employees")
+                manager_options = [("", "None")] + [
+                    (str(row["employee_id"]), row["name"]) 
+                    for _, row in employees_df.iterrows()
+                ] if not employees_df.empty else [("", "None")]
+                
+                manager_names = [m[1] for m in manager_options]
+                manager_ids = [m[0] for m in manager_options]
+                
+                # Form for adding new employee
+                emp_name = st.text_input("Employee Name", key="emp_name_input")
+                emp_email = st.text_input("Email", key="emp_email_input")
+                emp_title = st.text_input("Job Title", key="emp_title_input")
+                emp_level = st.selectbox("Job Level", level_options, key="emp_level_input")
+                emp_dept = st.text_input("Department", key="emp_dept_input")
+                selected_manager = st.selectbox("Manager", manager_names, key="emp_manager_input")
+                
+                # Get manager ID from selection
+                selected_manager_idx = manager_names.index(selected_manager)
+                selected_manager_id = manager_ids[selected_manager_idx]
+                
+                emp_date = st.date_input("Hire Date", key="emp_date_input")
+                
+                # Action buttons
+                button_col1, button_col2 = st.columns([1, 5])
+                with button_col1:
+                    submit_employee = st.button("Save", type="primary", key="submit_employee_btn")
+                with button_col2:
+                    cancel_employee = st.button("Cancel", key="cancel_employee_btn")
+                
+                # Submit handler
+                if submit_employee:
+                    if emp_name and emp_email and emp_title and emp_level and emp_dept:
+                        from data_manager import add_employee
+                        
+                        # Convert manager ID to integer if it's not empty
+                        manager_id = int(selected_manager_id) if selected_manager_id else None
+                        
+                        success, message, _ = add_employee(
+                            emp_name, 
+                            emp_email, 
+                            emp_title, 
+                            emp_level, 
+                            emp_dept, 
+                            manager_id, 
+                            emp_date.strftime("%Y-%m-%d")
+                        )
+                        if success:
+                            st.success(message)
+                            st.session_state.show_add_employee_form = False
+                        else:
+                            st.error(message)
+                    else:
+                        st.warning("Please fill in all required fields.")
+                
+                # Cancel handler
+                if cancel_employee:
+                    st.session_state.show_add_employee_form = False
+                    st.rerun()
     
-    with col2:
+    with right_col:
         st.subheader("Manage Existing Employees")
         employees_df = load_data("employees")
         
