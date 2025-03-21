@@ -12,7 +12,8 @@ DATA_FILES = {
     "levels": "job_levels.csv",
     "expectations": "skill_expectations.csv",
     "comp_expectations": "competency_expectations.csv",
-    "assessments": "skill_assessments.csv"
+    "assessments": "skill_assessments.csv",
+    "comp_assessments": "competency_assessments.csv"
 }
 
 # Define the ID columns for each data type
@@ -24,7 +25,8 @@ ID_COLUMNS = {
     "levels": "level_id",
     "expectations": None,  # Composite key
     "comp_expectations": None,  # Composite key
-    "assessments": "assessment_id"
+    "assessments": "assessment_id",
+    "comp_assessments": "assessment_id"
 }
 
 def load_data(data_type):
@@ -54,6 +56,8 @@ def load_data(data_type):
             return pd.DataFrame(columns=["job_level", "competency", "expected_score"])
         elif data_type == "assessments":
             return pd.DataFrame(columns=["assessment_id", "employee_id", "competency", "skill", "score", "assessment_type", "assessment_date", "notes"])
+        elif data_type == "comp_assessments":
+            return pd.DataFrame(columns=["assessment_id", "employee_id", "competency", "score", "assessment_type", "assessment_date", "notes"])
         else:
             return pd.DataFrame()
 
