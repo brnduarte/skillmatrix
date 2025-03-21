@@ -827,3 +827,122 @@ def update_employee(employee_id, name=None, email=None, job_title=None, job_leve
     
     save_data("employees", employees_df)
     return True, "Employee updated successfully"
+
+# Competency Assessment functions
+def add_competency_assessment(employee_id, competency, score, assessment_type, notes=""):
+    """Add a new competency assessment"""
+    comp_assessments_df = load_data("comp_assessments")
+    
+    # Generate new assessment ID
+    if comp_assessments_df.empty:
+        new_id = 1
+    else:
+        new_id = comp_assessments_df["assessment_id"].max() + 1
+    
+    # Add new assessment
+    new_assessment = pd.DataFrame({
+        "assessment_id": [new_id],
+        "employee_id": [employee_id],
+        "competency": [competency],
+        "score": [score],
+        "assessment_type": [assessment_type],
+        "assessment_date": [datetime.now().strftime("%Y-%m-%d")],
+        "notes": [notes]
+    })
+    
+    comp_assessments_df = pd.concat([comp_assessments_df, new_assessment], ignore_index=True)
+    save_data("comp_assessments", comp_assessments_df)
+    return True, "Competency assessment added successfully", new_id
+
+def get_employee_competency_assessments(employee_id, assessment_type=None):
+    """Get all competency assessments for an employee"""
+    comp_assessments_df = load_data("comp_assessments")
+    
+    if comp_assessments_df.empty:
+        return pd.DataFrame()
+    
+    if assessment_type:
+        return comp_assessments_df[
+            (comp_assessments_df["employee_id"] == employee_id) &
+            (comp_assessments_df["assessment_type"] == assessment_type)
+        ]
+    else:
+        return comp_assessments_df[comp_assessments_df["employee_id"] == employee_id]
+
+def get_latest_competency_assessment(employee_id, competency, assessment_type):
+    """Get the latest assessment for a specific competency"""
+    comp_assessments_df = load_data("comp_assessments")
+    
+    if comp_assessments_df.empty:
+        return None
+    
+    relevant = comp_assessments_df[
+        (comp_assessments_df["employee_id"] == employee_id) &
+        (comp_assessments_df["competency"] == competency) &
+        (comp_assessments_df["assessment_type"] == assessment_type)
+    ]
+    
+    if relevant.empty:
+        return None
+    
+    # Sort by date and get most recent
+    relevant["assessment_date"] = pd.to_datetime(relevant["assessment_date"])
+    latest = relevant.sort_values("assessment_date", ascending=False).iloc[0]
+    return latest
+
+def calculate_employee_comp_assessment_means(employee_id):
+    """Calculate the mean scores for competency assessments"""
+    comp_assessments_df = load_data("comp_assessments")
+    
+    if comp_assessments_df.empty:
+        return pd.DataFrame()
+    
+    employee_assessments = comp_assessments_df[comp_assessments_df["employee_id"] == employee_id]
+    
+    if employee_assessments.empty:
+        return pd.DataFrame()
+    
+    # Group by competency and assessment_type and calculate mean
+    means = employee_assessments.groupby(["competency", "assessment_type"])["score"].mean().reset_index()
+    
+    return means
+
+def get_team_comp_assessment_means(manager_id):
+    """Calculate team competency assessment means for a manager's team"""
+    employees_df = load_data("employees")
+    comp_assessments_df = load_data("comp_assessments")
+    
+    if employees_df.empty or comp_assessments_df.empty:
+        return pd.DataFrame()
+    
+    # Get all employees under this manager
+    team_employees = employees_df[employees_df["manager_id"] == manager_id]["employee_id"].tolist()
+    
+    if not team_employees:
+        return pd.DataFrame()
+    
+    # Get assessments for all team members
+    team_assessments = comp_assessments_df[comp_assessments_df["employee_id"].isin(team_employees)]
+    
+    if team_assessments.empty:
+        return pd.DataFrame()
+    
+    # Group by competency and assessment_type and calculate mean
+    means = team_assessments.groupby(["competency", "assessment_type"])["score"].mean().reset_index()
+    
+    return means
+
+def delete_competency_assessment(assessment_id):
+    """Delete a specific competency assessment"""
+    comp_assessments_df = load_data("comp_assessments")
+    
+    if comp_assessments_df.empty:
+        return False, "No competency assessment found"
+    
+    if assessment_id not in comp_assessments_df["assessment_id"].values:
+        return False, f"Competency assessment with ID {assessment_id} not found"
+    
+    comp_assessments_df = comp_assessments_df[comp_assessments_df["assessment_id"] != assessment_id]
+    save_data("comp_assessments", comp_assessments_df)
+    
+    return True, "Competency assessment deleted successfully"

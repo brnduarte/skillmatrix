@@ -3,7 +3,9 @@ import pandas as pd
 from datetime import datetime
 from data_manager import (
     load_data, add_assessment, get_employee_assessments,
-    get_latest_assessment, get_competency_skills
+    get_latest_assessment, get_competency_skills,
+    add_competency_assessment, get_employee_competency_assessments,
+    get_latest_competency_assessment
 )
 from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
 
@@ -19,7 +21,7 @@ if not hasattr(st.session_state, "authenticated") or not st.session_state.authen
     st.warning("Please login from the Home page.")
     st.stop()
 
-st.title("Employee Skill Assessment")
+st.title("Employee Skill & Competency Assessment")
 
 # Get current employee ID (for self-assessment)
 employee_id = get_user_id(st.session_state.username)
@@ -51,98 +53,11 @@ if st.session_state.user_role == "email_user":
             
             st.markdown("---")
             
-            # Get existing assessments
-            assessments = get_employee_assessments(employee_id, "self")
+            # Create tabs for skill vs competency assessment
+            skill_tab, comp_tab = st.tabs(["Skill Assessment", "Competency Assessment"])
             
-            # Select competency for assessment
-            st.subheader("Rate Your Skills")
-            
-            comp_options = competencies_df["name"].tolist()
-            selected_comp = st.selectbox("Select Competency", comp_options, key="self_comp")
-            
-            # Get competency ID
-            selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
-            
-            # Get skills for selected competency
-            comp_skills = get_competency_skills(selected_comp_id)
-            
-            if not comp_skills.empty:
-                st.write(f"Rate your proficiency in these skills from 1 to 5:")
-                st.write("1: Novice, 2: Advanced Beginner, 3: Competent, 4: Proficient, 5: Expert")
-                
-                skill_scores = {}
-                skill_notes = {}
-                
-                for _, skill_row in comp_skills.iterrows():
-                    skill_name = skill_row["name"]
-                    
-                    # Check if there's an existing assessment for this skill
-                    existing = get_latest_assessment(employee_id, selected_comp, skill_name, "self")
-                    
-                    # Set default value based on existing assessment if available
-                    default_value = float(existing["score"]) if existing is not None else 3.0
-                    default_notes = existing["notes"] if existing is not None else ""
-                    
-                    # Create expander for each skill
-                    with st.expander(f"{skill_name} - {skill_row['description']}"):
-                        skill_scores[skill_name] = st.slider(
-                            f"Your rating for {skill_name}",
-                            min_value=1.0,
-                            max_value=5.0,
-                            step=0.5,
-                            value=default_value,
-                            key=f"self_{skill_name}"
-                        )
-                        
-                        skill_notes[skill_name] = st.text_area(
-                            "Notes (examples, achievements, areas for improvement)",
-                            value=default_notes,
-                            key=f"self_notes_{skill_name}"
-                        )
-                
-                # Submit button for all skills in this competency
-                if st.button("Submit Self Assessment", key="submit_self"):
-                    for skill_name, score in skill_scores.items():
-                        success, message, _ = add_assessment(
-                            employee_id,
-                            selected_comp,
-                            skill_name,
-                            score,
-                            "self",
-                            skill_notes[skill_name]
-                        )
-                        
-                        if success:
-                            st.success(f"Assessment for {skill_name} submitted successfully.")
-                        else:
-                            st.error(f"Error submitting assessment for {skill_name}: {message}")
-            else:
-                st.info(f"No skills found for {selected_comp}. Please contact an administrator.")
-        else:
-            st.warning("Employee record not found. Please contact an administrator.")
-            
-else:
-    # For regular users (admin, manager, employee), show tabs
-    tab1, tab2 = st.tabs(["Self Assessment", "Manager Assessment"])
-    
-    # Self Assessment Tab
-    with tab1:
-        st.header("Self Assessment")
-        
-        if employee_id is None:
-            st.warning("Your user account is not linked to an employee record. Please contact an administrator.")
-        else:
-            employees_df = load_data("employees")
-            employee_info = employees_df[employees_df["employee_id"] == employee_id]
-            
-            if not employee_info.empty:
-                st.write(f"Employee: **{employee_info.iloc[0]['name']}**")
-                st.write(f"Job Title: {employee_info.iloc[0]['job_title']}")
-                st.write(f"Job Level: {employee_info.iloc[0]['job_level']}")
-                st.write(f"Department: {employee_info.iloc[0]['department']}")
-                
-                st.markdown("---")
-                
+            # Skills Assessment Tab
+            with skill_tab:
                 # Get existing assessments
                 assessments = get_employee_assessments(employee_id, "self")
                 
@@ -150,7 +65,7 @@ else:
                 st.subheader("Rate Your Skills")
                 
                 comp_options = competencies_df["name"].tolist()
-                selected_comp = st.selectbox("Select Competency", comp_options, key="self_comp")
+                selected_comp = st.selectbox("Select Competency", comp_options, key="self_comp_skill")
                 
                 # Get competency ID
                 selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
@@ -193,7 +108,7 @@ else:
                             )
                     
                     # Submit button for all skills in this competency
-                    if st.button("Submit Self Assessment", key="submit_self"):
+                    if st.button("Submit Skill Assessments", key="submit_self_skills"):
                         for skill_name, score in skill_scores.items():
                             success, message, _ = add_assessment(
                                 employee_id,
@@ -210,6 +125,215 @@ else:
                                 st.error(f"Error submitting assessment for {skill_name}: {message}")
                 else:
                     st.info(f"No skills found for {selected_comp}. Please contact an administrator.")
+            
+            # Competency Assessment Tab
+            with comp_tab:
+                st.subheader("Rate Your Competencies")
+                
+                # Select competency for assessment
+                comp_options = competencies_df["name"].tolist()
+                
+                st.write(f"Rate your overall proficiency in these competency areas from 1 to 5:")
+                st.write("1: Novice, 2: Advanced Beginner, 3: Competent, 4: Proficient, 5: Expert")
+                
+                comp_scores = {}
+                comp_notes = {}
+                
+                for _, comp_row in competencies_df.iterrows():
+                    comp_name = comp_row["name"]
+                    
+                    # Check if there's an existing assessment for this competency
+                    existing = get_latest_competency_assessment(employee_id, comp_name, "self")
+                    
+                    # Set default value based on existing assessment if available
+                    default_value = float(existing["score"]) if existing is not None else 3.0
+                    default_notes = existing["notes"] if existing is not None else ""
+                    
+                    # Create expander for each competency
+                    with st.expander(f"{comp_name} - {comp_row['description']}"):
+                        comp_scores[comp_name] = st.slider(
+                            f"Your overall rating for {comp_name} competency",
+                            min_value=1.0,
+                            max_value=5.0,
+                            step=0.5,
+                            value=default_value,
+                            key=f"self_comp_{comp_name}"
+                        )
+                        
+                        comp_notes[comp_name] = st.text_area(
+                            "Notes (examples, achievements, areas for improvement)",
+                            value=default_notes,
+                            key=f"self_comp_notes_{comp_name}"
+                        )
+                
+                # Submit button for all competency assessments
+                if st.button("Submit Competency Assessments", key="submit_self_comps"):
+                    for comp_name, score in comp_scores.items():
+                        success, message, _ = add_competency_assessment(
+                            employee_id,
+                            comp_name,
+                            score,
+                            "self",
+                            comp_notes[comp_name]
+                        )
+                        
+                        if success:
+                            st.success(f"Assessment for {comp_name} competency submitted successfully.")
+                        else:
+                            st.error(f"Error submitting competency assessment for {comp_name}: {message}")
+        else:
+            st.warning("Employee record not found. Please contact an administrator.")
+            
+else:
+    # For regular users (admin, manager, employee), show tabs
+    tab1, tab2 = st.tabs(["Self Assessment", "Manager Assessment"])
+    
+    # Self Assessment Tab
+    with tab1:
+        st.header("Self Assessment")
+        
+        if employee_id is None:
+            st.warning("Your user account is not linked to an employee record. Please contact an administrator.")
+        else:
+            employees_df = load_data("employees")
+            employee_info = employees_df[employees_df["employee_id"] == employee_id]
+            
+            if not employee_info.empty:
+                st.write(f"Employee: **{employee_info.iloc[0]['name']}**")
+                st.write(f"Job Title: {employee_info.iloc[0]['job_title']}")
+                st.write(f"Job Level: {employee_info.iloc[0]['job_level']}")
+                st.write(f"Department: {employee_info.iloc[0]['department']}")
+                
+                st.markdown("---")
+                
+                # Create tabs for skill vs competency assessment
+                skill_tab, comp_tab = st.tabs(["Skill Assessment", "Competency Assessment"])
+                
+                # Skills Assessment Tab
+                with skill_tab:
+                    # Get existing assessments
+                    assessments = get_employee_assessments(employee_id, "self")
+                    
+                    # Select competency for assessment
+                    st.subheader("Rate Your Skills")
+                    
+                    comp_options = competencies_df["name"].tolist()
+                    selected_comp = st.selectbox("Select Competency", comp_options, key="self_comp")
+                    
+                    # Get competency ID
+                    selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
+                    
+                    # Get skills for selected competency
+                    comp_skills = get_competency_skills(selected_comp_id)
+                    
+                    if not comp_skills.empty:
+                        st.write(f"Rate your proficiency in these skills from 1 to 5:")
+                        st.write("1: Novice, 2: Advanced Beginner, 3: Competent, 4: Proficient, 5: Expert")
+                        
+                        skill_scores = {}
+                        skill_notes = {}
+                        
+                        for _, skill_row in comp_skills.iterrows():
+                            skill_name = skill_row["name"]
+                            
+                            # Check if there's an existing assessment for this skill
+                            existing = get_latest_assessment(employee_id, selected_comp, skill_name, "self")
+                            
+                            # Set default value based on existing assessment if available
+                            default_value = float(existing["score"]) if existing is not None else 3.0
+                            default_notes = existing["notes"] if existing is not None else ""
+                            
+                            # Create expander for each skill
+                            with st.expander(f"{skill_name} - {skill_row['description']}"):
+                                skill_scores[skill_name] = st.slider(
+                                    f"Your rating for {skill_name}",
+                                    min_value=1.0,
+                                    max_value=5.0,
+                                    step=0.5,
+                                    value=default_value,
+                                    key=f"self_{skill_name}"
+                                )
+                                
+                                skill_notes[skill_name] = st.text_area(
+                                    "Notes (examples, achievements, areas for improvement)",
+                                    value=default_notes,
+                                    key=f"self_notes_{skill_name}"
+                                )
+                        
+                        # Submit button for all skills in this competency
+                        if st.button("Submit Skill Assessments", key="submit_self"):
+                            for skill_name, score in skill_scores.items():
+                                success, message, _ = add_assessment(
+                                    employee_id,
+                                    selected_comp,
+                                    skill_name,
+                                    score,
+                                    "self",
+                                    skill_notes[skill_name]
+                                )
+                                
+                                if success:
+                                    st.success(f"Assessment for {skill_name} submitted successfully.")
+                                else:
+                                    st.error(f"Error submitting assessment for {skill_name}: {message}")
+                    else:
+                        st.info(f"No skills found for {selected_comp}. Please contact an administrator.")
+                
+                # Competency Assessment Tab
+                with comp_tab:
+                    st.subheader("Rate Your Competencies")
+                    
+                    # Select competency for assessment
+                    comp_options = competencies_df["name"].tolist()
+                    
+                    st.write(f"Rate your overall proficiency in these competency areas from 1 to 5:")
+                    st.write("1: Novice, 2: Advanced Beginner, 3: Competent, 4: Proficient, 5: Expert")
+                    
+                    comp_scores = {}
+                    comp_notes = {}
+                    
+                    for _, comp_row in competencies_df.iterrows():
+                        comp_name = comp_row["name"]
+                        
+                        # Check if there's an existing assessment for this competency
+                        existing = get_latest_competency_assessment(employee_id, comp_name, "self")
+                        
+                        # Set default value based on existing assessment if available
+                        default_value = float(existing["score"]) if existing is not None else 3.0
+                        default_notes = existing["notes"] if existing is not None else ""
+                        
+                        # Create expander for each competency
+                        with st.expander(f"{comp_name} - {comp_row['description']}"):
+                            comp_scores[comp_name] = st.slider(
+                                f"Your overall rating for {comp_name} competency",
+                                min_value=1.0,
+                                max_value=5.0,
+                                step=0.5,
+                                value=default_value,
+                                key=f"self_comp_{comp_name}"
+                            )
+                            
+                            comp_notes[comp_name] = st.text_area(
+                                "Notes (examples, achievements, areas for improvement)",
+                                value=default_notes,
+                                key=f"self_comp_notes_{comp_name}"
+                            )
+                    
+                    # Submit button for all competency assessments
+                    if st.button("Submit Competency Assessments", key="submit_self_comp"):
+                        for comp_name, score in comp_scores.items():
+                            success, message, _ = add_competency_assessment(
+                                employee_id,
+                                comp_name,
+                                score,
+                                "self",
+                                comp_notes[comp_name]
+                            )
+                            
+                            if success:
+                                st.success(f"Assessment for {comp_name} competency submitted successfully.")
+                            else:
+                                st.error(f"Error submitting competency assessment for {comp_name}: {message}")
             else:
                 st.warning("Employee record not found. Please contact an administrator.")
     
@@ -255,80 +379,148 @@ else:
                     
                     st.markdown("---")
                     
-                    # Get existing assessments
-                    assessments = get_employee_assessments(selected_emp_id, "manager")
+                    # Create tabs for skill vs competency assessment
+                    mgr_skill_tab, mgr_comp_tab = st.tabs(["Skill Assessment", "Competency Assessment"])
                     
-                    # Select competency for assessment
-                    st.subheader("Rate Employee Skills")
+                    # Skills Assessment Tab
+                    with mgr_skill_tab:
+                        # Get existing assessments
+                        assessments = get_employee_assessments(selected_emp_id, "manager")
+                        
+                        # Select competency for assessment
+                        st.subheader("Rate Employee Skills")
+                        
+                        comp_options = competencies_df["name"].tolist()
+                        selected_comp = st.selectbox("Select Competency", comp_options, key="manager_comp")
+                        
+                        # Get competency ID
+                        selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
+                        
+                        # Get skills for selected competency
+                        comp_skills = get_competency_skills(selected_comp_id)
+                        
+                        if not comp_skills.empty:
+                            st.write(f"Rate the employee's proficiency in these skills from 1 to 5:")
+                            st.write("1: Novice, 2: Advanced Beginner, 3: Competent, 4: Proficient, 5: Expert")
+                            
+                            skill_scores = {}
+                            skill_notes = {}
+                            
+                            for _, skill_row in comp_skills.iterrows():
+                                skill_name = skill_row["name"]
+                                
+                                # Check if there's an existing assessment for this skill
+                                existing = get_latest_assessment(selected_emp_id, selected_comp, skill_name, "manager")
+                                
+                                # Set default value based on existing assessment if available
+                                default_value = float(existing["score"]) if existing is not None else 3.0
+                                default_notes = existing["notes"] if existing is not None else ""
+                                
+                                # Create expander for each skill
+                                with st.expander(f"{skill_name} - {skill_row['description']}"):
+                                    # Show employee's self-assessment if available
+                                    self_assessment = get_latest_assessment(selected_emp_id, selected_comp, skill_name, "self")
+                                    if self_assessment is not None:
+                                        st.info(f"Employee's self-assessment: **{self_assessment['score']}** ({pd.to_datetime(self_assessment['assessment_date']).strftime('%Y-%m-%d')})")
+                                        if self_assessment["notes"]:
+                                            st.info(f"Employee's notes: {self_assessment['notes']}")
+                                    
+                                    skill_scores[skill_name] = st.slider(
+                                        f"Your rating for {skill_name}",
+                                        min_value=1.0,
+                                        max_value=5.0,
+                                        step=0.5,
+                                        value=default_value,
+                                        key=f"manager_{skill_name}"
+                                    )
+                                    
+                                    skill_notes[skill_name] = st.text_area(
+                                        "Feedback and notes",
+                                        value=default_notes,
+                                        key=f"manager_notes_{skill_name}"
+                                    )
+                            
+                            # Submit button for all skills in this competency
+                            if st.button("Submit Skill Assessments", key="submit_manager"):
+                                for skill_name, score in skill_scores.items():
+                                    success, message, _ = add_assessment(
+                                        selected_emp_id,
+                                        selected_comp,
+                                        skill_name,
+                                        score,
+                                        "manager",
+                                        skill_notes[skill_name]
+                                    )
+                                    
+                                    if success:
+                                        st.success(f"Assessment for {skill_name} submitted successfully.")
+                                    else:
+                                        st.error(f"Error submitting assessment for {skill_name}: {message}")
+                        else:
+                            st.info(f"No skills found for {selected_comp}. Please contact an administrator.")
                     
-                    comp_options = competencies_df["name"].tolist()
-                    selected_comp = st.selectbox("Select Competency", comp_options, key="manager_comp")
-                    
-                    # Get competency ID
-                    selected_comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
-                    
-                    # Get skills for selected competency
-                    comp_skills = get_competency_skills(selected_comp_id)
-                    
-                    if not comp_skills.empty:
-                        st.write(f"Rate the employee's proficiency in these skills from 1 to 5:")
+                    # Competency Assessment Tab
+                    with mgr_comp_tab:
+                        st.subheader("Rate Employee Competencies")
+                        
+                        # Select competency for assessment
+                        comp_options = competencies_df["name"].tolist()
+                        
+                        st.write(f"Rate the employee's overall proficiency in these competency areas from 1 to 5:")
                         st.write("1: Novice, 2: Advanced Beginner, 3: Competent, 4: Proficient, 5: Expert")
                         
-                        skill_scores = {}
-                        skill_notes = {}
+                        comp_scores = {}
+                        comp_notes = {}
                         
-                        for _, skill_row in comp_skills.iterrows():
-                            skill_name = skill_row["name"]
+                        for _, comp_row in competencies_df.iterrows():
+                            comp_name = comp_row["name"]
                             
-                            # Check if there's an existing assessment for this skill
-                            existing = get_latest_assessment(selected_emp_id, selected_comp, skill_name, "manager")
+                            # Check if there's an existing assessment for this competency
+                            existing = get_latest_competency_assessment(selected_emp_id, comp_name, "manager")
                             
                             # Set default value based on existing assessment if available
                             default_value = float(existing["score"]) if existing is not None else 3.0
                             default_notes = existing["notes"] if existing is not None else ""
                             
-                            # Create expander for each skill
-                            with st.expander(f"{skill_name} - {skill_row['description']}"):
+                            # Create expander for each competency
+                            with st.expander(f"{comp_name} - {comp_row['description']}"):
                                 # Show employee's self-assessment if available
-                                self_assessment = get_latest_assessment(selected_emp_id, selected_comp, skill_name, "self")
-                                if self_assessment is not None:
-                                    st.info(f"Employee's self-assessment: **{self_assessment['score']}** ({pd.to_datetime(self_assessment['assessment_date']).strftime('%Y-%m-%d')})")
-                                    if self_assessment["notes"]:
-                                        st.info(f"Employee's notes: {self_assessment['notes']}")
+                                self_comp_assessment = get_latest_competency_assessment(selected_emp_id, comp_name, "self")
+                                if self_comp_assessment is not None:
+                                    st.info(f"Employee's self-assessment: **{self_comp_assessment['score']}** ({pd.to_datetime(self_comp_assessment['assessment_date']).strftime('%Y-%m-%d')})")
+                                    if self_comp_assessment["notes"]:
+                                        st.info(f"Employee's notes: {self_comp_assessment['notes']}")
                                 
-                                skill_scores[skill_name] = st.slider(
-                                    f"Your rating for {skill_name}",
+                                comp_scores[comp_name] = st.slider(
+                                    f"Your overall rating for {comp_name} competency",
                                     min_value=1.0,
                                     max_value=5.0,
                                     step=0.5,
                                     value=default_value,
-                                    key=f"manager_{skill_name}"
+                                    key=f"manager_comp_{comp_name}"
                                 )
                                 
-                                skill_notes[skill_name] = st.text_area(
+                                comp_notes[comp_name] = st.text_area(
                                     "Feedback and notes",
                                     value=default_notes,
-                                    key=f"manager_notes_{skill_name}"
+                                    key=f"manager_comp_notes_{comp_name}"
                                 )
                         
-                        # Submit button for all skills in this competency
-                        if st.button("Submit Manager Assessment", key="submit_manager"):
-                            for skill_name, score in skill_scores.items():
-                                success, message, _ = add_assessment(
+                        # Submit button for all competency assessments
+                        if st.button("Submit Competency Assessments", key="submit_manager_comp"):
+                            for comp_name, score in comp_scores.items():
+                                success, message, _ = add_competency_assessment(
                                     selected_emp_id,
-                                    selected_comp,
-                                    skill_name,
+                                    comp_name,
                                     score,
                                     "manager",
-                                    skill_notes[skill_name]
+                                    comp_notes[comp_name]
                                 )
                                 
                                 if success:
-                                    st.success(f"Assessment for {skill_name} submitted successfully.")
+                                    st.success(f"Assessment for {comp_name} competency submitted successfully.")
                                 else:
-                                    st.error(f"Error submitting assessment for {skill_name}: {message}")
-                    else:
-                        st.info(f"No skills found for {selected_comp}. Please contact an administrator.")
+                                    st.error(f"Error submitting competency assessment for {comp_name}: {message}")
                 else:
                     st.warning("Employee record not found.")
             else:
