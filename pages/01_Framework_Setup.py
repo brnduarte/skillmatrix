@@ -232,34 +232,36 @@ with tab1:
                             st.rerun()
         
         # Skills section
-        st.subheader("Skills by Competency")
+        st.subheader("Skills")
         
         # Filter options
         filter_col1, filter_col2 = st.columns(2)
         
+        # Get all skills for the dropdown
+        all_skills_df = skills_df.copy()
+        
         with filter_col1:
-            # Create selection for competency with "All Competencies" option
-            comp_options = ["All Competencies"] + competencies_df["competency_id"].tolist()
-            selected_comp = st.selectbox(
-                "Select Competency", 
-                comp_options,
-                format_func=lambda x: "All Competencies" if x == "All Competencies" else competencies_df[competencies_df["competency_id"] == x]["name"].iloc[0],
-                key="skill_comp_filter"
-            )
+            if not all_skills_df.empty:
+                # Create a "Select Skill" filter dropdown with "All Skills" option
+                skill_options = ["All Skills"] + all_skills_df["name"].tolist()
+                selected_skill_name = st.selectbox(
+                    "Select Skill",
+                    skill_options,
+                    key="skill_filter"
+                )
+                
+                # Filter based on selected skill
+                if selected_skill_name == "All Skills":
+                    st.markdown("#### All Skills")
+                    filtered_skills = skills_df
+                else:
+                    st.markdown(f"#### Skill: {selected_skill_name}")
+                    filtered_skills = skills_df[skills_df["name"] == selected_skill_name]
+            else:
+                st.info("No skills have been added yet.")
+                filtered_skills = pd.DataFrame()
         
-        # Set the title based on selection
-        if selected_comp == "All Competencies":
-            st.markdown("#### All Skills")
-            # Get all skills
-            filtered_skills = skills_df
-        else:
-            # Get selected competency name
-            selected_comp_name = competencies_df[competencies_df["competency_id"] == selected_comp]["name"].iloc[0]
-            st.markdown(f"#### Skills for: {selected_comp_name}")
-            # Get skills for selected competency
-            filtered_skills = get_competency_skills(selected_comp)
-        
-        # Add skill name filter
+        # Add text search filter
         with filter_col2:
             if not filtered_skills.empty:
                 search_skill = st.text_input("Search skills by name", key="skill_search")
@@ -270,14 +272,16 @@ with tab1:
             # Display skills in a table format
             
             # Display headers
-            skill_header_cols = st.columns([3, 5, 1, 1])
+            skill_header_cols = st.columns([2, 2, 3, 1, 1])
             with skill_header_cols[0]:
                 st.markdown("**Skill Name**")
             with skill_header_cols[1]:
-                st.markdown("**Description**")
+                st.markdown("**Competency**")
             with skill_header_cols[2]:
-                st.markdown("**Edit**")
+                st.markdown("**Description**")
             with skill_header_cols[3]:
+                st.markdown("**Edit**")
+            with skill_header_cols[4]:
                 st.markdown("**Delete**")
             
             st.markdown("---")
@@ -285,21 +289,28 @@ with tab1:
             # Display each skill row (filtered)
             for _, skill_row in filtered_skills.iterrows():
                 skill_id = skill_row["skill_id"]
-                skill_cols = st.columns([3, 5, 1, 1])
+                # Get competency name for this skill
+                comp_id = skill_row['competency_id']
+                comp_name = competencies_df[competencies_df['competency_id'] == comp_id]['name'].iloc[0] if comp_id in competencies_df['competency_id'].values else "Unknown"
+                
+                skill_cols = st.columns([2, 2, 3, 1, 1])
                 
                 with skill_cols[0]:
                     st.write(f"{skill_row['name']}")
-                
+                    
                 with skill_cols[1]:
-                    st.write(f"{skill_row['description']}")
+                    st.write(f"{comp_name}")
                 
                 with skill_cols[2]:
+                    st.write(f"{skill_row['description']}")
+                
+                with skill_cols[3]:
                     # Edit skill button
                     if st.button("✏️", key=f"edit_skill_{skill_id}"):
                         # Set session state to store the skill being edited
                         st.session_state[f"edit_skill_id_{skill_id}"] = True
                 
-                with skill_cols[3]:
+                with skill_cols[4]:
                     # Delete skill button
                     if st.button("🗑️", key=f"del_skill_{skill_id}"):
                         success, message = delete_skill(skill_id)
@@ -334,11 +345,7 @@ with tab1:
                                 st.session_state.pop(f"edit_skill_id_{skill_id}", None)
                                 st.rerun()
         else:
-            if selected_comp == "All Competencies":
-                st.info("No skills have been added yet.")
-            else:
-                selected_comp_name = competencies_df[competencies_df["competency_id"] == selected_comp]["name"].iloc[0]
-                st.info(f"No skills added yet for the {selected_comp_name} competency.")
+            st.info("No skills match your filter criteria.")
     else:
         st.info("No competencies added yet.")
 
