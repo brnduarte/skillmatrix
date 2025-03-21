@@ -344,47 +344,42 @@ def employee_competency_radar(employee_id, assessment_type="self"):
     
     return fig, None
 
-def competency_bar_chart(employee_id, job_level=None, assessment_type="self", title="Competency Assessment"):
-    """Create a bar chart for competencies using latest assessments"""
+def competency_bar_chart(team_assessments, level_expectations=None, assessment_type="self", title="Competency Assessment"):
+    """Create a bar chart for competencies using team assessment data
+    
+    Args:
+        team_assessments: DataFrame containing assessment data
+        level_expectations: DataFrame containing expectation data for job levels (optional)
+        assessment_type: Type of assessment to use (should be pre-filtered)
+        title: Title for the chart
+    """
     # Load necessary data
     competencies_df = load_data("competencies")
-    comp_expectations_df = load_data("comp_expectations") if job_level else None
     
-    if competencies_df.empty:
-        return None, "No competencies found."
+    # Check if dataframes are empty
+    if competencies_df.empty or team_assessments.empty:
+        return None, "No competencies or assessments found."
     
-    if job_level and comp_expectations_df is not None:
-        # Filter expectations for the employee's job level
-        level_expectations = comp_expectations_df[comp_expectations_df["job_level"] == job_level]
-        
-        if level_expectations.empty:
-            job_level = None  # Don't show expectations if none are defined for this level
+    # Calculate the mean score for each competency from the filtered assessments
+    comp_means = team_assessments.groupby('competency')['score'].mean().reset_index()
+    
+    if comp_means.empty:
+        return None, f"No {assessment_type} competency assessments found."
     
     # Create lists for chart data
-    labels = []
-    actual_values = []
+    labels = comp_means['competency'].tolist()
+    actual_values = comp_means['score'].tolist()
     expected_values = []
     
-    # Loop through all competencies to get latest assessments
-    for _, comp_row in competencies_df.iterrows():
-        # Get latest competency assessment
-        latest = get_latest_competency_assessment(
-            employee_id, 
-            comp_row["name"], 
-            assessment_type
-        )
-        
-        if latest is not None:
-            labels.append(comp_row["name"])
-            actual_values.append(latest["score"])
-            
-            # Get expectation if available
-            if job_level and level_expectations is not None:
-                expectation = level_expectations[level_expectations["competency"] == comp_row["name"]]
-                if not expectation.empty:
-                    expected_values.append(expectation.iloc[0]["expected_score"])
-                else:
-                    expected_values.append(None)  # No expectation for this competency
+    # Get expectation data if available
+    if level_expectations is not None and not level_expectations.empty:
+        # For each competency, find its expectation
+        for comp in labels:
+            expectation = level_expectations[level_expectations["competency"] == comp]
+            if not expectation.empty:
+                expected_values.append(expectation.iloc[0]["expected_score"])
+            else:
+                expected_values.append(None)  # No expectation for this competency
     
     if not labels:
         return None, f"No {assessment_type} competency assessments found."
@@ -400,7 +395,7 @@ def competency_bar_chart(employee_id, job_level=None, assessment_type="self", ti
     ))
     
     # Add expectation data if available
-    if job_level and expected_values and any(v is not None for v in expected_values):
+    if expected_values and any(v is not None for v in expected_values):
         # Replace None values with NaN for plotting
         expected_values = [v if v is not None else float('nan') for v in expected_values]
         
