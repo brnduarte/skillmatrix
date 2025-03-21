@@ -380,6 +380,21 @@ with tab2:
     levels_df = load_data("levels")
     
     if not levels_df.empty:
+        # Add filter options
+        filter_col1, filter_col2, filter_col3 = st.columns([1, 1, 1])
+        with filter_col1:
+            filter_type = st.selectbox("Filter By", ["All Levels", "Search by Name"], key="level_filter_type")
+        
+        with filter_col2:
+            if filter_type == "Search by Name":
+                search_term = st.text_input("Enter level name", key="level_search")
+                if search_term:
+                    filtered_levels_df = levels_df[levels_df["name"].str.contains(search_term, case=False)]
+                else:
+                    filtered_levels_df = levels_df
+            else:
+                filtered_levels_df = levels_df
+        
         # Display management instructions
         st.info("Use the table below to manage job levels.")
         
@@ -396,8 +411,8 @@ with tab2:
         
         st.markdown("---")
         
-        # Display each level row
-        for _, level_row in levels_df.iterrows():
+        # Display each level row (filtered)
+        for _, level_row in filtered_levels_df.iterrows():
             level_id = level_row["level_id"]
             level_cols = st.columns([3, 5, 1, 1])
             
@@ -793,13 +808,29 @@ with tab4:
         comp_expectations_df = load_data("comp_expectations")
         
         if not comp_expectations_df.empty:
-            # Show dropdown to filter by level
-            level_options = ["All Levels"] + levels_df["name"].tolist()
-            filter_level = st.selectbox("Filter by Job Level", level_options, key="filter_comp_expectations_level")
+            # Show filter options
+            filter_col1, filter_col2 = st.columns(2)
+            
+            with filter_col1:
+                level_options = ["All Levels"] + levels_df["name"].tolist()
+                filter_level = st.selectbox("Filter by Job Level", level_options, key="filter_comp_expectations_level")
+                
+            with filter_col2:
+                comp_options = ["All Competencies"] + competencies_df["name"].tolist()
+                filter_comp = st.selectbox("Filter by Competency", comp_options, key="filter_comp_expectations_comp")
+            
+            # Apply filters
+            filtered_exp = comp_expectations_df.copy()
             
             if filter_level != "All Levels":
                 # Filter by selected level
-                filtered_exp = comp_expectations_df[comp_expectations_df["job_level"] == filter_level]
+                filtered_exp = filtered_exp[filtered_exp["job_level"] == filter_level]
+                
+            if filter_comp != "All Competencies":
+                # Filter by selected competency
+                filtered_exp = filtered_exp[filtered_exp["competency"] == filter_comp]
+                
+            if (filter_level != "All Levels" or filter_comp != "All Competencies"):
                 if not filtered_exp.empty:
                     # Display expectations in a table format
                     st.info("Use the table below to manage competency expectations.")
@@ -876,10 +907,16 @@ with tab4:
                                         st.session_state[f"edit_comp_exp_{i}"] = False
                                         st.rerun()
                 else:
-                    st.info(f"No competency expectations set for {filter_level} yet.")
+                    # Show appropriate info message based on what was filtered
+                    if filter_level != "All Levels" and filter_comp != "All Competencies":
+                        st.info(f"No competency expectations set for {filter_level} and {filter_comp}.")
+                    elif filter_level != "All Levels":
+                        st.info(f"No competency expectations set for {filter_level}.")
+                    else:
+                        st.info(f"No competency expectations set for {filter_comp}.")
             else:
                 # Show all expectations in a table format
-                st.info("Showing all competency expectations. Select a specific job level to filter.")
+                st.info("Showing all competency expectations. Use filters above to narrow down the results.")
                 
                 # Display headers
                 header_cols = st.columns([2, 3, 1, 1, 1])
