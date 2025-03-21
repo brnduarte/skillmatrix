@@ -493,16 +493,33 @@ with tab3:
                 if selected_level:
                     filtered_exp = expectations_df[expectations_df["job_level"] == selected_level]
                     if not filtered_exp.empty:
-                        # Display a table with delete buttons
-                        st.info("Click Delete to remove an expectation")
+                        # Display expectations in a table format
+                        st.info("Use the table below to manage skill expectations.")
                         
+                        # Display headers
+                        header_cols = st.columns([2, 2, 1, 1])
+                        with header_cols[0]:
+                            st.markdown("**Competency**")
+                        with header_cols[1]:
+                            st.markdown("**Skill**")
+                        with header_cols[2]:
+                            st.markdown("**Expected Score**")
+                        with header_cols[3]:
+                            st.markdown("**Delete**")
+                        
+                        st.markdown("---")
+                        
+                        # Display each expectation row
                         for i, row in filtered_exp.iterrows():
-                            exp_cols = st.columns([3, 1])
+                            exp_cols = st.columns([2, 2, 1, 1])
                             with exp_cols[0]:
-                                st.write(f"**{row['competency']} - {row['skill']}**: Expected score {row['expected_score']}")
-                            
+                                st.write(f"{row['competency']}")
                             with exp_cols[1]:
-                                if st.button("Delete", key=f"del_exp_{i}"):
+                                st.write(f"{row['skill']}")
+                            with exp_cols[2]:
+                                st.write(f"{row['expected_score']}")
+                            with exp_cols[3]:
+                                if st.button("🗑️", key=f"del_exp_{i}"):
                                     success, message = delete_expectation(
                                         row["job_level"], 
                                         row["competency"], 
@@ -513,48 +530,50 @@ with tab3:
                                         st.rerun()
                                     else:
                                         st.error(message)
-                                        
-                        # Also show a table for reference
-                        st.markdown("### All Expectations for this Level")
-                        st.dataframe(filtered_exp)
                     else:
                         st.info(f"No expectations set for {selected_level} yet.")
                 else:
-                    # Show all expectations with a select box to choose which one to delete
-                    st.info("Select an expectation to delete")
+                    # Show all expectations in a table format
+                    st.info("Select a job level above to see expectations for that level.")
                     
-                    # Create a selection box for expectations
-                    exp_options = [
-                        (i, f"{row['job_level']} - {row['competency']} - {row['skill']}: {row['expected_score']}") 
-                        for i, row in expectations_df.iterrows()
-                    ]
-                    exp_labels = [e[1] for e in exp_options]
-                    exp_indices = [e[0] for e in exp_options]
+                    # Display headers
+                    header_cols = st.columns([2, 2, 2, 1, 1])
+                    with header_cols[0]:
+                        st.markdown("**Job Level**")
+                    with header_cols[1]:
+                        st.markdown("**Competency**")
+                    with header_cols[2]:
+                        st.markdown("**Skill**")
+                    with header_cols[3]:
+                        st.markdown("**Expected Score**")
+                    with header_cols[4]:
+                        st.markdown("**Delete**")
                     
-                    if exp_labels:
-                        selected_exp_label = st.selectbox("Select Expectation", exp_labels, key="select_expectation_to_manage")
-                        selected_idx = exp_labels.index(selected_exp_label)
-                        selected_exp_idx = exp_indices[selected_idx]
-                        
-                        # Get the selected expectation
-                        selected_exp = expectations_df.iloc[selected_exp_idx]
-                        
-                        # Create action button
-                        if st.button("Delete Selected Expectation"):
-                            success, message = delete_expectation(
-                                selected_exp["job_level"],
-                                selected_exp["competency"],
-                                selected_exp["skill"]
-                            )
-                            if success:
-                                st.success(message)
-                                st.rerun()
-                            else:
-                                st.error(message)
+                    st.markdown("---")
                     
-                    # Also show all expectations in a table
-                    st.markdown("### All Expectations")
-                    st.dataframe(expectations_df)
+                    # Display each expectation row
+                    for i, row in expectations_df.iterrows():
+                        exp_cols = st.columns([2, 2, 2, 1, 1])
+                        with exp_cols[0]:
+                            st.write(f"{row['job_level']}")
+                        with exp_cols[1]:
+                            st.write(f"{row['competency']}")
+                        with exp_cols[2]:
+                            st.write(f"{row['skill']}")
+                        with exp_cols[3]:
+                            st.write(f"{row['expected_score']}")
+                        with exp_cols[4]:
+                            if st.button("🗑️", key=f"del_exp_all_{i}"):
+                                success, message = delete_expectation(
+                                    row["job_level"], 
+                                    row["competency"], 
+                                    row["skill"]
+                                )
+                                if success:
+                                    st.success(message)
+                                    st.rerun()
+                                else:
+                                    st.error(message)
             else:
                 st.info("No skill expectations set yet.")
 
@@ -612,16 +631,29 @@ with tab4:
                 if selected_level:
                     filtered_exp = comp_expectations_df[comp_expectations_df["job_level"] == selected_level]
                     if not filtered_exp.empty:
-                        # Display a table with delete buttons
-                        st.info("Click Delete to remove a competency expectation")
+                        # Display expectations in a table format
+                        st.info("Use the table below to manage competency expectations.")
                         
+                        # Display headers
+                        header_cols = st.columns([3, 1, 1])
+                        with header_cols[0]:
+                            st.markdown("**Competency**")
+                        with header_cols[1]:
+                            st.markdown("**Expected Score**")
+                        with header_cols[2]:
+                            st.markdown("**Delete**")
+                        
+                        st.markdown("---")
+                        
+                        # Display each expectation row
                         for i, row in filtered_exp.iterrows():
-                            exp_cols = st.columns([3, 1])
+                            exp_cols = st.columns([3, 1, 1])
                             with exp_cols[0]:
-                                st.write(f"**{row['competency']}**: Expected score {row['expected_score']}")
-                            
+                                st.write(f"{row['competency']}")
                             with exp_cols[1]:
-                                if st.button("Delete", key=f"del_comp_exp_{i}"):
+                                st.write(f"{row['expected_score']}")
+                            with exp_cols[2]:
+                                if st.button("🗑️", key=f"del_comp_exp_{i}"):
                                     success, message = delete_competency_expectation(
                                         row["job_level"],
                                         row["competency"]
@@ -631,47 +663,45 @@ with tab4:
                                         st.rerun()
                                     else:
                                         st.error(message)
-                                        
-                        # Also show a table for reference
-                        st.markdown("### All Competency Expectations for this Level")
-                        st.dataframe(filtered_exp)
                     else:
                         st.info(f"No competency expectations set for {selected_level} yet.")
                 else:
-                    # Show all expectations with a select box to choose which one to delete
-                    st.info("Select a competency expectation to delete")
+                    # Show all expectations in a table format
+                    st.info("Select a job level above to see competency expectations for that level.")
                     
-                    # Create a selection box for expectations
-                    exp_options = [
-                        (i, f"{row['job_level']} - {row['competency']}: {row['expected_score']}") 
-                        for i, row in comp_expectations_df.iterrows()
-                    ]
-                    exp_labels = [e[1] for e in exp_options]
-                    exp_indices = [e[0] for e in exp_options]
+                    # Display headers
+                    header_cols = st.columns([2, 3, 1, 1])
+                    with header_cols[0]:
+                        st.markdown("**Job Level**")
+                    with header_cols[1]:
+                        st.markdown("**Competency**")
+                    with header_cols[2]:
+                        st.markdown("**Expected Score**")
+                    with header_cols[3]:
+                        st.markdown("**Delete**")
                     
-                    if exp_labels:
-                        selected_exp_label = st.selectbox("Select Expectation", exp_labels, key="select_comp_expectation_to_manage")
-                        selected_idx = exp_labels.index(selected_exp_label)
-                        selected_exp_idx = exp_indices[selected_idx]
-                        
-                        # Get the selected expectation
-                        selected_exp = comp_expectations_df.iloc[selected_exp_idx]
-                        
-                        # Create action button
-                        if st.button("Delete Selected Competency Expectation"):
-                            success, message = delete_competency_expectation(
-                                selected_exp["job_level"],
-                                selected_exp["competency"]
-                            )
-                            if success:
-                                st.success(message)
-                                st.rerun()
-                            else:
-                                st.error(message)
+                    st.markdown("---")
                     
-                    # Also show all expectations in a table
-                    st.markdown("### All Competency Expectations")
-                    st.dataframe(comp_expectations_df)
+                    # Display each expectation row
+                    for i, row in comp_expectations_df.iterrows():
+                        exp_cols = st.columns([2, 3, 1, 1])
+                        with exp_cols[0]:
+                            st.write(f"{row['job_level']}")
+                        with exp_cols[1]:
+                            st.write(f"{row['competency']}")
+                        with exp_cols[2]:
+                            st.write(f"{row['expected_score']}")
+                        with exp_cols[3]:
+                            if st.button("🗑️", key=f"del_comp_exp_all_{i}"):
+                                success, message = delete_competency_expectation(
+                                    row["job_level"],
+                                    row["competency"]
+                                )
+                                if success:
+                                    st.success(message)
+                                    st.rerun()
+                                else:
+                                    st.error(message)
             else:
                 st.info("No competency expectations set yet.")
 
