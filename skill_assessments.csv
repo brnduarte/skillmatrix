@@ -1,58 +1,118 @@
 assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date,notes
-1,1,Expertise,Visual Design,3.0,manager,2025-03-21,
-4,1,Continuous Improvement,Design Systems and A11y,3.5,manager,2025-03-21,
-5,1,Accountability,UX Strategy,4.0,manager,2025-03-21,
-6,1,Initiative,User Testing and Validation,3.5,manager,2025-03-21,
-7,1,Initiative,User Testing and Validation,3.5,manager,2025-03-21,
-8,1,Personal Development,Influence,2.5,manager,2025-03-21,
-9,1,Collaboration,Cross-Functional Collaboration,3.5,manager,2025-03-21,
-10,1,Communication,Competitive Analysis,3.0,manager,2025-03-21,
-11,1,Open Minded,Resource Management and Operations,2.5,manager,2025-03-21,
-12,2,Expertise,Visual Design,3.5,manager,2025-03-21,
-15,2,Continuous Improvement,Design Systems and A11y,3.5,manager,2025-03-21,
-16,2,Accountability,UX Strategy,3.0,manager,2025-03-21,
-17,2,Initiative,User Testing and Validation,3.5,manager,2025-03-21,
-18,2,Personal Development,Influence,2.5,manager,2025-03-21,
-19,2,Collaboration,Cross-Functional Collaboration,3.5,manager,2025-03-21,
-20,2,Communication,Competitive Analysis,3.5,manager,2025-03-21,
-21,2,Communication,Competitive Analysis,3.5,manager,2025-03-21,
-22,2,Open Minded,Resource Management and Operations,2.5,manager,2025-03-21,
-23,8,Expertise,Visual Design,2.5,self,2025-03-21,
-26,8,Continuous Improvement,Design Systems and A11y,3.5,self,2025-03-21,
-27,8,Accountability,UX Strategy,3.0,self,2025-03-21,
-28,8,Initiative,User Testing and Validation,3.5,self,2025-03-21,
-29,8,Personal Development,Influence,3.5,self,2025-03-21,
-30,8,Collaboration,Cross-Functional Collaboration,3.5,self,2025-03-21,
-31,8,Collaboration,Cross-Functional Collaboration,3.5,self,2025-03-21,
-32,8,Communication,Competitive Analysis,3.5,self,2025-03-21,
-33,8,Communication,Competitive Analysis,4.0,self,2025-03-21,
-34,8,Open Minded,Resource Management and Operations,3.5,self,2025-03-21,
-35,8,Expertise,Visual Design,3.0,manager,2025-03-21,
-38,8,Continuous Improvement,Design Systems and A11y,3.5,manager,2025-03-21,
-39,8,Accountability,UX Strategy,2.5,manager,2025-03-21,
-40,8,Initiative,User Testing and Validation,2.5,manager,2025-03-21,
-41,8,Personal Development,Influence,3.5,manager,2025-03-21,
-42,8,Personal Development,Influence,3.5,manager,2025-03-21,
-43,8,Collaboration,Cross-Functional Collaboration,2.5,manager,2025-03-21,
-44,8,Communication,Competitive Analysis,3.0,manager,2025-03-21,
-45,8,Collaboration,Cross-Functional Collaboration,3.0,manager,2025-03-21,
-46,8,Open Minded,Resource Management and Operations,3.0,manager,2025-03-21,
-47,8,Expertise,Visual Design,2.5,manager,2025-03-21,
-48,8,Decision Making,Interaction Design,1.5,manager,2025-03-21,
-49,8,Continuous Improvement,Design Systems and A11y,1.5,manager,2025-03-21,
-50,8,Accountability,UX Strategy,2.0,manager,2025-03-21,
-51,8,Initiative,User Testing and Validation,2.5,manager,2025-03-21,
-52,8,Personal Development,Influence,2.5,manager,2025-03-21,
-53,8,Collaboration,Cross-Functional Collaboration,2.0,manager,2025-03-21,
-54,8,Communication,Competitive Analysis,1.5,manager,2025-03-21,
-55,8,Open Minded,Resource Management and Operations,1.5,manager,2025-03-21,
-56,8,Expertise,Visual Design,1.5,self,2025-03-21,
-57,8,Decision Making,Interaction Design,1.5,self,2025-03-21,
-58,8,Continuous Improvement,Design Systems and A11y,1.5,self,2025-03-21,
-59,8,Accountability,UX Strategy,2.0,self,2025-03-21,
-60,8,Initiative,User Testing and Validation,2.5,self,2025-03-21,
-61,8,Initiative,User Testing and Validation,2.0,self,2025-03-21,
-62,8,Personal Development,Influence,2.0,self,2025-03-21,
-63,8,Collaboration,Cross-Functional Collaboration,2.5,self,2025-03-21,
-64,8,Communication,Competitive Analysis,2.0,self,2025-03-21,
-65,8,Open Minded,Resource Management and Operations,2.0,self,2025-03-21,nan
+1,1,Expertise,Visual Design,4.5,self,2025-03-21,Self assessment for Visual Design
+2,1,Decision Making,Interaction Design,3.1,self,2025-03-21,Self assessment for Interaction Design
+3,1,Continuous Improvement,Design Systems and A11y,2.3,self,2025-03-21,Self assessment for Design Systems and A11y
+4,1,Accountability,UX Strategy,4.2,self,2025-03-21,Self assessment for UX Strategy
+5,1,Initiative,User Testing and Validation,5.0,self,2025-03-21,Self assessment for User Testing and Validation
+6,1,Personal Development,Influence,4.7,self,2025-03-21,Self assessment for Influence
+7,1,Collaboration,Cross-Functional Collaboration,3.9,self,2025-03-21,Self assessment for Cross-Functional Collaboration
+8,1,Communication,Competitive Analysis,4.6,self,2025-03-21,Self assessment for Competitive Analysis
+9,1,Open Minded,Resource Management and Operations,4.0,self,2025-03-21,Self assessment for Resource Management and Operations
+10,1,Expertise,Visual Design,4.5,manager,2025-03-21,Manager assessment for Visual Design
+11,1,Decision Making,Interaction Design,3.6,manager,2025-03-21,Manager assessment for Interaction Design
+12,1,Continuous Improvement,Design Systems and A11y,4.5,manager,2025-03-21,Manager assessment for Design Systems and A11y
+13,1,Accountability,UX Strategy,4.5,manager,2025-03-21,Manager assessment for UX Strategy
+14,1,Initiative,User Testing and Validation,4.5,manager,2025-03-21,Manager assessment for User Testing and Validation
+15,1,Personal Development,Influence,4.8,manager,2025-03-21,Manager assessment for Influence
+16,1,Collaboration,Cross-Functional Collaboration,3.6,manager,2025-03-21,Manager assessment for Cross-Functional Collaboration
+17,1,Communication,Competitive Analysis,4.4,manager,2025-03-21,Manager assessment for Competitive Analysis
+18,1,Open Minded,Resource Management and Operations,3.8,manager,2025-03-21,Manager assessment for Resource Management and Operations
+19,2,Expertise,Visual Design,4.6,self,2025-03-21,Self assessment for Visual Design
+20,2,Decision Making,Interaction Design,4.1,self,2025-03-21,Self assessment for Interaction Design
+21,2,Continuous Improvement,Design Systems and A11y,3.6,self,2025-03-21,Self assessment for Design Systems and A11y
+22,2,Accountability,UX Strategy,2.6,self,2025-03-21,Self assessment for UX Strategy
+23,2,Initiative,User Testing and Validation,3.8,self,2025-03-21,Self assessment for User Testing and Validation
+24,2,Personal Development,Influence,4.0,self,2025-03-21,Self assessment for Influence
+25,2,Collaboration,Cross-Functional Collaboration,4.2,self,2025-03-21,Self assessment for Cross-Functional Collaboration
+26,2,Communication,Competitive Analysis,5.0,self,2025-03-21,Self assessment for Competitive Analysis
+27,2,Open Minded,Resource Management and Operations,5.0,self,2025-03-21,Self assessment for Resource Management and Operations
+28,3,Expertise,Visual Design,2.9,self,2025-03-21,Self assessment for Visual Design
+29,3,Decision Making,Interaction Design,2.4,self,2025-03-21,Self assessment for Interaction Design
+30,3,Continuous Improvement,Design Systems and A11y,2.1,self,2025-03-21,Self assessment for Design Systems and A11y
+31,3,Accountability,UX Strategy,2.5,self,2025-03-21,Self assessment for UX Strategy
+32,3,Initiative,User Testing and Validation,2.7,self,2025-03-21,Self assessment for User Testing and Validation
+33,3,Personal Development,Influence,2.6,self,2025-03-21,Self assessment for Influence
+34,3,Collaboration,Cross-Functional Collaboration,3.2,self,2025-03-21,Self assessment for Cross-Functional Collaboration
+35,3,Communication,Competitive Analysis,2.5,self,2025-03-21,Self assessment for Competitive Analysis
+36,3,Open Minded,Resource Management and Operations,2.2,self,2025-03-21,Self assessment for Resource Management and Operations
+37,4,Expertise,Visual Design,4.2,self,2025-03-21,Self assessment for Visual Design
+38,4,Decision Making,Interaction Design,3.7,self,2025-03-21,Self assessment for Interaction Design
+39,4,Continuous Improvement,Design Systems and A11y,3.7,self,2025-03-21,Self assessment for Design Systems and A11y
+40,4,Accountability,UX Strategy,3.7,self,2025-03-21,Self assessment for UX Strategy
+41,4,Initiative,User Testing and Validation,3.4,self,2025-03-21,Self assessment for User Testing and Validation
+42,4,Personal Development,Influence,4.8,self,2025-03-21,Self assessment for Influence
+43,4,Collaboration,Cross-Functional Collaboration,3.6,self,2025-03-21,Self assessment for Cross-Functional Collaboration
+44,4,Communication,Competitive Analysis,2.9,self,2025-03-21,Self assessment for Competitive Analysis
+45,4,Open Minded,Resource Management and Operations,3.5,self,2025-03-21,Self assessment for Resource Management and Operations
+46,4,Expertise,Visual Design,2.7,manager,2025-03-21,Manager assessment for Visual Design
+47,4,Decision Making,Interaction Design,3.3,manager,2025-03-21,Manager assessment for Interaction Design
+48,4,Continuous Improvement,Design Systems and A11y,4.3,manager,2025-03-21,Manager assessment for Design Systems and A11y
+49,4,Accountability,UX Strategy,3.4,manager,2025-03-21,Manager assessment for UX Strategy
+50,4,Initiative,User Testing and Validation,2.9,manager,2025-03-21,Manager assessment for User Testing and Validation
+51,4,Personal Development,Influence,5.0,manager,2025-03-21,Manager assessment for Influence
+52,4,Collaboration,Cross-Functional Collaboration,3.1,manager,2025-03-21,Manager assessment for Cross-Functional Collaboration
+53,4,Communication,Competitive Analysis,5.0,manager,2025-03-21,Manager assessment for Competitive Analysis
+54,4,Open Minded,Resource Management and Operations,4.0,manager,2025-03-21,Manager assessment for Resource Management and Operations
+55,5,Expertise,Visual Design,3.8,self,2025-03-21,Self assessment for Visual Design
+56,5,Decision Making,Interaction Design,3.3,self,2025-03-21,Self assessment for Interaction Design
+57,5,Continuous Improvement,Design Systems and A11y,4.2,self,2025-03-21,Self assessment for Design Systems and A11y
+58,5,Accountability,UX Strategy,2.9,self,2025-03-21,Self assessment for UX Strategy
+59,5,Initiative,User Testing and Validation,3.3,self,2025-03-21,Self assessment for User Testing and Validation
+60,5,Personal Development,Influence,4.1,self,2025-03-21,Self assessment for Influence
+61,5,Collaboration,Cross-Functional Collaboration,5.0,self,2025-03-21,Self assessment for Cross-Functional Collaboration
+62,5,Communication,Competitive Analysis,4.4,self,2025-03-21,Self assessment for Competitive Analysis
+63,5,Open Minded,Resource Management and Operations,3.4,self,2025-03-21,Self assessment for Resource Management and Operations
+64,6,Expertise,Visual Design,5.0,self,2025-03-21,Self assessment for Visual Design
+65,6,Decision Making,Interaction Design,4.1,self,2025-03-21,Self assessment for Interaction Design
+66,6,Continuous Improvement,Design Systems and A11y,2.9,self,2025-03-21,Self assessment for Design Systems and A11y
+67,6,Accountability,UX Strategy,3.1,self,2025-03-21,Self assessment for UX Strategy
+68,6,Initiative,User Testing and Validation,4.3,self,2025-03-21,Self assessment for User Testing and Validation
+69,6,Personal Development,Influence,3.8,self,2025-03-21,Self assessment for Influence
+70,6,Collaboration,Cross-Functional Collaboration,3.0,self,2025-03-21,Self assessment for Cross-Functional Collaboration
+71,6,Communication,Competitive Analysis,4.6,self,2025-03-21,Self assessment for Competitive Analysis
+72,6,Open Minded,Resource Management and Operations,3.4,self,2025-03-21,Self assessment for Resource Management and Operations
+73,6,Expertise,Visual Design,3.6,manager,2025-03-21,Manager assessment for Visual Design
+74,6,Decision Making,Interaction Design,3.4,manager,2025-03-21,Manager assessment for Interaction Design
+75,6,Continuous Improvement,Design Systems and A11y,2.7,manager,2025-03-21,Manager assessment for Design Systems and A11y
+76,6,Accountability,UX Strategy,2.9,manager,2025-03-21,Manager assessment for UX Strategy
+77,6,Initiative,User Testing and Validation,3.8,manager,2025-03-21,Manager assessment for User Testing and Validation
+78,6,Personal Development,Influence,4.0,manager,2025-03-21,Manager assessment for Influence
+79,6,Collaboration,Cross-Functional Collaboration,3.6,manager,2025-03-21,Manager assessment for Cross-Functional Collaboration
+80,6,Communication,Competitive Analysis,4.0,manager,2025-03-21,Manager assessment for Competitive Analysis
+81,6,Open Minded,Resource Management and Operations,3.1,manager,2025-03-21,Manager assessment for Resource Management and Operations
+82,7,Expertise,Visual Design,2.5,self,2025-03-21,Self assessment for Visual Design
+83,7,Decision Making,Interaction Design,3.5,self,2025-03-21,Self assessment for Interaction Design
+84,7,Continuous Improvement,Design Systems and A11y,5.0,self,2025-03-21,Self assessment for Design Systems and A11y
+85,7,Accountability,UX Strategy,3.1,self,2025-03-21,Self assessment for UX Strategy
+86,7,Initiative,User Testing and Validation,4.2,self,2025-03-21,Self assessment for User Testing and Validation
+87,7,Personal Development,Influence,3.8,self,2025-03-21,Self assessment for Influence
+88,7,Collaboration,Cross-Functional Collaboration,3.6,self,2025-03-21,Self assessment for Cross-Functional Collaboration
+89,7,Communication,Competitive Analysis,4.2,self,2025-03-21,Self assessment for Competitive Analysis
+90,7,Open Minded,Resource Management and Operations,3.2,self,2025-03-21,Self assessment for Resource Management and Operations
+91,7,Expertise,Visual Design,4.6,manager,2025-03-21,Manager assessment for Visual Design
+92,7,Decision Making,Interaction Design,4.2,manager,2025-03-21,Manager assessment for Interaction Design
+93,7,Continuous Improvement,Design Systems and A11y,3.9,manager,2025-03-21,Manager assessment for Design Systems and A11y
+94,7,Accountability,UX Strategy,4.4,manager,2025-03-21,Manager assessment for UX Strategy
+95,7,Initiative,User Testing and Validation,4.1,manager,2025-03-21,Manager assessment for User Testing and Validation
+96,7,Personal Development,Influence,4.8,manager,2025-03-21,Manager assessment for Influence
+97,7,Collaboration,Cross-Functional Collaboration,2.7,manager,2025-03-21,Manager assessment for Cross-Functional Collaboration
+98,7,Communication,Competitive Analysis,3.8,manager,2025-03-21,Manager assessment for Competitive Analysis
+99,7,Open Minded,Resource Management and Operations,3.4,manager,2025-03-21,Manager assessment for Resource Management and Operations
+100,8,Expertise,Visual Design,2.3,self,2025-03-21,Self assessment for Visual Design
+101,8,Decision Making,Interaction Design,2.7,self,2025-03-21,Self assessment for Interaction Design
+102,8,Continuous Improvement,Design Systems and A11y,1.3,self,2025-03-21,Self assessment for Design Systems and A11y
+103,8,Accountability,UX Strategy,1.7,self,2025-03-21,Self assessment for UX Strategy
+104,8,Initiative,User Testing and Validation,2.0,self,2025-03-21,Self assessment for User Testing and Validation
+105,8,Personal Development,Influence,1.0,self,2025-03-21,Self assessment for Influence
+106,8,Collaboration,Cross-Functional Collaboration,2.4,self,2025-03-21,Self assessment for Cross-Functional Collaboration
+107,8,Communication,Competitive Analysis,1.0,self,2025-03-21,Self assessment for Competitive Analysis
+108,8,Open Minded,Resource Management and Operations,3.0,self,2025-03-21,Self assessment for Resource Management and Operations
+109,8,Expertise,Visual Design,3.6,manager,2025-03-21,Manager assessment for Visual Design
+110,8,Decision Making,Interaction Design,1.3,manager,2025-03-21,Manager assessment for Interaction Design
+111,8,Continuous Improvement,Design Systems and A11y,1.7,manager,2025-03-21,Manager assessment for Design Systems and A11y
+112,8,Accountability,UX Strategy,1.6,manager,2025-03-21,Manager assessment for UX Strategy
+113,8,Initiative,User Testing and Validation,1.1,manager,2025-03-21,Manager assessment for User Testing and Validation
+114,8,Personal Development,Influence,3.8,manager,2025-03-21,Manager assessment for Influence
+115,8,Collaboration,Cross-Functional Collaboration,2.8,manager,2025-03-21,Manager assessment for Cross-Functional Collaboration
+116,8,Communication,Competitive Analysis,1.0,manager,2025-03-21,Manager assessment for Competitive Analysis
+117,8,Open Minded,Resource Management and Operations,1.0,manager,2025-03-21,Manager assessment for Resource Management and Operations
