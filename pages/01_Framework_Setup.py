@@ -140,49 +140,67 @@ with tab1:
                     st.session_state.show_add_skill_form = False
                     st.rerun()
     
-    # View existing competencies and skills with edit/delete options
-    st.subheader("Existing Competencies & Skills")
+    # View existing competencies with edit/delete options
+    st.subheader("Existing Competencies")
     competencies_df = load_data("competencies")
     skills_df = load_data("skills")
     
     # Display management instructions
-    st.info("Expand a competency to view, edit, or delete its details and associated skills.")
+    st.info("Use the table below to manage competencies and skills.")
     
     if not competencies_df.empty:
+        # Display competencies in a table format
+        
+        # Display headers
+        header_cols = st.columns([3, 5, 1, 1])
+        with header_cols[0]:
+            st.markdown("**Name**")
+        with header_cols[1]:
+            st.markdown("**Description**")
+        with header_cols[2]:
+            st.markdown("**Edit**")
+        with header_cols[3]:
+            st.markdown("**Delete**")
+        
+        st.markdown("---")
+        
+        # Display each competency row
         for _, comp_row in competencies_df.iterrows():
             comp_id = comp_row["competency_id"]
-            with st.expander(f"{comp_row['name']} (ID: {comp_id})"):
-                # Create columns for competency actions
-                comp_col1, comp_col2, comp_col3 = st.columns([2, 1, 1])
-                
-                with comp_col1:
-                    st.write(f"**Description:** {comp_row['description']}")
-                
-                with comp_col2:
-                    # Edit competency button
-                    if st.button(f"Edit Competency #{comp_id}", key=f"edit_comp_{comp_id}"):
-                        # Set session state to store the competency being edited
-                        st.session_state[f"edit_comp_id_{comp_id}"] = True
-                
-                with comp_col3:
-                    # Delete competency button
-                    if st.button(f"Delete Competency #{comp_id}", key=f"del_comp_{comp_id}"):
-                        success, message = delete_competency(comp_id)
-                        if success:
-                            st.success(message)
-                            st.rerun()
-                        else:
-                            st.error(message)
-                
-                # Display edit form if the edit button was clicked
-                if st.session_state.get(f"edit_comp_id_{comp_id}", False):
+            comp_cols = st.columns([3, 5, 1, 1])
+            
+            with comp_cols[0]:
+                st.write(f"{comp_row['name']} (ID: {comp_id})")
+            
+            with comp_cols[1]:
+                st.write(f"{comp_row['description']}")
+            
+            with comp_cols[2]:
+                # Edit competency button
+                if st.button("✏️", key=f"edit_comp_{comp_id}"):
+                    # Set session state to store the competency being edited
+                    st.session_state[f"edit_comp_id_{comp_id}"] = True
+            
+            with comp_cols[3]:
+                # Delete competency button
+                if st.button("🗑️", key=f"del_comp_{comp_id}"):
+                    success, message = delete_competency(comp_id)
+                    if success:
+                        st.success(message)
+                        st.rerun()
+                    else:
+                        st.error(message)
+            
+            # Display edit form if the edit button was clicked
+            if st.session_state.get(f"edit_comp_id_{comp_id}", False):
+                with st.container(border=True):
                     st.markdown("### Edit Competency")
                     new_name = st.text_input("Name", value=comp_row["name"], key=f"comp_name_{comp_id}")
                     new_desc = st.text_area("Description", value=comp_row["description"], key=f"comp_desc_{comp_id}")
                     
-                    edit_col1, edit_col2 = st.columns([1, 1])
+                    edit_col1, edit_col2 = st.columns([1, 5])
                     with edit_col1:
-                        if st.button("Save Changes", key=f"save_comp_{comp_id}"):
+                        if st.button("Save", type="primary", key=f"save_comp_{comp_id}"):
                             success, message = update_competency(comp_id, new_name, new_desc)
                             if success:
                                 st.success(message)
@@ -197,62 +215,94 @@ with tab1:
                             # Clear the editing state
                             st.session_state.pop(f"edit_comp_id_{comp_id}", None)
                             st.rerun()
+        
+        # Skills section
+        st.subheader("Skills by Competency")
+        
+        # Create selection for competency
+        selected_comp_id = st.selectbox(
+            "Select Competency to View Skills", 
+            competencies_df["competency_id"].tolist(),
+            format_func=lambda x: competencies_df[competencies_df["competency_id"] == x]["name"].iloc[0]
+        )
+        
+        # Get selected competency name
+        selected_comp_name = competencies_df[competencies_df["competency_id"] == selected_comp_id]["name"].iloc[0]
+        
+        st.markdown(f"#### Skills for: {selected_comp_name}")
+        
+        # Get skills for selected competency
+        comp_skills = get_competency_skills(selected_comp_id)
+        
+        if not comp_skills.empty:
+            # Display skills in a table format
+            
+            # Display headers
+            skill_header_cols = st.columns([3, 5, 1, 1])
+            with skill_header_cols[0]:
+                st.markdown("**Skill Name**")
+            with skill_header_cols[1]:
+                st.markdown("**Description**")
+            with skill_header_cols[2]:
+                st.markdown("**Edit**")
+            with skill_header_cols[3]:
+                st.markdown("**Delete**")
+            
+            st.markdown("---")
+            
+            # Display each skill row
+            for _, skill_row in comp_skills.iterrows():
+                skill_id = skill_row["skill_id"]
+                skill_cols = st.columns([3, 5, 1, 1])
                 
-                st.markdown("---")
-                st.write("**Skills:**")
+                with skill_cols[0]:
+                    st.write(f"{skill_row['name']}")
                 
-                comp_skills = get_competency_skills(comp_id)
-                if not comp_skills.empty:
-                    # Create a table-like display for skills with actions
-                    for _, skill_row in comp_skills.iterrows():
-                        skill_id = skill_row["skill_id"]
-                        skill_col1, skill_col2, skill_col3 = st.columns([3, 1, 1])
+                with skill_cols[1]:
+                    st.write(f"{skill_row['description']}")
+                
+                with skill_cols[2]:
+                    # Edit skill button
+                    if st.button("✏️", key=f"edit_skill_{skill_id}"):
+                        # Set session state to store the skill being edited
+                        st.session_state[f"edit_skill_id_{skill_id}"] = True
+                
+                with skill_cols[3]:
+                    # Delete skill button
+                    if st.button("🗑️", key=f"del_skill_{skill_id}"):
+                        success, message = delete_skill(skill_id)
+                        if success:
+                            st.success(message)
+                            st.rerun()
+                        else:
+                            st.error(message)
+                
+                # Display edit form if the edit button was clicked
+                if st.session_state.get(f"edit_skill_id_{skill_id}", False):
+                    with st.container(border=True):
+                        st.markdown("### Edit Skill")
+                        new_skill_name = st.text_input("Name", value=skill_row["name"], key=f"skill_name_{skill_id}")
+                        new_skill_desc = st.text_area("Description", value=skill_row["description"], key=f"skill_desc_{skill_id}")
                         
-                        with skill_col1:
-                            st.write(f"**{skill_row['name']}**: {skill_row['description']}")
-                        
-                        with skill_col2:
-                            # Edit skill button
-                            if st.button(f"Edit", key=f"edit_skill_{skill_id}"):
-                                st.session_state[f"edit_skill_id_{skill_id}"] = True
-                        
-                        with skill_col3:
-                            # Delete skill button
-                            if st.button(f"Delete", key=f"del_skill_{skill_id}"):
-                                success, message = delete_skill(skill_id)
+                        skill_edit_col1, skill_edit_col2 = st.columns([1, 5])
+                        with skill_edit_col1:
+                            if st.button("Save", type="primary", key=f"save_skill_{skill_id}"):
+                                success, message = update_skill(skill_id, new_skill_name, new_skill_desc)
                                 if success:
                                     st.success(message)
+                                    # Clear the editing state
+                                    st.session_state.pop(f"edit_skill_id_{skill_id}", None)
                                     st.rerun()
                                 else:
                                     st.error(message)
                         
-                        # Display edit form if the edit button was clicked
-                        if st.session_state.get(f"edit_skill_id_{skill_id}", False):
-                            st.markdown("### Edit Skill")
-                            new_skill_name = st.text_input("Name", value=skill_row["name"], key=f"skill_name_{skill_id}")
-                            new_skill_desc = st.text_area("Description", value=skill_row["description"], key=f"skill_desc_{skill_id}")
-                            
-                            skill_edit_col1, skill_edit_col2 = st.columns([1, 1])
-                            with skill_edit_col1:
-                                if st.button("Save Changes", key=f"save_skill_{skill_id}"):
-                                    success, message = update_skill(skill_id, new_skill_name, new_skill_desc)
-                                    if success:
-                                        st.success(message)
-                                        # Clear the editing state
-                                        st.session_state.pop(f"edit_skill_id_{skill_id}", None)
-                                        st.rerun()
-                                    else:
-                                        st.error(message)
-                            
-                            with skill_edit_col2:
-                                if st.button("Cancel", key=f"cancel_skill_{skill_id}"):
-                                    # Clear the editing state
-                                    st.session_state.pop(f"edit_skill_id_{skill_id}", None)
-                                    st.rerun()
-                        
-                        st.markdown("---")
-                else:
-                    st.write("No skills added yet.")
+                        with skill_edit_col2:
+                            if st.button("Cancel", key=f"cancel_skill_{skill_id}"):
+                                # Clear the editing state
+                                st.session_state.pop(f"edit_skill_id_{skill_id}", None)
+                                st.rerun()
+        else:
+            st.info(f"No skills added yet for the {selected_comp_name} competency.")
     else:
         st.info("No competencies added yet.")
 
@@ -306,70 +356,72 @@ with tab2:
     
     if not levels_df.empty:
         # Display management instructions
-        st.info("Select a job level to edit or delete")
+        st.info("Use the table below to manage job levels.")
         
-        # Create a selection box for job levels
-        level_options = [(row["level_id"], f"{row['name']} (ID: {row['level_id']})") for _, row in levels_df.iterrows()]
-        level_labels = [l[1] for l in level_options]
-        level_ids = [l[0] for l in level_options]
+        # Display headers
+        header_cols = st.columns([3, 5, 1, 1])
+        with header_cols[0]:
+            st.markdown("**Name**")
+        with header_cols[1]:
+            st.markdown("**Description**")
+        with header_cols[2]:
+            st.markdown("**Edit**")
+        with header_cols[3]:
+            st.markdown("**Delete**")
         
-        if level_labels:
-            selected_level_label = st.selectbox("Select Job Level", level_labels, key="select_level_to_manage")
-            selected_idx = level_labels.index(selected_level_label)
-            selected_level_id = level_ids[selected_idx]
+        st.markdown("---")
+        
+        # Display each level row
+        for _, level_row in levels_df.iterrows():
+            level_id = level_row["level_id"]
+            level_cols = st.columns([3, 5, 1, 1])
             
-            # Get the selected level details
-            selected_level = levels_df[levels_df["level_id"] == selected_level_id].iloc[0]
+            with level_cols[0]:
+                st.write(f"{level_row['name']} (ID: {level_id})")
             
-            # Display the level details in a container
-            with st.container(border=True):
-                st.write(f"**Name:** {selected_level['name']}")
-                st.write(f"**Description:** {selected_level['description']}")
-                
-                # Create action buttons
-                action_col1, action_col2 = st.columns([1, 1])
-                
-                with action_col1:
-                    if st.button("Edit Job Level", key=f"edit_level_{selected_level_id}"):
-                        st.session_state[f"edit_level_id_{selected_level_id}"] = True
-                
-                with action_col2:
-                    if st.button("Delete Job Level", key=f"del_level_{selected_level_id}"):
-                        success, message = delete_job_level(selected_level_id)
-                        if success:
-                            st.success(message)
-                            st.rerun()
-                        else:
-                            st.error(message)
+            with level_cols[1]:
+                st.write(f"{level_row['description']}")
             
-            # Edit form
-            if st.session_state.get(f"edit_level_id_{selected_level_id}", False):
+            with level_cols[2]:
+                # Edit level button
+                if st.button("✏️", key=f"edit_level_{level_id}"):
+                    # Set session state to store the level being edited
+                    st.session_state[f"edit_level_id_{level_id}"] = True
+            
+            with level_cols[3]:
+                # Delete level button
+                if st.button("🗑️", key=f"del_level_{level_id}"):
+                    success, message = delete_job_level(level_id)
+                    if success:
+                        st.success(message)
+                        st.rerun()
+                    else:
+                        st.error(message)
+            
+            # Display edit form if the edit button was clicked
+            if st.session_state.get(f"edit_level_id_{level_id}", False):
                 with st.container(border=True):
                     st.markdown("### Edit Job Level")
-                    new_name = st.text_input("Name", value=selected_level["name"], key=f"level_name_{selected_level_id}")
-                    new_desc = st.text_area("Description", value=selected_level["description"], key=f"level_desc_{selected_level_id}")
+                    new_name = st.text_input("Name", value=level_row["name"], key=f"level_name_{level_id}")
+                    new_desc = st.text_area("Description", value=level_row["description"], key=f"level_desc_{level_id}")
                     
                     edit_col1, edit_col2 = st.columns([1, 5])
                     with edit_col1:
-                        if st.button("Save Changes", type="primary", key=f"save_level_{selected_level_id}"):
-                            success, message = update_job_level(selected_level_id, new_name, new_desc)
+                        if st.button("Save", type="primary", key=f"save_level_{level_id}"):
+                            success, message = update_job_level(level_id, new_name, new_desc)
                             if success:
                                 st.success(message)
                                 # Clear the editing state
-                                st.session_state.pop(f"edit_level_id_{selected_level_id}", None)
+                                st.session_state.pop(f"edit_level_id_{level_id}", None)
                                 st.rerun()
                             else:
                                 st.error(message)
                     
                     with edit_col2:
-                        if st.button("Cancel", key=f"cancel_level_{selected_level_id}"):
+                        if st.button("Cancel", key=f"cancel_level_{level_id}"):
                             # Clear the editing state
-                            st.session_state.pop(f"edit_level_id_{selected_level_id}", None)
+                            st.session_state.pop(f"edit_level_id_{level_id}", None)
                             st.rerun()
-        
-        # Also show a table of all levels for reference
-        st.markdown("### All Job Levels")
-        st.dataframe(levels_df[["level_id", "name", "description"]])
     else:
         st.info("No job levels added yet.")
 
