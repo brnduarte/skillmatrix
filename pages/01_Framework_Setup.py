@@ -145,6 +145,21 @@ with tab1:
     competencies_df = load_data("competencies")
     skills_df = load_data("skills")
     
+    # Add filter options
+    filter_col1, filter_col2, filter_col3 = st.columns([1, 1, 1])
+    with filter_col1:
+        filter_type = st.selectbox("Filter By", ["All Competencies", "Search by Name"], key="competency_filter_type")
+    
+    with filter_col2:
+        if filter_type == "Search by Name":
+            search_term = st.text_input("Enter competency name", key="competency_search")
+            if search_term:
+                filtered_comp_df = competencies_df[competencies_df["name"].str.contains(search_term, case=False)]
+            else:
+                filtered_comp_df = competencies_df
+        else:
+            filtered_comp_df = competencies_df
+    
     # Display management instructions
     st.info("Use the table below to manage competencies and skills.")
     
@@ -164,8 +179,8 @@ with tab1:
         
         st.markdown("---")
         
-        # Display each competency row
-        for _, comp_row in competencies_df.iterrows():
+        # Display each competency row (filtered)
+        for _, comp_row in filtered_comp_df.iterrows():
             comp_id = comp_row["competency_id"]
             comp_cols = st.columns([3, 5, 1, 1])
             
@@ -234,6 +249,16 @@ with tab1:
         # Get skills for selected competency
         comp_skills = get_competency_skills(selected_comp_id)
         
+        # Add skill filter
+        if not comp_skills.empty:
+            search_skill = st.text_input("Search skills by name", key="skill_search")
+            if search_skill:
+                filtered_skills = comp_skills[comp_skills["name"].str.contains(search_skill, case=False)]
+            else:
+                filtered_skills = comp_skills
+        else:
+            filtered_skills = comp_skills
+        
         if not comp_skills.empty:
             # Display skills in a table format
             
@@ -250,8 +275,8 @@ with tab1:
             
             st.markdown("---")
             
-            # Display each skill row
-            for _, skill_row in comp_skills.iterrows():
+            # Display each skill row (filtered)
+            for _, skill_row in filtered_skills.iterrows():
                 skill_id = skill_row["skill_id"]
                 skill_cols = st.columns([3, 5, 1, 1])
                 
