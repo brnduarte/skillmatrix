@@ -510,6 +510,10 @@ def display_organization_selector():
                 st.rerun()
 
 # Application flow
+# First, check for invitation tokens
+handle_invitation()
+
+# Regular application flow
 if not st.session_state.authenticated:
     display_login()
 elif not st.session_state.get("organization_selected", False):
