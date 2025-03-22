@@ -281,9 +281,17 @@ def set_competency_expectation(job_level, competency, expected_score):
     save_data("comp_expectations", comp_expectations_df)
     return True, "Competency expectation set successfully"
 
-def add_assessment(employee_id, competency, skill, score, assessment_type, notes=""):
+def add_assessment(employee_id, competency, skill, score, assessment_type, notes="", organization_id=None):
     """Add a new skill assessment"""
     assessments_df = load_data("assessments")
+    
+    # Get employee's organization if not provided
+    if organization_id is None and employee_id is not None:
+        employees_df = load_data("employees")
+        if not employees_df.empty:
+            employee = employees_df[employees_df["employee_id"] == employee_id]
+            if not employee.empty and "organization_id" in employee.columns:
+                organization_id = employee.iloc[0].get("organization_id")
     
     # Generate new assessment ID
     if assessments_df.empty:
@@ -300,7 +308,8 @@ def add_assessment(employee_id, competency, skill, score, assessment_type, notes
         "score": [score],
         "assessment_type": [assessment_type],
         "assessment_date": [datetime.now().strftime("%Y-%m-%d")],
-        "notes": [notes]
+        "notes": [notes],
+        "organization_id": [organization_id]
     })
     
     assessments_df = pd.concat([assessments_df, new_assessment], ignore_index=True)
@@ -1105,19 +1114,38 @@ def update_csv_structure(data_type, add_columns):
         return False, f"Error updating {data_type} structure: {str(e)}"
 
 def update_schema_for_organizations():
-    """Update the schema of employees, competencies, and job levels to include organization_id"""
+    """Update the schema of all relevant data types to include organization_id field
+    
+    This ensures all data structures can be properly associated with an organization.
+    """
     results = []
     
-    # Update employees schema
+    # Primary entity schemas
     success, message = update_csv_structure("employees", {"organization_id": None})
     results.append(f"Employees: {message}")
     
-    # Update competencies schema
     success, message = update_csv_structure("competencies", {"organization_id": None})
     results.append(f"Competencies: {message}")
     
-    # Update job levels schema
     success, message = update_csv_structure("levels", {"organization_id": None})
     results.append(f"Job Levels: {message}")
+    
+    # Assessment schemas
+    success, message = update_csv_structure("assessments", {"organization_id": None})
+    results.append(f"Skill Assessments: {message}")
+    
+    success, message = update_csv_structure("comp_assessments", {"organization_id": None})
+    results.append(f"Competency Assessments: {message}")
+    
+    # Expectation schemas
+    success, message = update_csv_structure("expectations", {"organization_id": None})
+    results.append(f"Skill Expectations: {message}")
+    
+    success, message = update_csv_structure("comp_expectations", {"organization_id": None})
+    results.append(f"Competency Expectations: {message}")
+    
+    # Skills schema (linked through competencies)
+    success, message = update_csv_structure("skills", {"organization_id": None})
+    results.append(f"Skills: {message}")
     
     return results
