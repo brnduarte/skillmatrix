@@ -45,13 +45,13 @@ def load_data(data_type):
         if data_type == "users":
             return pd.DataFrame(columns=["username", "password", "role", "name", "email"])
         elif data_type == "employees":
-            return pd.DataFrame(columns=["employee_id", "name", "email", "job_title", "job_level", "department", "manager_id", "hire_date"])
+            return pd.DataFrame(columns=["employee_id", "name", "email", "job_title", "job_level", "department", "manager_id", "organization_id", "hire_date"])
         elif data_type == "competencies":
-            return pd.DataFrame(columns=["competency_id", "name", "description"])
+            return pd.DataFrame(columns=["competency_id", "name", "description", "organization_id"])
         elif data_type == "skills":
             return pd.DataFrame(columns=["skill_id", "competency_id", "name", "description"])
         elif data_type == "levels":
-            return pd.DataFrame(columns=["level_id", "name", "description"])
+            return pd.DataFrame(columns=["level_id", "name", "description", "organization_id"])
         elif data_type == "expectations":
             return pd.DataFrame(columns=["job_level", "competency", "skill", "expected_score"])
         elif data_type == "comp_expectations":
@@ -125,7 +125,7 @@ def add_employee(name, email, job_title, job_level, department, manager_id, orga
     save_data("employees", employees_df)
     return True, "Employee added successfully", new_id
 
-def add_competency(name, description=""):
+def add_competency(name, description="", organization_id=None):
     """Add a new competency"""
     competencies_df = load_data("competencies")
     
@@ -139,7 +139,8 @@ def add_competency(name, description=""):
     new_competency = pd.DataFrame({
         "competency_id": [new_id],
         "name": [name],
-        "description": [description]
+        "description": [description],
+        "organization_id": [organization_id]
     })
     
     competencies_df = pd.concat([competencies_df, new_competency], ignore_index=True)
@@ -173,7 +174,7 @@ def add_skill(competency_id, name, description=""):
     save_data("skills", skills_df)
     return True, "Skill added successfully", new_id
 
-def add_job_level(name, description=""):
+def add_job_level(name, description="", organization_id=None):
     """Add a new job level"""
     levels_df = load_data("levels")
     
@@ -187,7 +188,8 @@ def add_job_level(name, description=""):
     new_level = pd.DataFrame({
         "level_id": [new_id],
         "name": [name],
-        "description": [description]
+        "description": [description],
+        "organization_id": [organization_id]
     })
     
     levels_df = pd.concat([levels_df, new_level], ignore_index=True)

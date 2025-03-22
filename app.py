@@ -140,6 +140,10 @@ def main_app():
     st.sidebar.title(f"Welcome, {st.session_state.username}")
     st.sidebar.markdown(f"**Role**: {st.session_state.user_role}")
     
+    # Display current organization
+    if st.session_state.organization_name:
+        st.sidebar.markdown(f"**Organization**: {st.session_state.organization_name}")
+    
     if st.sidebar.button("Logout"):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
@@ -255,8 +259,88 @@ def main_app():
         if st.session_state.user_role == "admin":
             st.info("Go to the Framework Setup page to get started.")
 
+# Organization selection or creation
+def display_organization_selector():
+    st.title("Select or Create Organization")
+    
+    # Import data manager functions
+    from data_manager import get_organizations, add_organization, get_user_organizations
+    
+    if st.session_state.user_role == "admin":
+        # Admins can see all organizations or create new ones
+        st.info("As an administrator, you can select an existing organization or create a new one.")
+        
+        tab1, tab2 = st.tabs(["Select Organization", "Create Organization"])
+        
+        with tab1:
+            # Get all organizations
+            orgs_df = get_organizations()
+            
+            if not orgs_df.empty:
+                org_options = list(zip(orgs_df["organization_id"].astype(str), orgs_df["name"]))
+                selected_org = st.selectbox(
+                    "Select an organization", 
+                    options=org_options,
+                    format_func=lambda x: x[1]
+                )
+                
+                if st.button("Continue with Selected Organization"):
+                    # Store the organization ID in session state
+                    st.session_state.organization_id = int(selected_org[0])
+                    st.session_state.organization_name = selected_org[1]
+                    st.session_state.organization_selected = True
+                    st.rerun()
+            else:
+                st.warning("No organizations found. Please create a new organization.")
+        
+        with tab2:
+            # Create new organization form
+            org_name = st.text_input("Organization Name")
+            
+            if st.button("Create Organization") and org_name:
+                # Add new organization
+                success, message, org_id = add_organization(org_name, st.session_state.username)
+                
+                if success:
+                    st.success(f"Organization '{org_name}' created successfully!")
+                    # Store the organization ID in session state
+                    st.session_state.organization_id = org_id
+                    st.session_state.organization_name = org_name
+                    st.session_state.organization_selected = True
+                    st.rerun()
+                else:
+                    st.error(f"Failed to create organization: {message}")
+    else:
+        # Regular users can only see their organizations
+        user_orgs = get_user_organizations(st.session_state.username)
+        
+        if not user_orgs.empty:
+            org_options = list(zip(user_orgs["organization_id"].astype(str), user_orgs["name"]))
+            selected_org = st.selectbox(
+                "Select your organization", 
+                options=org_options,
+                format_func=lambda x: x[1]
+            )
+            
+            if st.button("Continue"):
+                # Store the organization ID in session state
+                st.session_state.organization_id = int(selected_org[0])
+                st.session_state.organization_name = selected_org[1]
+                st.session_state.organization_selected = True
+                st.rerun()
+        else:
+            st.warning("You don't have access to any organizations. Please contact an administrator.")
+            
+            if st.button("Logout"):
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                initialize_session_state()
+                st.rerun()
+
 # Application flow
 if not st.session_state.authenticated:
     display_login()
+elif not st.session_state.get("organization_selected", False):
+    display_organization_selector()
 else:
     main_app()

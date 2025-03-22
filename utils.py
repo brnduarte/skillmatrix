@@ -17,6 +17,12 @@ def initialize_session_state():
         st.session_state.current_employee_id = None
     if "employee_email" not in st.session_state:
         st.session_state.employee_email = None
+    if "organization_selected" not in st.session_state:
+        st.session_state.organization_selected = False
+    if "organization_id" not in st.session_state:
+        st.session_state.organization_id = None
+    if "organization_name" not in st.session_state:
+        st.session_state.organization_name = None
 
 def authenticate_user(username, password):
     """
