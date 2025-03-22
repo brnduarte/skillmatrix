@@ -15,9 +15,13 @@ from data_manager import (
     delete_expectation, delete_competency_expectation, update_competency, update_skill, update_job_level,
     update_employee
 )
-from utils import get_current_organization_id
+from utils import get_current_organization_id, check_page_access
 from utils import check_permission
 from ui_helpers import load_custom_css
+
+# Check if user has access to this page (admin only)
+if not check_page_access(["admin"]):
+    st.stop()
 
 # Load custom CSS for consistent styling
 load_custom_css()

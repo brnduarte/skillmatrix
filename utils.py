@@ -186,3 +186,36 @@ def get_current_organization_id():
     if hasattr(st.session_state, "organization_id") and st.session_state.organization_id is not None:
         return st.session_state.organization_id
     return None
+
+def check_page_access(allowed_roles):
+    """Check if the current user has access to the page
+    
+    Args:
+        allowed_roles: List of roles that have access to the page
+        
+    Returns:
+        bool: True if the user has access, False otherwise
+    """
+    # Initialize session state if needed
+    initialize_session_state()
+    
+    # Check if user is authenticated
+    if not st.session_state.get("authenticated", False):
+        st.warning("Please log in to access this page.")
+        st.stop()
+        return False
+        
+    # Check if user has selected an organization
+    if not st.session_state.get("organization_selected", False):
+        st.warning("Please select an organization to continue.")
+        st.stop()
+        return False
+        
+    # Check if user role is allowed
+    current_role = st.session_state.get("user_role", "")
+    if current_role not in allowed_roles:
+        st.error("You don't have permission to access this page.")
+        st.stop()
+        return False
+        
+    return True

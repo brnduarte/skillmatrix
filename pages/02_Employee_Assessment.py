@@ -15,8 +15,12 @@ from data_manager import (
     add_competency_assessment, get_employee_competency_assessments,
     get_latest_competency_assessment
 )
-from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id
+from utils import check_permission, check_page_access, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id
 from ui_helpers import load_custom_css
+
+# This page is accessible to all roles: admin, manager, employee, email_user
+if not check_page_access(["admin", "manager", "employee", "email_user"]):
+    st.stop()
 
 # Load custom CSS for consistent styling
 load_custom_css()
