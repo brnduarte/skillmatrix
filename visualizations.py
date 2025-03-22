@@ -782,17 +782,17 @@ def team_heatmap(team_assessments, assessment_type="self"):
         j = all_skills.index(skill)
         heatmap_data[i, j] = total / count  # Calculate mean
     
-    # Create heatmap
+    # Create heatmap with WCAG 2.2 compliant colors
     fig = go.Figure(data=go.Heatmap(
         z=heatmap_data,
         x=all_skills,
         y=job_levels,
         colorscale=[
-            [0, "#f5f0d2"],  # Light yellow for low values
-            [0.25, "#f2bc54"],  # Yellow-orange
-            [0.5, "#e67e22"],  # Orange
-            [0.75, "#d13c35"],  # Red
-            [1, "#0e2b3d"]   # Dark blue for high values
+            [0, "#FFFFFF"],  # White for low values (better contrast for text)
+            [0.25, "#FFCB4C"],  # Darker yellow with better contrast
+            [0.5, "#E36C09"],  # Darker orange with better contrast
+            [0.75, "#B22222"],  # Darker red with better contrast
+            [1, "#0A1A2A"]   # Very dark blue for high values (better contrast)
         ],
         zmin=0,
         zmax=5
