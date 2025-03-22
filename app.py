@@ -123,14 +123,24 @@ def handle_invitation():
                                 # Mark invitation as accepted
                                 mark_invitation_accepted(token)
                                 
-                                st.success("Invitation accepted! You can now log in with your username and password.")
+                                # Automatically log in the new user
+                                st.session_state.authenticated = True
+                                st.session_state.username = username
+                                st.session_state.user_role = invitation.get("role", "employee")
+                                st.session_state.employee_id = employee_id
+                                
+                                # Also set the organization if it exists
+                                if organization_id:
+                                    st.session_state.selected_organization = organization_id
+                                
+                                st.success("Invitation accepted! You've been automatically logged in.")
                                 
                                 # Clear invitation data and params
                                 for key in list(st.session_state.keys()):
                                     if key.startswith("invitation_"):
                                         del st.session_state[key]
                                 
-                                # Clear query params and redirect to login
+                                # Clear query params and redirect to app
                                 st.query_params.clear()
                                 st.rerun()
                             else:
@@ -291,7 +301,18 @@ def display_login():
                         )
                         
                         if employee_success:
-                            st.success("Registration successful! You can now log in with your username and password.")
+                            # Automatically log in the new user
+                            st.session_state.authenticated = True
+                            st.session_state.username = reg_username
+                            st.session_state.user_role = "employee"
+                            st.session_state.employee_id = employee_id
+                            
+                            # Also set the organization if it exists
+                            if organization_id:
+                                st.session_state.selected_organization = organization_id
+                            
+                            st.success("Registration successful! You've been automatically logged in.")
+                            st.rerun()
                         else:
                             st.error(f"Failed to create employee record: {employee_message}")
                     else:
