@@ -10,12 +10,12 @@ st.set_page_config(
 import pandas as pd
 from datetime import datetime
 from data_manager import (
-    load_data, add_assessment, get_employee_assessments,
+    load_data, load_data_for_organization, add_assessment, get_employee_assessments,
     get_latest_assessment, get_competency_skills,
     add_competency_assessment, get_employee_competency_assessments,
     get_latest_competency_assessment
 )
-from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
+from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id
 from ui_helpers import load_custom_css
 
 # Load custom CSS for consistent styling
@@ -32,8 +32,9 @@ st.title("Employee Skill & Competency Assessment")
 employee_id = get_user_id(st.session_state.username)
 
 # Check if framework is set up
-competencies_df = load_data("competencies")
-skills_df = load_data("skills")
+organization_id = get_current_organization_id()
+competencies_df = load_data_for_organization("competencies", organization_id)
+skills_df = load_data_for_organization("skills", organization_id)
 
 if competencies_df.empty or skills_df.empty:
     st.error("The competency framework has not been set up yet. Please ask an administrator to set it up.")
@@ -47,7 +48,8 @@ if st.session_state.user_role == "email_user":
     if employee_id is None:
         st.warning("Your user account is not linked to an employee record. Please contact an administrator.")
     else:
-        employees_df = load_data("employees")
+        organization_id = get_current_organization_id()
+        employees_df = load_data_for_organization("employees", organization_id)
         employee_info = employees_df[employees_df["employee_id"] == employee_id]
         
         if not employee_info.empty:
@@ -200,7 +202,8 @@ else:
         if employee_id is None:
             st.warning("Your user account is not linked to an employee record. Please contact an administrator.")
         else:
-            employees_df = load_data("employees")
+            organization_id = get_current_organization_id()
+            employees_df = load_data_for_organization("employees", organization_id)
             employee_info = employees_df[employees_df["employee_id"] == employee_id]
             
             if not employee_info.empty:
@@ -348,7 +351,8 @@ else:
         
         # Check if user is a manager
         if st.session_state.user_role in ["admin", "manager"]:
-            employees_df = load_data("employees")
+            organization_id = get_current_organization_id()
+            employees_df = load_data_for_organization("employees", organization_id)
             
             # Get employees that this user manages
             if st.session_state.user_role == "admin":

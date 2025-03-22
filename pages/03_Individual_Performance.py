@@ -11,10 +11,10 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from data_manager import (
-    load_data, get_employee_assessments, calculate_employee_skill_means,
+    load_data, load_data_for_organization, get_employee_assessments, calculate_employee_skill_means,
     calculate_employee_competency_means, get_competency_skills, get_latest_assessment
 )
-from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
+from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id
 from ui_helpers import load_custom_css
 from visualizations import (
     employee_skill_radar, employee_competency_radar, comparison_radar_chart, 
@@ -42,7 +42,8 @@ if st.session_state.user_role == "employee":
         st.stop()
 else:
     # Managers and admins can view employees
-    employees_df = load_data("employees")
+    organization_id = get_current_organization_id()
+    employees_df = load_data_for_organization("employees", organization_id)
     
     if employees_df.empty:
         st.warning("No employees found in the system.")
@@ -71,7 +72,8 @@ else:
 
 # If we have a valid employee ID, show their performance
 if employee_id:
-    employees_df = load_data("employees")
+    organization_id = get_current_organization_id()
+    employees_df = load_data_for_organization("employees", organization_id)
     employee_info = employees_df[employees_df["employee_id"] == employee_id]
     
     if not employee_info.empty:
@@ -169,8 +171,9 @@ if employee_id:
             st.header("Skill Details")
             
             # Load data
-            competencies_df = load_data("competencies")
-            skills_df = load_data("skills")
+            organization_id = get_current_organization_id()
+            competencies_df = load_data_for_organization("competencies", organization_id)
+            skills_df = load_data_for_organization("skills", organization_id)
             
             if not competencies_df.empty:
                 # Select competency to view
@@ -185,7 +188,7 @@ if employee_id:
                 
                 if not comp_skills.empty:
                     # Get expected scores
-                    expectations_df = load_data("expectations")
+                    expectations_df = load_data_for_organization("expectations", organization_id)
                     
                     # Create a table with skill details and assessments
                     skill_data = []
@@ -277,8 +280,9 @@ if employee_id:
             st.header("Development Progress")
             
             # Load competencies and skills
-            competencies_df = load_data("competencies")
-            skills_df = load_data("skills")
+            organization_id = get_current_organization_id()
+            competencies_df = load_data_for_organization("competencies", organization_id)
+            skills_df = load_data_for_organization("skills", organization_id)
             
             if not competencies_df.empty and not skills_df.empty:
                 # Select competency and skill
