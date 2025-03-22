@@ -756,7 +756,8 @@ with tab3:
             # Select report type
             report_type = st.selectbox(
                 "Report Type",
-                ["Competency Framework Overview", "Skill Expectations by Level"]
+                ["Competency Framework Overview", "Skill Expectations by Level"],
+                key="framework_report_type"
             )
             
             if report_type == "Competency Framework Overview":
@@ -825,7 +826,7 @@ with tab3:
                     job_levels = sorted(expectations_df["job_level"].unique())
                     
                     # Allow selecting job level
-                    selected_level = st.selectbox("Select Job Level", job_levels)
+                    selected_level = st.selectbox("Select Job Level", job_levels, key="framework_job_level_select")
                     
                     # Filter expectations by level
                     level_expectations = expectations_df[expectations_df["job_level"] == selected_level]
