@@ -65,6 +65,25 @@ def load_data(data_type):
         else:
             return pd.DataFrame()
 
+def load_data_for_organization(data_type, organization_id):
+    """Load data from a CSV file filtered by organization_id
+    
+    Args:
+        data_type: Type of data to load (employees, competencies, levels)
+        organization_id: ID of the organization to filter by
+        
+    Returns:
+        DataFrame containing only records for the specified organization
+    """
+    df = load_data(data_type)
+    
+    # Check if this data type has organization_id field
+    if df.empty or "organization_id" not in df.columns:
+        return df
+    
+    # Filter by organization ID
+    return df[df["organization_id"] == organization_id]
+
 def save_data(data_type, df):
     """Save data to a CSV file"""
     if data_type not in DATA_FILES:

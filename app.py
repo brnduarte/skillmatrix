@@ -303,6 +303,10 @@ def display_organization_selector():
                 
                 if success:
                     st.success(f"Organization '{org_name}' created successfully!")
+                    # Update schemas to include organization_id fields
+                    from data_manager import update_schema_for_organizations
+                    update_results = update_schema_for_organizations()
+                    
                     # Store the organization ID in session state
                     st.session_state.organization_id = org_id
                     st.session_state.organization_name = org_name
