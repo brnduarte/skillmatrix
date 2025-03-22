@@ -3,24 +3,24 @@ skill_id,competency_id,name,description,organization_id
 - Iconography and Visual Elements: Crafting clear and intuitive icons and assets.
 - Typography and Color Theory: Ensures aesthetic and functional design.
 - Composition and Layout: Guides user attention through effective layouts.
-- Motion and Video: Adds dynamic, engaging elements to improve UX.",
+- Motion and Video: Adds dynamic, engaging elements to improve UX.",1.0
 3,2,Interaction Design,"- Information Architecture and Wireframing: Organizing information for usability and clarity.
 - Interaction Patterns and Micro-Interactions: Defining user-friendly and engaging behaviors.
 - User Interface and Prototyping: Translating concepts into interactive prototypes.
-- Responsive and Mobile Design: Designing for accessibility across devices.",
+- Responsive and Mobile Design: Designing for accessibility across devices.",1.0
 4,3,Design Systems and A11y,"- Design Systems and Components Specifications: Establishing consistency and scalability in design systems.
-- Accessibility and Usability Standards: Ensuring inclusivity and compliance with accessibility guidelines.",
+- Accessibility and Usability Standards: Ensuring inclusivity and compliance with accessibility guidelines.",1.0
 5,4,UX Strategy,"- UX Strategy and Planning: Aligning UX efforts with business and user needs.
 - Roadmapping and Prioritization: Planning features and aligning with product goals.
-- User Flows and Task Analysis: Understanding and optimizing user pathways.",
-6,5,User Testing and Validation,Iteratively improving designs based on user feedback.,
+- User Flows and Task Analysis: Understanding and optimizing user pathways.",1.0
+6,5,User Testing and Validation,Iteratively improving designs based on user feedback.,1.0
 7,6,Influence,"- Stakeholder Management and Confliict Resolution: Seek consensus and stakeholders alignment
-- Communication and Presentation: Advocating for design decisions and strategies to stakeholders.""",
+- Communication and Presentation: Advocating for design decisions and strategies to stakeholders.""",1.0
 8,7,Cross-Functional Collaboration,"Aligning with engineering, product, and business teams for cohesive execution.
-- Workshop Facilitation: Fostering collaborative problem-solving and discovery.""",
+- Workshop Facilitation: Fostering collaborative problem-solving and discovery.""",1.0
 9,8,Competitive Analysis," Leveraging insights from competitors to inform decisions.
 - Research Planning, Execution, and Analysis: Driving data-informed design enhancements.
 - Quantitative Research Methods: Using numerical data to uncover trends and insights.
-- Qualitative Research and Analytics: Gathering deeper insights into user behaviors and motivations.""",
-10,9,Resource Management and Operations,Managing design team resources and workflows efficiently.,
-11,10,tes tes te ste,,
+- Qualitative Research and Analytics: Gathering deeper insights into user behaviors and motivations.""",1.0
+10,9,Resource Management and Operations,Managing design team resources and workflows efficiently.,1.0
+11,10,tes tes te ste,,1.0
