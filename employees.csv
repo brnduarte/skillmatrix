@@ -6,4 +6,3 @@ employee_id,name,email,job_title,job_level,department,manager_id,hire_date,organ
 6,Cher,test@test.com,Product Designer,Manager,Design,7.0,2025-03-21,1
 7,Admin,admin@test.com,Product Designer,Manager,Design,6.0,2025-03-21,1
 11,Jonhy Test 1,jojo@test.com,Designer,IC4 - Staff,Design,,2025-03-22,1
-12,Zedas Cove,brnduarte@gmail.com,Product Design,IC3 - Senior,Design,,2025-03-22,1
