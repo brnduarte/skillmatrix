@@ -69,7 +69,8 @@ with tab1:
     st.header("Individual Performance Reports")
     
     # Get list of employees the user can access
-    employees_df = load_data("employees")
+    organization_id = get_current_organization_id()
+    employees_df = load_data_for_organization("employees", organization_id)
     
     if employees_df.empty:
         st.warning("No employees found in the system.")
@@ -121,9 +122,9 @@ with tab1:
                     # Prepare data
                     report_data = []
                     
-                    competencies_df = load_data("competencies")
-                    skills_df = load_data("skills")
-                    expectations_df = load_data("expectations")
+                    competencies_df = load_data_for_organization("competencies", organization_id)
+                    skills_df = load_data_for_organization("skills", organization_id)
+                    expectations_df = load_data_for_organization("expectations", organization_id)
                     
                     # Get all assessments and organize by competency and skill
                     all_assessments = pd.concat([self_assessments, manager_assessments])
@@ -269,7 +270,7 @@ with tab1:
                     st.subheader(f"Skills Gap Analysis: {employee_info['name']}")
                     
                     # Get expected scores
-                    expectations_df = load_data("expectations")
+                    expectations_df = load_data_for_organization("expectations", organization_id)
                     
                     if expectations_df.empty:
                         st.warning("No skill expectations defined in the system.")
@@ -367,8 +368,8 @@ with tab2:
     st.header("Team Performance Reports")
     
     # Get department or team data
-    employees_df = load_data("employees")
-    assessments_df = load_data("assessments")
+    employees_df = load_data_for_organization("employees", organization_id)
+    assessments_df = load_data_for_organization("assessments", organization_id)
     
     if employees_df.empty or assessments_df.empty:
         st.warning("Employee or assessment data not available.")
@@ -751,9 +752,9 @@ with tab3:
         st.info("Only administrators can access framework reports.")
     else:
         # Load framework data
-        competencies_df = load_data("competencies")
-        skills_df = load_data("skills")
-        expectations_df = load_data("expectations")
+        competencies_df = load_data_for_organization("competencies", organization_id)
+        skills_df = load_data_for_organization("skills", organization_id)
+        expectations_df = load_data_for_organization("expectations", organization_id)
         
         if competencies_df.empty or skills_df.empty:
             st.warning("Competency framework not fully set up.")
