@@ -697,9 +697,10 @@ def team_heatmap(team_assessments, assessment_type="self"):
     # Load necessary data
     skills_df = load_data("skills")
     competencies_df = load_data("competencies")
+    employees_df = load_data("employees")
     
     # Check if dataframes are empty
-    if skills_df.empty or competencies_df.empty or team_assessments.empty:
+    if skills_df.empty or competencies_df.empty or team_assessments.empty or employees_df.empty:
         return None, "No team members or skills/competencies found."
     
     # Get unique employee IDs from the assessments
@@ -725,42 +726,59 @@ def team_heatmap(team_assessments, assessment_type="self"):
     if not all_skills:
         return None, "No skills found for this team."
     
-    # Create 2D array for heatmap with default values of NaN (will display as blank in heatmap)
-    heatmap_data = np.full((len(competencies), len(all_skills)), np.nan)
+    # Get unique job levels from the team
+    team_employees = employees_df[employees_df["employee_id"].isin(team_employee_ids)]
+    job_levels = sorted(team_employees["job_level"].unique())
     
-    # Dictionary to store cumulative skill scores and counts
-    skill_data = {}  # {(competency, skill): [total_score, count]}
+    if not job_levels:
+        return None, "No job levels found for this team."
+    
+    # Create 2D array for heatmap with default values of NaN (will display as blank in heatmap)
+    heatmap_data = np.full((len(job_levels), len(all_skills)), np.nan)
+    
+    # Dictionary to store cumulative skill scores and counts by job level
+    # {(job_level, skill): [total_score, count]}
+    skill_data_by_level = {}
     
     # Process each employee's latest assessments
     for employee_id in team_employee_ids:
+        # Get employee's job level
+        employee = team_employees[team_employees["employee_id"] == employee_id]
+        if employee.empty:
+            continue
+        
+        job_level = employee.iloc[0]["job_level"]
+        
         # Loop through all competencies and skills
-        for i, comp in enumerate(competencies):
+        for comp in competencies:
             comp_id = competencies_df[competencies_df["name"] == comp]["competency_id"].iloc[0]
             comp_skills = skills_df[skills_df["competency_id"] == comp_id]
             
             for _, skill_row in comp_skills.iterrows():
+                skill_name = skill_row["name"]
+                
                 # Get latest assessment for this skill
                 latest = get_latest_assessment(
                     employee_id, 
                     comp, 
-                    skill_row["name"], 
+                    skill_name, 
                     assessment_type
                 )
                 
                 if latest is not None:
-                    key = (comp, skill_row["name"])
-                    if key not in skill_data:
-                        skill_data[key] = [latest["score"], 1]
+                    key = (job_level, skill_name)
+                    if key not in skill_data_by_level:
+                        skill_data_by_level[key] = [latest["score"], 1]
                     else:
-                        skill_data[key][0] += latest["score"]
-                        skill_data[key][1] += 1
+                        skill_data_by_level[key][0] += latest["score"]
+                        skill_data_by_level[key][1] += 1
     
-    if not skill_data:
+    if not skill_data_by_level:
         return None, f"No {assessment_type} assessments found for this team."
     
     # Fill in the heatmap data with calculated means
-    for (comp, skill), (total, count) in skill_data.items():
-        i = competencies.index(comp)
+    for (job_level, skill), (total, count) in skill_data_by_level.items():
+        i = job_levels.index(job_level)
         j = all_skills.index(skill)
         heatmap_data[i, j] = total / count  # Calculate mean
     
@@ -768,7 +786,7 @@ def team_heatmap(team_assessments, assessment_type="self"):
     fig = go.Figure(data=go.Heatmap(
         z=heatmap_data,
         x=all_skills,
-        y=competencies,
+        y=job_levels,
         colorscale="Viridis",
         zmin=0,
         zmax=5
@@ -776,9 +794,9 @@ def team_heatmap(team_assessments, assessment_type="self"):
     
     # Set layout
     fig.update_layout(
-        title=f"Team Skills Heatmap ({assessment_type.capitalize()})",
+        title=f"Skills by Job Level ({assessment_type.capitalize()} Assessment)",
         xaxis_title="Skills",
-        yaxis_title="Competencies"
+        yaxis_title="Job Levels"
     )
     
     return fig, None
