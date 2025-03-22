@@ -4,11 +4,11 @@ address = "0.0.0.0"
 port = 5000
 
 [theme]
-# Primary colors - WCAG 2.2 compliant with adequate contrast ratios
-primaryColor = "#b22222"  # Darker red for better contrast (for buttons and interactive elements)
-backgroundColor = "#ffffff"  # White background for maximum contrast
-secondaryBackgroundColor = "#0a1a2a"  # Darker blue for sidebar with better contrast against white text
-textColor = "#0a1a2a"  # Near-black text color for maximum readability
+# Primary colors
+primaryColor = "#d13c35"  # Red for primary buttons and interactive elements
+backgroundColor = "#f5f0d2"  # Light yellow for page background
+secondaryBackgroundColor = "#f2bc54"  # Yellow-orange for container backgrounds
+textColor = "#0e2b3d"  # Dark blue for text
 
 # Additional customizations
 font = "sans serif"
