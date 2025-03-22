@@ -13,7 +13,8 @@ DATA_FILES = {
     "expectations": "skill_expectations.csv",
     "comp_expectations": "competency_expectations.csv",
     "assessments": "skill_assessments.csv",
-    "comp_assessments": "competency_assessments.csv"
+    "comp_assessments": "competency_assessments.csv",
+    "organizations": "organizations.csv"
 }
 
 # Define the ID columns for each data type
@@ -26,7 +27,8 @@ ID_COLUMNS = {
     "expectations": None,  # Composite key
     "comp_expectations": None,  # Composite key
     "assessments": "assessment_id",
-    "comp_assessments": "assessment_id"
+    "comp_assessments": "assessment_id",
+    "organizations": "organization_id"
 }
 
 def load_data(data_type):
@@ -58,6 +60,8 @@ def load_data(data_type):
             return pd.DataFrame(columns=["assessment_id", "employee_id", "competency", "skill", "score", "assessment_type", "assessment_date", "notes"])
         elif data_type == "comp_assessments":
             return pd.DataFrame(columns=["assessment_id", "employee_id", "competency", "score", "assessment_type", "assessment_date", "notes"])
+        elif data_type == "organizations":
+            return pd.DataFrame(columns=["organization_id", "name", "created_by", "created_at"])
         else:
             return pd.DataFrame()
 
@@ -91,7 +95,7 @@ def add_user(username, password, role, name, email):
     save_data("users", users_df)
     return True, "User added successfully"
 
-def add_employee(name, email, job_title, job_level, department, manager_id, hire_date=None):
+def add_employee(name, email, job_title, job_level, department, manager_id, organization_id=None, hire_date=None):
     """Add a new employee"""
     employees_df = load_data("employees")
     
@@ -113,6 +117,7 @@ def add_employee(name, email, job_title, job_level, department, manager_id, hire
         "job_level": [job_level],
         "department": [department],
         "manager_id": [manager_id],
+        "organization_id": [organization_id],
         "hire_date": [hire_date]
     })
     
@@ -946,3 +951,77 @@ def delete_competency_assessment(assessment_id):
     save_data("comp_assessments", comp_assessments_df)
     
     return True, "Competency assessment deleted successfully"
+
+
+# Organization functions
+def add_organization(name, created_by):
+    """Add a new organization"""
+    organizations_df = load_data("organizations")
+    
+    # Generate new organization ID
+    if organizations_df.empty:
+        new_id = 1
+    else:
+        new_id = organizations_df["organization_id"].max() + 1
+    
+    # Add new organization
+    new_organization = pd.DataFrame({
+        "organization_id": [new_id],
+        "name": [name],
+        "created_by": [created_by],
+        "created_at": [datetime.now().strftime("%Y-%m-%d")]
+    })
+    
+    organizations_df = pd.concat([organizations_df, new_organization], ignore_index=True)
+    save_data("organizations", organizations_df)
+    return True, "Organization added successfully", new_id
+
+def get_organization(organization_id):
+    """Get an organization by ID"""
+    organizations_df = load_data("organizations")
+    
+    if organizations_df.empty:
+        return None
+    
+    org = organizations_df[organizations_df["organization_id"] == organization_id]
+    
+    if org.empty:
+        return None
+    
+    return org.iloc[0]
+
+def get_organizations():
+    """Get all organizations"""
+    return load_data("organizations")
+
+def get_user_organizations(username):
+    """Get all organizations created by a user"""
+    organizations_df = load_data("organizations")
+    
+    if organizations_df.empty:
+        return pd.DataFrame()
+    
+    return organizations_df[organizations_df["created_by"] == username]
+
+def update_organization(organization_id, name=None):
+    """Update an organization's details"""
+    organizations_df = load_data("organizations")
+    
+    if organizations_df.empty:
+        return False, "No organizations found"
+    
+    # Check if organization exists
+    organization_mask = organizations_df["organization_id"] == organization_id
+    if not any(organization_mask):
+        return False, f"Organization with ID {organization_id} not found"
+    
+    # Update fields if provided
+    if name is not None:
+        organizations_df.loc[organization_mask, "name"] = name
+    
+    save_data("organizations", organizations_df)
+    return True, "Organization updated successfully"
+
+def delete_organization(organization_id):
+    """Delete an organization"""
+    return delete_record("organizations", organization_id)

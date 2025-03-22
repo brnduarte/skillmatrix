@@ -7,3 +7,4 @@ employee_id,name,email,job_title,job_level,department,manager_id,hire_date
 6,Cher,test@test.com,Product Designer,Manager,Design,7.0,2025-03-21
 7,Admin,admin@test.com,Product Designer,Manager,Design,6.0,2025-03-21
 8,Bruno Duarte,brnduarte@gmail.com,Product Designer,IC1 - Associate,Design,6.0,2025-03-21
+9,Breno Das art,brnduarte+skills@gmail.com,Software Engineer,IC2 - Mid Level,Engineering,,2025-03-22

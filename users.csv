@@ -1,3 +1,4 @@
 username,password,role,name,email
 admin,admin,admin,Administrator,admin@example.com
 bruno,password123,employee,Bruno Duarte,brnduarte@gmail.com
+brnduarte,bad1783,employee,Breno Das art,brnduarte+skills@gmail.com
