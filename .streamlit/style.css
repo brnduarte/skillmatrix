@@ -4,6 +4,8 @@
 /* Apply Lato font to all elements and set base styles */
 html, body, [class*="css"] {
   font-family: 'Lato', sans-serif !important;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 /* ------- LAYOUT & CONTAINERS ------- */
@@ -20,12 +22,14 @@ header {
 h1, h2, h3 {
   color: #0e2b3d;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.02em;
 }
 
 h1 {
-  border-bottom: 2px solid #d13c35;
-  padding-bottom: 0.5rem;
+  border-bottom: 3px solid #d13c35;
+  padding-bottom: 0.75rem;
+  font-size: 2.2rem;
 }
 
 /* Content containers */
@@ -41,21 +45,66 @@ h1 {
 /* Card containers with shadow and border */
 .css-1r6slb0, .css-12oz5g7 {
   background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  margin: 1rem 0;
-  border-left: 4px solid #d13c35;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 1.75rem;
+  margin: 1.25rem 0;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.css-1r6slb0:before, .css-12oz5g7:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, #d13c35, #f2bc54);
 }
 
 /* Sidebar styling */
 [data-testid="stSidebar"] {
   background-color: #0e2b3d;
   padding-top: 2rem;
+  background-image: linear-gradient(180deg, #0e2b3d, #1a4562);
+  border-right: 1px solid rgba(255,255,255,0.1);
 }
 
+/* Sidebar content */
 [data-testid="stSidebar"] [data-testid="stMarkdown"] {
   color: #f5f0d2;
+}
+
+/* Sidebar title */
+[data-testid="stSidebar"] [data-testid="stMarkdown"] h1 {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 0.75rem;
+}
+
+/* Sidebar navigation links */
+[data-testid="stSidebar"] .css-pkbazv {
+  margin-top: 1rem;
+}
+
+[data-testid="stSidebar"] a {
+  color: rgba(255,255,255,0.8) !important;
+  text-decoration: none;
+  padding: 0.5rem 0;
+  display: block;
+  transition: all 0.2s;
+  font-weight: 400;
+}
+
+[data-testid="stSidebar"] a:hover {
+  color: white !important;
+  background-color: rgba(255,255,255,0.1);
+  padding-left: 0.5rem;
+  border-radius: 4px;
 }
 
 /* Expanders */
@@ -79,11 +128,14 @@ h1 {
   background-color: #0e2b3d;
   color: #f5f0d2;
   border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
+  border-radius: 30px; /* More rounded buttons */
+  padding: 0.6rem 1.2rem;
+  font-weight: 700;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
 }
 
 .stButton>button:hover {
@@ -189,60 +241,103 @@ a:hover {
 
 /* Metrics */
 [data-testid="stMetric"] {
-  background-color: #f2bc54;
-  padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  padding: 1.25rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-testid="stMetric"]:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 [data-testid="stMetricLabel"] {
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.8rem;
+  color: #666;
 }
 
 [data-testid="stMetricValue"] {
-  font-size: 2rem !important;
+  font-size: 2.5rem !important;
   font-weight: 900 !important;
   color: #d13c35;
+  margin-top: 0.3rem;
 }
 
 /* ------- SPECIAL ELEMENTS ------- */
 /* Skill rating containers */
 .skills-container {
-  border: 1px solid #f2bc54;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
   background-color: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skills-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
 .skill-header {
   font-weight: 700;
   color: #0e2b3d;
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid #f2bc54;
-  padding-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 0.75rem;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Rating scale */
 .rating-scale {
   display: flex;
   justify-content: space-between;
-  margin: 0.5rem 0;
+  margin: 0.75rem 0;
+  position: relative;
+}
+
+.rating-scale:after {
+  content: "";
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(to right, #f2bc54, #d13c35);
+  width: 100%;
+  bottom: -5px;
+  left: 0;
+  border-radius: 2px;
 }
 
 .rating-option {
   text-align: center;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.9rem;
-  border-radius: 4px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 30px;
   background-color: #f5f0d2;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  min-width: 35px;
 }
 
 /* Assessment scores */
 .assessment-score {
-  font-weight: 700;
-  font-size: 1.1rem;
+  font-weight: 800;
+  font-size: 1.2rem;
   color: #d13c35;
+  background-color: rgba(209, 60, 53, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  display: inline-block;
 }
 
 /* Tables */
@@ -272,21 +367,119 @@ a:hover {
 
 /* Alert messages */
 .success-message {
-  background-color: #d4edda;
+  background-color: rgba(40, 167, 69, 0.1);
   color: #155724;
-  padding: 1rem;
-  border-radius: 6px;
-  border-left: 4px solid #28a745;
-  margin: 1rem 0;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin: 1.25rem 0;
+  border: 1px solid rgba(40, 167, 69, 0.2);
+  box-shadow: 0 5px 15px rgba(40, 167, 69, 0.05);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.success-message:before {
+  content: "✓";
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-right: 1rem;
+  background-color: #28a745;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .error-message {
-  background-color: #f8d7da;
+  background-color: rgba(220, 53, 69, 0.1);
   color: #721c24;
-  padding: 1rem;
-  border-radius: 6px;
-  border-left: 4px solid #dc3545;
-  margin: 1rem 0;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin: 1.25rem 0;
+  border: 1px solid rgba(220, 53, 69, 0.2);
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.05);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.error-message:before {
+  content: "!";
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-right: 1rem;
+  background-color: #dc3545;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-message {
+  background-color: rgba(23, 162, 184, 0.1);
+  color: #0c5460;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin: 1.25rem 0;
+  border: 1px solid rgba(23, 162, 184, 0.2);
+  box-shadow: 0 5px 15px rgba(23, 162, 184, 0.05);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.info-message:before {
+  content: "i";
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-style: italic;
+  margin-right: 1rem;
+  background-color: #17a2b8;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.warning-message {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: #856404;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin: 1.25rem 0;
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  box-shadow: 0 5px 15px rgba(255, 193, 7, 0.05);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.warning-message:before {
+  content: "⚠";
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  background-color: #ffc107;
+  color: #856404;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Responsive adjustments */
