@@ -1067,7 +1067,7 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     skills_df = load_data("skills")
     competencies_df = load_data("competencies")
     expectations_df = load_data("expectations")
-    comp_expectations_df = load_data("comp_expectations")
+    comp_expectations_df = load_data("competency_expectations")
     job_levels_df = load_data("levels")
     
     if competencies_df.empty:

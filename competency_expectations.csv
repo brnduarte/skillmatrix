@@ -17,21 +17,21 @@ job_level,competency,expected_score
 2,Collaboration,2.5
 2,Communication,2.5
 2,Open Minded,2.0
-3,Expertise,3.0
-3,Decision Making,3.0
-3,Continuous Improvement,3.0
-3,Accountability,3.5
-3,Initiative,3.0
-3,Personal Development,3.5
-3,Collaboration,3.5
-3,Communication,3.5
-3,Open Minded,3.5
-4,Expertise,4.0
-4,Decision Making,4.0
-4,Accountability,4.5
-4,Continuous Improvement,4.5
-4,Initiative,4.0
-4,Personal Development,4.5
-4,Collaboration,4.5
-4,Communication,4.5
-4,Open Minded,4.0
+IC4 - Staff,Expertise,4.0
+IC4 - Staff,Decision Making,4.5
+IC4 - Staff,Continuous Improvement,4.0
+IC4 - Staff,Accountability,4.5
+IC4 - Staff,Initiative,4.5
+IC4 - Staff,Personal Development,4.5
+IC4 - Staff,Collaboration,4.5
+IC4 - Staff,Communication,5.0
+IC4 - Staff,Open Minded,4.5
+IC3 - Senior,Expertise,3.5
+IC3 - Senior,Continuous Improvement,3.0
+IC3 - Senior,Accountability,3.5
+IC3 - Senior,Decision Making,3.0
+IC3 - Senior,Initiative,3.5
+IC3 - Senior,Collaboration,3.5
+IC3 - Senior,Communication,3.5
+IC3 - Senior,Open Minded,3.5
+IC3 - Senior,Personal Development,3.0
