@@ -26,7 +26,7 @@ def display_login():
     st.title("Skill Matrix & Competency Framework")
     st.subheader("Login")
     
-    login_tab1, login_tab2 = st.tabs(["Account Login", "Email Self-Assessment"])
+    login_tab1, login_tab2, login_tab3 = st.tabs(["Account Login", "Email Self-Assessment", "Register"])
     
     with login_tab1:
         username = st.text_input("Username", key="username_login")
@@ -59,6 +59,81 @@ def display_login():
                 st.rerun()
             else:
                 st.error("Email not found. Please contact your manager or administrator.")
+    
+    with login_tab3:
+        st.write("Create a new account to access the Skill Matrix")
+        
+        # Registration form
+        with st.form(key="registration_form"):
+            st.subheader("Personal Information")
+            reg_name = st.text_input("Full Name", key="reg_name", placeholder="John Doe")
+            reg_email = st.text_input("Email", key="reg_email", placeholder="john.doe@company.com")
+            
+            st.subheader("Account Information")
+            reg_username = st.text_input("Username", key="reg_username", placeholder="johndoe")
+            reg_password = st.text_input("Password", type="password", key="reg_password")
+            reg_confirm_password = st.text_input("Confirm Password", type="password", key="reg_confirm_password")
+            
+            st.subheader("Job Information")
+            reg_job_title = st.text_input("Job Title", key="reg_job_title", placeholder="Software Engineer")
+            
+            # Get job levels for dropdown
+            job_levels_df = load_data("levels")
+            job_level_options = [""] + job_levels_df["name"].tolist() if not job_levels_df.empty else [""]
+            reg_job_level = st.selectbox("Job Level", options=job_level_options, key="reg_job_level")
+            
+            reg_department = st.text_input("Department", key="reg_department", placeholder="Engineering")
+            
+            # Get managers for dropdown
+            employees_df = load_data("employees")
+            managers = employees_df[["employee_id", "name"]].copy()
+            manager_options = [("", "None")] + list(zip(managers["employee_id"].astype(str), managers["name"])) if not employees_df.empty else [("", "None")]
+            reg_manager_id = st.selectbox("Manager", options=manager_options, format_func=lambda x: x[1], key="reg_manager_id")
+            
+            # Submit button
+            submit_button = st.form_submit_button(label="Register")
+            
+            if submit_button:
+                # Validate form
+                if not reg_name or not reg_email or not reg_username or not reg_password:
+                    st.error("Please fill in all required fields")
+                elif reg_password != reg_confirm_password:
+                    st.error("Passwords do not match")
+                elif "@" not in reg_email or "." not in reg_email:
+                    st.error("Please enter a valid email address")
+                else:
+                    # Add user to database
+                    from data_manager import add_user, add_employee
+                    
+                    # Extract manager ID (first element of the tuple)
+                    manager_id = reg_manager_id[0] if reg_manager_id and reg_manager_id[0] else None
+                    
+                    # Create employee record first
+                    success, message, employee_id = add_employee(
+                        name=reg_name,
+                        email=reg_email,
+                        job_title=reg_job_title,
+                        job_level=reg_job_level,
+                        department=reg_department,
+                        manager_id=manager_id
+                    )
+                    
+                    if success:
+                        # Create user account
+                        user_success, user_message = add_user(
+                            username=reg_username,
+                            password=reg_password,
+                            role="employee",  # Default role for new registrations
+                            name=reg_name,
+                            email=reg_email
+                        )
+                        
+                        if user_success:
+                            st.success("Registration successful! You can now log in with your username and password.")
+                        else:
+                            st.error(f"Failed to create user account: {user_message}")
+                    else:
+                        st.error(f"Failed to create employee record: {message}")
 
 # Main application
 def main_app():
