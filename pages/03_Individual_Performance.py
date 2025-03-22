@@ -134,21 +134,28 @@ if employee_id:
                 else:
                     st.info("No assessments completed yet.")
             
-            # Comparison to expected levels
+            # Comparison to next level expectations
             st.markdown("---")
-            st.subheader("Performance vs. Expected Level")
+            st.subheader("Performance vs. Next Level Expectations")
             
             if not self_assessments.empty or not manager_assessments.empty:
                 # Use the same view type (Skills/Competencies) as selected above
                 comparison_view_type = "Skills" if view_type == "Skills" else "Competencies"
                 
-                # Use the combined comparison chart function that shows both self and manager assessments
-                # together with expected levels
+                # Display explanatory text
+                st.markdown("""
+                This chart compares:
+                - **Current Performance**: Average score of self and manager assessments
+                - **Next Level Expectations**: Required scores for the next job level
+                """)
+                
+                # Use the combined comparison chart function that shows the mean of self and manager assessments
+                # together with next level expected values
                 fig, error = combined_comparison_radar_chart(employee_id, employee_level, comparison_view_type)
                 if fig:
                     st.plotly_chart(fig, use_container_width=True)
                 else:
-                    st.info(error or f"Cannot create comparison chart. Check that expectations are defined for level {employee_level}.")
+                    st.info(error or f"Cannot create comparison chart. Check that expectations are defined for next level.")
             else:
                 st.info("No assessments available to compare with expected levels.")
         
@@ -349,7 +356,8 @@ st.markdown("---")
 st.markdown("""
 ### Understanding Performance Data
 
-- **Overall Performance:** Radar charts showing self and manager assessments across all skills, and comparison with expected levels
+- **Overall Performance:** Radar charts showing combined self and manager assessments across all skills or competencies
+- **Performance vs. Next Level:** Comparison between current performance (mean of self and manager assessments) and the expected level for the next job level
 - **Skill Details:** Detailed breakdown of individual skills with self and manager ratings, expected scores, and gaps
 - **Development Progress:** Track progress over time for specific skills and view assessment history
 

@@ -1053,11 +1053,11 @@ def combined_team_competency_radar(team_assessments, title="Team Competency Asse
     return fig, None
 
 def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
-    """Create a radar chart comparing combined self and manager assessments vs expected level
+    """Create a radar chart comparing the mean of self and manager assessments vs expected levels for next job level
     
     Args:
         employee_id: ID of the employee to display
-        job_level: Job level of the employee for expectations
+        job_level: Current job level of the employee 
         view_type: Whether to show "Skills" or "Competencies"
     """
     import plotly.graph_objects as go
@@ -1068,6 +1068,7 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     competencies_df = load_data("competencies")
     expectations_df = load_data("expectations")
     comp_expectations_df = load_data("comp_expectations")
+    job_levels_df = load_data("job_levels")
     
     if competencies_df.empty:
         return None, "No competencies found."
@@ -1081,21 +1082,28 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     if view_type == "Competencies" and comp_expectations_df.empty:
         return None, "No competency expectations defined."
     
-    # Filter expectations for the employee's job level
+    # Calculate the next job level
+    job_level_int = int(job_level)
+    next_level = job_level_int + 1
+    
+    # Check if next level exists
+    if job_levels_df.empty or not any(job_levels_df["level_id"] == next_level):
+        return None, f"No next job level defined after level {job_level}."
+    
+    # Filter expectations for the next job level
     if view_type == "Skills":
-        level_expectations = expectations_df[expectations_df["job_level"] == job_level]
-        if level_expectations.empty:
-            return None, f"No skill expectations defined for job level {job_level}."
+        next_level_expectations = expectations_df[expectations_df["job_level"] == next_level]
+        if next_level_expectations.empty:
+            return None, f"No skill expectations defined for next job level {next_level}."
     else:
-        level_expectations = comp_expectations_df[comp_expectations_df["job_level"] == job_level]
-        if level_expectations.empty:
-            return None, f"No competency expectations defined for job level {job_level}."
+        next_level_expectations = comp_expectations_df[comp_expectations_df["job_level"] == next_level]
+        if next_level_expectations.empty:
+            return None, f"No competency expectations defined for next job level {next_level}."
     
     # Create lists for chart data
     labels = []
-    self_values = []
-    manager_values = []
-    expected_values = []
+    combined_values = []
+    next_level_expected_values = []
     
     if view_type == "Skills":
         # Loop through all competencies and skills
@@ -1119,18 +1127,31 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
                     "manager"
                 )
                 
-                # Find matching expectation
-                expectation = level_expectations[
-                    (level_expectations["competency"] == comp_row["name"]) &
-                    (level_expectations["skill"] == skill_row["name"])
+                # Find matching expectation for the next level
+                next_expectation = next_level_expectations[
+                    (next_level_expectations["competency"] == comp_row["name"]) &
+                    (next_level_expectations["skill"] == skill_row["name"])
                 ]
                 
-                # Only include if expectation exists and at least one assessment exists
-                if not expectation.empty and (self_latest is not None or manager_latest is not None):
-                    labels.append(f"{comp_row['name']} - {skill_row['name']}")
-                    self_values.append(self_latest["score"] if self_latest is not None else None)
-                    manager_values.append(manager_latest["score"] if manager_latest is not None else None)
-                    expected_values.append(expectation.iloc[0]["expected_score"])
+                # Only include if next level expectation exists and at least one assessment exists
+                if not next_expectation.empty and (self_latest is not None or manager_latest is not None):
+                    # Calculate the combined mean of self and manager assessments
+                    sum_scores = 0
+                    count_scores = 0
+                    
+                    if self_latest is not None:
+                        sum_scores += float(self_latest["score"])
+                        count_scores += 1
+                        
+                    if manager_latest is not None:
+                        sum_scores += float(manager_latest["score"])
+                        count_scores += 1
+                    
+                    # Only add if we have at least one assessment
+                    if count_scores > 0:
+                        labels.append(f"{comp_row['name']} - {skill_row['name']}")
+                        combined_values.append(sum_scores / count_scores)
+                        next_level_expected_values.append(next_expectation.iloc[0]["expected_score"])
     else:
         # Loop through all competencies
         for _, comp_row in competencies_df.iterrows():
@@ -1148,56 +1169,52 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
                 "manager"
             )
             
-            # Find matching expectation
-            expectation = level_expectations[
-                (level_expectations["competency"] == comp_row["name"])
+            # Find matching expectation for the next level
+            next_expectation = next_level_expectations[
+                (next_level_expectations["competency"] == comp_row["name"])
             ]
             
-            # Only include if expectation exists and at least one assessment exists
-            if not expectation.empty and (self_latest is not None or manager_latest is not None):
-                labels.append(comp_row["name"])
-                self_values.append(self_latest["score"] if self_latest is not None else None)
-                manager_values.append(manager_latest["score"] if manager_latest is not None else None)
-                expected_values.append(expectation.iloc[0]["expected_score"])
+            # Only include if next level expectation exists and at least one assessment exists
+            if not next_expectation.empty and (self_latest is not None or manager_latest is not None):
+                # Calculate the combined mean of self and manager assessments
+                sum_scores = 0
+                count_scores = 0
+                
+                if self_latest is not None:
+                    sum_scores += float(self_latest["score"])
+                    count_scores += 1
+                    
+                if manager_latest is not None:
+                    sum_scores += float(manager_latest["score"])
+                    count_scores += 1
+                
+                # Only add if we have at least one assessment
+                if count_scores > 0:
+                    labels.append(comp_row["name"])
+                    combined_values.append(sum_scores / count_scores)
+                    next_level_expected_values.append(next_expectation.iloc[0]["expected_score"])
     
     if not labels:
-        return None, f"No matching {'skill' if view_type == 'Skills' else 'competency'} expectations found for this employee's assessments."
+        return None, f"No matching {'skill' if view_type == 'Skills' else 'competency'} expectations found for next level assessments."
     
     # Create radar chart
     fig = go.Figure()
     
-    # Add self assessment trace
-    if any(v is not None for v in self_values):
-        # Replace None with 0 for visualization purposes
-        self_values_visual = [v if v is not None else 0 for v in self_values]
-        
-        fig.add_trace(go.Scatterpolar(
-            r=self_values_visual,
-            theta=labels,
-            fill='toself',
-            name='Self Assessment',
-            line=dict(color='blue')
-        ))
-    
-    # Add manager assessment trace
-    if any(v is not None for v in manager_values):
-        # Replace None with 0 for visualization purposes
-        manager_values_visual = [v if v is not None else 0 for v in manager_values]
-        
-        fig.add_trace(go.Scatterpolar(
-            r=manager_values_visual,
-            theta=labels,
-            fill='toself',
-            name='Manager Assessment',
-            line=dict(color='green')
-        ))
-    
-    # Add expected values trace
+    # Add combined assessment values trace
     fig.add_trace(go.Scatterpolar(
-        r=expected_values,
+        r=combined_values,
         theta=labels,
         fill='toself',
-        name=f'Expected (Level {job_level})',
+        name='Current Performance (Mean)',
+        line=dict(color='blue')
+    ))
+    
+    # Add next level expected values trace
+    fig.add_trace(go.Scatterpolar(
+        r=next_level_expected_values,
+        theta=labels,
+        fill='toself',
+        name=f'Expected (Level {next_level})',
         line=dict(color='red', dash='dash')
     ))
     
@@ -1209,7 +1226,7 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
                 range=[0, 5]
             )
         ),
-        title=f"{view_type} vs. Expectations",
+        title=f"Current Performance vs. Next Level ({view_type})",
         showlegend=True
     )
     
