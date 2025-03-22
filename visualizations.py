@@ -1068,7 +1068,7 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     competencies_df = load_data("competencies")
     expectations_df = load_data("expectations")
     comp_expectations_df = load_data("comp_expectations")
-    job_levels_df = load_data("job_levels")
+    job_levels_df = load_data("levels")
     
     if competencies_df.empty:
         return None, "No competencies found."
@@ -1087,16 +1087,16 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     next_level = job_level_int + 1
     
     # Check if next level exists
-    if job_levels_df.empty or not any(job_levels_df["level_id"] == next_level):
+    if job_levels_df.empty or not any(job_levels_df["level_id"].astype(int) == next_level):
         return None, f"No next job level defined after level {job_level}."
     
     # Filter expectations for the next job level
     if view_type == "Skills":
-        next_level_expectations = expectations_df[expectations_df["job_level"] == next_level]
+        next_level_expectations = expectations_df[expectations_df["job_level"].astype(int) == next_level]
         if next_level_expectations.empty:
             return None, f"No skill expectations defined for next job level {next_level}."
     else:
-        next_level_expectations = comp_expectations_df[comp_expectations_df["job_level"] == next_level]
+        next_level_expectations = comp_expectations_df[comp_expectations_df["job_level"].astype(int) == next_level]
         if next_level_expectations.empty:
             return None, f"No competency expectations defined for next job level {next_level}."
     
