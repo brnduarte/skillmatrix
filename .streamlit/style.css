@@ -1,0 +1,84 @@
+/* Import Lato font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+
+/* Apply Lato font to all elements */
+html, body, [class*="css"] {
+  font-family: 'Lato', sans-serif !important;
+}
+
+/* Custom styles for buttons using the color scheme */
+.stButton>button {
+  background-color: #0e2b3d;
+  color: #f5f0d2;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.stButton>button:hover {
+  background-color: #d13c35;
+}
+
+/* Style for links */
+a {
+  color: #d13c35;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #e67e22;
+  text-decoration: underline;
+}
+
+/* Style for tabs */
+.stTabs [data-baseweb="tab-list"] {
+  gap: 8px;
+}
+
+.stTabs [data-baseweb="tab"] {
+  background-color: #f2bc54;
+  color: #0e2b3d;
+  border-radius: 4px 4px 0 0;
+}
+
+.stTabs [aria-selected="true"] {
+  background-color: #d13c35 !important;
+  color: #f5f0d2 !important;
+}
+
+/* Style for text inputs */
+.stTextInput>div>div>input {
+  border: 1px solid #f2bc54;
+}
+
+.stTextInput>div>div>input:focus {
+  border: 2px solid #d13c35;
+  box-shadow: 0 0 0 1px #d13c35;
+}
+
+/* Style for select boxes */
+.stSelectbox > div > div {
+  background-color: #f5f0d2;
+  border: 1px solid #f2bc54;
+}
+
+.stSelectbox > div > div:focus {
+  border: 2px solid #d13c35;
+  box-shadow: 0 0 0 1px #d13c35;
+}
+
+/* Style for multiselect */
+.stMultiSelect > div > div {
+  background-color: #f5f0d2;
+  border: 1px solid #f2bc54;
+}
+
+.stMultiSelect > div > div:focus {
+  border: 2px solid #d13c35;
+  box-shadow: 0 0 0 1px #d13c35;
+}
+
+/* Style for main containers */
+div.stContainer, [data-testid="stAppViewContainer"] {
+  background-color: #f5f0d2;
+}

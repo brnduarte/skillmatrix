@@ -11,4 +11,4 @@ secondaryBackgroundColor = "#f2bc54"  # Yellow-orange for container backgrounds
 textColor = "#0e2b3d"  # Dark blue for text
 
 # Additional customizations
-font = "sans serif"
+font = "Lato"
