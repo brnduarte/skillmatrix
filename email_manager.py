@@ -11,7 +11,8 @@ import pandas as pd
 
 # Load SendGrid API key from environment
 SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
-DEFAULT_FROM_EMAIL = "admin@example.com"  # This should match a verified sender in your SendGrid account
+# Use a default sender email or allow overriding via environment variable
+DEFAULT_FROM_EMAIL = os.environ.get('SENDGRID_FROM_EMAIL', "noreply@skillmatrix.com")
 
 # File to store invitation tokens
 INVITATIONS_FILE = "invitations.csv"
@@ -106,7 +107,7 @@ def send_invitation_email(email, token, name=None, organization_name=None):
         Tuple of (success, message)
     """
     if not SENDGRID_API_KEY:
-        return False, "SendGrid API key not found in environment variables"
+        return False, "SendGrid API key not found in environment variables. Please set the SENDGRID_API_KEY environment variable."
     
     # Construct the invitation URL with relative path
     invite_url = f"/?token={token}"
@@ -137,24 +138,35 @@ def send_invitation_email(email, token, name=None, organization_name=None):
     </div>
     """
     
-    message = Mail(
-        from_email=DEFAULT_FROM_EMAIL,
-        to_emails=email,
-        subject='You\'ve Been Invited to Skill Matrix Platform',
-        html_content=html_content
-    )
-    
     try:
+        message = Mail(
+            from_email=DEFAULT_FROM_EMAIL,
+            to_emails=email,
+            subject='You\'ve Been Invited to Skill Matrix Platform',
+            html_content=html_content
+        )
+        
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         response = sg.send(message)
+        
         if response.status_code >= 200 and response.status_code < 300:
             # Update invitation status to "sent"
             update_invitation_status(token, "sent")
             return True, f"Invitation email sent to {email}"
         else:
-            return False, f"Failed to send email: {response.status_code} {response.body}"
+            error_body = getattr(response, 'body', 'No detailed error')
+            error_msg = (f"SendGrid API error (HTTP {response.status_code}): {error_body}. "
+                       f"Please check that your API key has the correct permissions and "
+                       f"that '{DEFAULT_FROM_EMAIL}' is a verified sender in your SendGrid account.")
+            return False, error_msg
     except Exception as e:
-        return False, f"Error sending email: {str(e)}"
+        error_msg = str(e)
+        if "403" in error_msg:
+            error_msg = (f"Error sending email: {error_msg}. This is typically caused by: "
+                       f"1) Your SendGrid API key doesn't have permission to send emails, or "
+                       f"2) The sender email '{DEFAULT_FROM_EMAIL}' is not verified in your SendGrid account. "
+                       f"Please verify your sender email in SendGrid or set SENDGRID_FROM_EMAIL to a verified address.")
+        return False, error_msg
 
 def update_invitation_status(token, status):
     """
