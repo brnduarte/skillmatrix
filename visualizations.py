@@ -787,7 +787,13 @@ def team_heatmap(team_assessments, assessment_type="self"):
         z=heatmap_data,
         x=all_skills,
         y=job_levels,
-        colorscale="Viridis",
+        colorscale=[
+            [0, "#f5f0d2"],  # Light yellow for low values
+            [0.25, "#f2bc54"],  # Yellow-orange
+            [0.5, "#e67e22"],  # Orange
+            [0.75, "#d13c35"],  # Red
+            [1, "#0e2b3d"]   # Dark blue for high values
+        ],
         zmin=0,
         zmax=5
     ))
@@ -796,7 +802,9 @@ def team_heatmap(team_assessments, assessment_type="self"):
     fig.update_layout(
         title=f"Skills by Job Level ({assessment_type.capitalize()} Assessment)",
         xaxis_title="Skills",
-        yaxis_title="Job Levels"
+        yaxis_title="Job Levels",
+        paper_bgcolor='rgba(245, 240, 210, 0)',  # Transparent background
+        plot_bgcolor='rgba(245, 240, 210, 0)'
     )
     
     return fig, None
@@ -908,7 +916,8 @@ def combined_team_skill_radar(team_assessments, title="Team Skills Assessment"):
             theta=labels,
             fill='toself',
             name='Self Assessment',
-            line=dict(color='blue')
+            line=dict(color='#0e2b3d'),  # Dark blue
+            fillcolor='rgba(14, 43, 61, 0.2)'  # Transparent dark blue
         ))
     
     # Add manager assessment data
@@ -921,7 +930,8 @@ def combined_team_skill_radar(team_assessments, title="Team Skills Assessment"):
             theta=labels,
             fill='toself',
             name='Manager Assessment',
-            line=dict(color='green')
+            line=dict(color='#d13c35'),  # Red
+            fillcolor='rgba(209, 60, 53, 0.2)'  # Transparent red
         ))
     
     # Set layout
@@ -930,10 +940,13 @@ def combined_team_skill_radar(team_assessments, title="Team Skills Assessment"):
             radialaxis=dict(
                 visible=True,
                 range=[0, 5]
-            )
+            ),
+            bgcolor='rgba(245, 240, 210, 0.5)'  # Light yellow background
         ),
         title=title,
-        showlegend=True
+        showlegend=True,
+        paper_bgcolor='rgba(245, 240, 210, 0)',  # Transparent background
+        plot_bgcolor='rgba(245, 240, 210, 0)'
     )
     
     return fig, None
@@ -1040,7 +1053,8 @@ def combined_team_competency_radar(team_assessments, title="Team Competency Asse
             theta=labels,
             fill='toself',
             name='Self Assessment',
-            line=dict(color='blue')
+            line=dict(color='#0e2b3d'),  # Dark blue
+            fillcolor='rgba(14, 43, 61, 0.2)'  # Transparent dark blue
         ))
     
     # Add manager assessment data
@@ -1053,7 +1067,8 @@ def combined_team_competency_radar(team_assessments, title="Team Competency Asse
             theta=labels,
             fill='toself',
             name='Manager Assessment',
-            line=dict(color='green')
+            line=dict(color='#d13c35'),  # Red
+            fillcolor='rgba(209, 60, 53, 0.2)'  # Transparent red
         ))
     
     # Set layout
@@ -1062,10 +1077,13 @@ def combined_team_competency_radar(team_assessments, title="Team Competency Asse
             radialaxis=dict(
                 visible=True,
                 range=[0, 5]
-            )
+            ),
+            bgcolor='rgba(245, 240, 210, 0.5)'  # Light yellow background
         ),
         title=title,
-        showlegend=True
+        showlegend=True,
+        paper_bgcolor='rgba(245, 240, 210, 0)',  # Transparent background
+        plot_bgcolor='rgba(245, 240, 210, 0)'
     )
     
     return fig, None
@@ -1243,7 +1261,8 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
         theta=labels,
         fill='toself',
         name='Current Performance (Mean)',
-        line=dict(color='blue')
+        line=dict(color='#0e2b3d'),  # Dark blue
+        fillcolor='rgba(14, 43, 61, 0.2)'  # Transparent dark blue
     ))
     
     # Add next level expected values trace
@@ -1252,7 +1271,8 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
         theta=labels,
         fill='toself',
         name=f'Expected ({next_level_name})',
-        line=dict(color='red', dash='dash')
+        line=dict(color='#d13c35', dash='dash'),  # Red
+        fillcolor='rgba(209, 60, 53, 0.2)'  # Transparent red
     ))
     
     # Set layout
@@ -1261,10 +1281,13 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
             radialaxis=dict(
                 visible=True,
                 range=[0, 5]
-            )
+            ),
+            bgcolor='rgba(245, 240, 210, 0.5)'  # Light yellow background
         ),
         title=f"Current Performance vs. Next Level ({view_type})",
-        showlegend=True
+        showlegend=True,
+        paper_bgcolor='rgba(245, 240, 210, 0)',  # Transparent background
+        plot_bgcolor='rgba(245, 240, 210, 0)'
     )
     
     return fig, None
