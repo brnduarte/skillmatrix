@@ -425,7 +425,7 @@ with tab4:
                                 except:
                                     pass
                             
-                            # Send email
+                            # Send email invitation
                             try:
                                 email_success, email_message = send_invitation_email(
                                     email=inv_email,
@@ -434,8 +434,10 @@ with tab4:
                                     organization_name=org_name
                                 )
                                 
-                                # Display detailed error message for debugging
-                                if not email_success:
+                                if email_success:
+                                    st.success(f"Invitation sent successfully to {inv_email}")
+                                else:
+                                    # Display detailed error message for debugging
                                     st.error(f"Email sending failed: {email_message}")
                                     
                                     # If email sending failed, display the invitation link directly
@@ -451,11 +453,8 @@ with tab4:
                                 st.warning("⚠️ Since email sending failed, please copy this invitation link and share it directly with the user:")
                                 st.code(invite_url, language="text")
                                 st.info("This invitation link will expire in 7 days.")
-                            
-                            # This duplicates the success message that's already handled in the try block above
-                            # Removing to avoid "possibly unbound" variable errors
                         else:
-                            # This is handled inside the try block above to avoid unbound variable errors
+                            st.error(f"Failed to create invitation: {inv_message}")
                     except Exception as e:
                         st.error(f"Error sending invitation: {str(e)}")
     
