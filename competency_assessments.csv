@@ -1,145 +1,145 @@
 assessment_id,employee_id,competency,score,assessment_type,assessment_date,notes,organization_id
-1,1,Expertise,4.4,self,2025-03-21,Self assessment for Expertise,1.0
-2,1,Decision Making,3.0,self,2025-03-21,Self assessment for Decision Making,1.0
-3,1,Continuous Improvement,3.1,self,2025-03-21,Self assessment for Continuous Improvement,1.0
-4,1,Accountability,4.2,self,2025-03-21,Self assessment for Accountability,1.0
-5,1,Initiative,4.6,self,2025-03-21,Self assessment for Initiative,1.0
-6,1,Personal Development,3.9,self,2025-03-21,Self assessment for Personal Development,1.0
-7,1,Collaboration,4.0,self,2025-03-21,Self assessment for Collaboration,1.0
-8,1,Communication,4.4,self,2025-03-21,Self assessment for Communication,1.0
-9,1,Open Minded,4.2,self,2025-03-21,Self assessment for Open Minded,1.0
-10,1,Expertise,4.6,manager,2025-03-21,Manager assessment for Expertise,1.0
-11,1,Decision Making,3.2,manager,2025-03-21,Manager assessment for Decision Making,1.0
-12,1,Continuous Improvement,4.3,manager,2025-03-21,Manager assessment for Continuous Improvement,1.0
-13,1,Accountability,5.0,manager,2025-03-21,Manager assessment for Accountability,1.0
-14,1,Initiative,5.0,manager,2025-03-21,Manager assessment for Initiative,1.0
-15,1,Personal Development,5.0,manager,2025-03-21,Manager assessment for Personal Development,1.0
-16,1,Collaboration,3.8,manager,2025-03-21,Manager assessment for Collaboration,1.0
-17,1,Communication,4.6,manager,2025-03-21,Manager assessment for Communication,1.0
-18,1,Open Minded,3.8,manager,2025-03-21,Manager assessment for Open Minded,1.0
-19,2,Expertise,4.7,self,2025-03-21,Self assessment for Expertise,1.0
-20,2,Decision Making,4.0,self,2025-03-21,Self assessment for Decision Making,1.0
-21,2,Continuous Improvement,4.2,self,2025-03-21,Self assessment for Continuous Improvement,1.0
-22,2,Accountability,3.0,self,2025-03-21,Self assessment for Accountability,1.0
-23,2,Initiative,3.8,self,2025-03-21,Self assessment for Initiative,1.0
-24,2,Personal Development,3.9,self,2025-03-21,Self assessment for Personal Development,1.0
-25,2,Collaboration,4.1,self,2025-03-21,Self assessment for Collaboration,1.0
-26,2,Communication,4.2,self,2025-03-21,Self assessment for Communication,1.0
-27,2,Open Minded,4.8,self,2025-03-21,Self assessment for Open Minded,1.0
-28,3,Expertise,2.8,self,2025-03-21,Self assessment for Expertise,1.0
-29,3,Decision Making,3.0,self,2025-03-21,Self assessment for Decision Making,1.0
-30,3,Continuous Improvement,2.3,self,2025-03-21,Self assessment for Continuous Improvement,1.0
-31,3,Accountability,3.2,self,2025-03-21,Self assessment for Accountability,1.0
-32,3,Initiative,3.2,self,2025-03-21,Self assessment for Initiative,1.0
-33,3,Personal Development,3.0,self,2025-03-21,Self assessment for Personal Development,1.0
-34,3,Collaboration,3.9,self,2025-03-21,Self assessment for Collaboration,1.0
-35,3,Communication,3.2,self,2025-03-21,Self assessment for Communication,1.0
-36,3,Open Minded,2.6,self,2025-03-21,Self assessment for Open Minded,1.0
-37,4,Expertise,4.9,self,2025-03-21,Self assessment for Expertise,1.0
-38,4,Decision Making,3.6,self,2025-03-21,Self assessment for Decision Making,1.0
-39,4,Continuous Improvement,3.4,self,2025-03-21,Self assessment for Continuous Improvement,1.0
-40,4,Accountability,3.7,self,2025-03-21,Self assessment for Accountability,1.0
-41,4,Initiative,3.3,self,2025-03-21,Self assessment for Initiative,1.0
-42,4,Personal Development,4.9,self,2025-03-21,Self assessment for Personal Development,1.0
-43,4,Collaboration,4.0,self,2025-03-21,Self assessment for Collaboration,1.0
-44,4,Communication,3.3,self,2025-03-21,Self assessment for Communication,1.0
-45,4,Open Minded,3.6,self,2025-03-21,Self assessment for Open Minded,1.0
-46,4,Expertise,2.9,manager,2025-03-21,Manager assessment for Expertise,1.0
-47,4,Decision Making,3.7,manager,2025-03-21,Manager assessment for Decision Making,1.0
-48,4,Continuous Improvement,3.9,manager,2025-03-21,Manager assessment for Continuous Improvement,1.0
-49,4,Accountability,3.0,manager,2025-03-21,Manager assessment for Accountability,1.0
-50,4,Initiative,3.4,manager,2025-03-21,Manager assessment for Initiative,1.0
-51,4,Personal Development,4.6,manager,2025-03-21,Manager assessment for Personal Development,1.0
-52,4,Collaboration,3.9,manager,2025-03-21,Manager assessment for Collaboration,1.0
-53,4,Communication,5.0,manager,2025-03-21,Manager assessment for Communication,1.0
-54,4,Open Minded,3.2,manager,2025-03-21,Manager assessment for Open Minded,1.0
-55,5,Expertise,3.1,self,2025-03-21,Self assessment for Expertise,1.0
-56,5,Decision Making,3.3,self,2025-03-21,Self assessment for Decision Making,1.0
-57,5,Continuous Improvement,4.5,self,2025-03-21,Self assessment for Continuous Improvement,1.0
-58,5,Accountability,3.5,self,2025-03-21,Self assessment for Accountability,1.0
-59,5,Initiative,3.5,self,2025-03-21,Self assessment for Initiative,1.0
-60,5,Personal Development,4.1,self,2025-03-21,Self assessment for Personal Development,1.0
-61,5,Collaboration,4.7,self,2025-03-21,Self assessment for Collaboration,1.0
-62,5,Communication,5.0,self,2025-03-21,Self assessment for Communication,1.0
-63,5,Open Minded,3.9,self,2025-03-21,Self assessment for Open Minded,1.0
-64,6,Expertise,4.9,self,2025-03-21,Self assessment for Expertise,1.0
-65,6,Decision Making,4.7,self,2025-03-21,Self assessment for Decision Making,1.0
-66,6,Continuous Improvement,3.3,self,2025-03-21,Self assessment for Continuous Improvement,1.0
-67,6,Accountability,3.8,self,2025-03-21,Self assessment for Accountability,1.0
-68,6,Initiative,4.3,self,2025-03-21,Self assessment for Initiative,1.0
-69,6,Personal Development,3.1,self,2025-03-21,Self assessment for Personal Development,1.0
-70,6,Collaboration,3.0,self,2025-03-21,Self assessment for Collaboration,1.0
-71,6,Communication,4.8,self,2025-03-21,Self assessment for Communication,1.0
-72,6,Open Minded,3.6,self,2025-03-21,Self assessment for Open Minded,1.0
-73,6,Expertise,4.2,manager,2025-03-21,Manager assessment for Expertise,1.0
-74,6,Decision Making,3.9,manager,2025-03-21,Manager assessment for Decision Making,1.0
-75,6,Continuous Improvement,3.2,manager,2025-03-21,Manager assessment for Continuous Improvement,1.0
-76,6,Accountability,3.0,manager,2025-03-21,Manager assessment for Accountability,1.0
-77,6,Initiative,4.2,manager,2025-03-21,Manager assessment for Initiative,1.0
-78,6,Personal Development,3.3,manager,2025-03-21,Manager assessment for Personal Development,1.0
-79,6,Collaboration,3.0,manager,2025-03-21,Manager assessment for Collaboration,1.0
-80,6,Communication,3.5,manager,2025-03-21,Manager assessment for Communication,1.0
-81,6,Open Minded,3.6,manager,2025-03-21,Manager assessment for Open Minded,1.0
-82,7,Expertise,3.3,self,2025-03-21,Self assessment for Expertise,1.0
-83,7,Decision Making,3.3,self,2025-03-21,Self assessment for Decision Making,1.0
-84,7,Continuous Improvement,5.0,self,2025-03-21,Self assessment for Continuous Improvement,1.0
-85,7,Accountability,3.7,self,2025-03-21,Self assessment for Accountability,1.0
-86,7,Initiative,4.9,self,2025-03-21,Self assessment for Initiative,1.0
-87,7,Personal Development,4.5,self,2025-03-21,Self assessment for Personal Development,1.0
-88,7,Collaboration,3.6,self,2025-03-21,Self assessment for Collaboration,1.0
-89,7,Communication,3.9,self,2025-03-21,Self assessment for Communication,1.0
-90,7,Open Minded,3.1,self,2025-03-21,Self assessment for Open Minded,1.0
-91,7,Expertise,4.5,manager,2025-03-21,Manager assessment for Expertise,1.0
-92,7,Decision Making,4.7,manager,2025-03-21,Manager assessment for Decision Making,1.0
-93,7,Continuous Improvement,4.3,manager,2025-03-21,Manager assessment for Continuous Improvement,1.0
-94,7,Accountability,4.8,manager,2025-03-21,Manager assessment for Accountability,1.0
-95,7,Initiative,3.3,manager,2025-03-21,Manager assessment for Initiative,1.0
-96,7,Personal Development,4.5,manager,2025-03-21,Manager assessment for Personal Development,1.0
-97,7,Collaboration,3.4,manager,2025-03-21,Manager assessment for Collaboration,1.0
-98,7,Communication,3.7,manager,2025-03-21,Manager assessment for Communication,1.0
-99,7,Open Minded,3.7,manager,2025-03-21,Manager assessment for Open Minded,1.0
-100,8,Expertise,1.7,self,2025-03-21,Self assessment for Expertise,1.0
-101,8,Decision Making,2.0,self,2025-03-21,Self assessment for Decision Making,1.0
-102,8,Continuous Improvement,1.0,self,2025-03-21,Self assessment for Continuous Improvement,1.0
-103,8,Accountability,1.4,self,2025-03-21,Self assessment for Accountability,1.0
-104,8,Initiative,2.4,self,2025-03-21,Self assessment for Initiative,1.0
-105,8,Personal Development,1.2,self,2025-03-21,Self assessment for Personal Development,1.0
-106,8,Collaboration,1.9,self,2025-03-21,Self assessment for Collaboration,1.0
-107,8,Communication,1.0,self,2025-03-21,Self assessment for Communication,1.0
-108,8,Open Minded,2.6,self,2025-03-21,Self assessment for Open Minded,1.0
-109,8,Expertise,3.0,manager,2025-03-21,Manager assessment for Expertise,1.0
-110,8,Decision Making,2.0,manager,2025-03-21,Manager assessment for Decision Making,1.0
-111,8,Continuous Improvement,1.8,manager,2025-03-21,Manager assessment for Continuous Improvement,1.0
-112,8,Accountability,1.9,manager,2025-03-21,Manager assessment for Accountability,1.0
-113,8,Initiative,1.7,manager,2025-03-21,Manager assessment for Initiative,1.0
-114,8,Personal Development,3.4,manager,2025-03-21,Manager assessment for Personal Development,1.0
-115,8,Collaboration,2.2,manager,2025-03-21,Manager assessment for Collaboration,1.0
-116,8,Communication,1.0,manager,2025-03-21,Manager assessment for Communication,1.0
-117,8,Open Minded,1.0,manager,2025-03-21,Manager assessment for Open Minded,1.0
-118,5,Expertise,3.0,manager,2025-03-21,,1.0
-119,5,Decision Making,3.0,manager,2025-03-21,,1.0
-120,5,Continuous Improvement,3.5,manager,2025-03-21,,1.0
-121,5,Accountability,3.5,manager,2025-03-21,,1.0
-122,5,Initiative,2.5,manager,2025-03-21,,1.0
-123,5,Personal Development,4.0,manager,2025-03-21,,1.0
-124,5,Collaboration,4.0,manager,2025-03-21,,1.0
-125,5,Communication,4.5,manager,2025-03-21,,1.0
-126,5,Open Minded,4.0,manager,2025-03-21,,1.0
-127,2,Expertise,4.5,manager,2025-03-22,,1.0
-128,2,Decision Making,4.0,manager,2025-03-22,,1.0
-129,2,Continuous Improvement,4.5,manager,2025-03-22,,1.0
-130,2,Accountability,3.5,manager,2025-03-22,,1.0
-131,2,Initiative,4.0,manager,2025-03-22,,1.0
-132,2,Personal Development,4.0,manager,2025-03-22,,1.0
-133,2,Collaboration,4.5,manager,2025-03-22,,1.0
-134,2,Communication,4.5,manager,2025-03-22,,1.0
-135,2,Open Minded,5.0,manager,2025-03-22,,1.0
-136,3,Expertise,3.5,manager,2025-03-22,,1.0
-137,3,Decision Making,3.0,manager,2025-03-22,,1.0
-138,3,Continuous Improvement,2.5,manager,2025-03-22,,1.0
-139,3,Accountability,2.5,manager,2025-03-22,,1.0
-140,3,Initiative,2.5,manager,2025-03-22,,1.0
-141,3,Personal Development,3.5,manager,2025-03-22,,1.0
-142,3,Collaboration,3.5,manager,2025-03-22,,1.0
-143,3,Communication,3.5,manager,2025-03-22,,1.0
-144,3,Open Minded,3.5,manager,2025-03-22,,1.0
+1,1,Expertise,4.4,self,2025-03-21,Self assessment for Expertise,1
+2,1,Decision Making,3.0,self,2025-03-21,Self assessment for Decision Making,1
+3,1,Continuous Improvement,3.1,self,2025-03-21,Self assessment for Continuous Improvement,1
+4,1,Accountability,4.2,self,2025-03-21,Self assessment for Accountability,1
+5,1,Initiative,4.6,self,2025-03-21,Self assessment for Initiative,1
+6,1,Personal Development,3.9,self,2025-03-21,Self assessment for Personal Development,1
+7,1,Collaboration,4.0,self,2025-03-21,Self assessment for Collaboration,1
+8,1,Communication,4.4,self,2025-03-21,Self assessment for Communication,1
+9,1,Open Minded,4.2,self,2025-03-21,Self assessment for Open Minded,1
+10,1,Expertise,4.6,manager,2025-03-21,Manager assessment for Expertise,1
+11,1,Decision Making,3.2,manager,2025-03-21,Manager assessment for Decision Making,1
+12,1,Continuous Improvement,4.3,manager,2025-03-21,Manager assessment for Continuous Improvement,1
+13,1,Accountability,5.0,manager,2025-03-21,Manager assessment for Accountability,1
+14,1,Initiative,5.0,manager,2025-03-21,Manager assessment for Initiative,1
+15,1,Personal Development,5.0,manager,2025-03-21,Manager assessment for Personal Development,1
+16,1,Collaboration,3.8,manager,2025-03-21,Manager assessment for Collaboration,1
+17,1,Communication,4.6,manager,2025-03-21,Manager assessment for Communication,1
+18,1,Open Minded,3.8,manager,2025-03-21,Manager assessment for Open Minded,1
+19,2,Expertise,4.7,self,2025-03-21,Self assessment for Expertise,1
+20,2,Decision Making,4.0,self,2025-03-21,Self assessment for Decision Making,1
+21,2,Continuous Improvement,4.2,self,2025-03-21,Self assessment for Continuous Improvement,1
+22,2,Accountability,3.0,self,2025-03-21,Self assessment for Accountability,1
+23,2,Initiative,3.8,self,2025-03-21,Self assessment for Initiative,1
+24,2,Personal Development,3.9,self,2025-03-21,Self assessment for Personal Development,1
+25,2,Collaboration,4.1,self,2025-03-21,Self assessment for Collaboration,1
+26,2,Communication,4.2,self,2025-03-21,Self assessment for Communication,1
+27,2,Open Minded,4.8,self,2025-03-21,Self assessment for Open Minded,1
+28,3,Expertise,2.8,self,2025-03-21,Self assessment for Expertise,1
+29,3,Decision Making,3.0,self,2025-03-21,Self assessment for Decision Making,1
+30,3,Continuous Improvement,2.3,self,2025-03-21,Self assessment for Continuous Improvement,1
+31,3,Accountability,3.2,self,2025-03-21,Self assessment for Accountability,1
+32,3,Initiative,3.2,self,2025-03-21,Self assessment for Initiative,1
+33,3,Personal Development,3.0,self,2025-03-21,Self assessment for Personal Development,1
+34,3,Collaboration,3.9,self,2025-03-21,Self assessment for Collaboration,1
+35,3,Communication,3.2,self,2025-03-21,Self assessment for Communication,1
+36,3,Open Minded,2.6,self,2025-03-21,Self assessment for Open Minded,1
+37,4,Expertise,4.9,self,2025-03-21,Self assessment for Expertise,1
+38,4,Decision Making,3.6,self,2025-03-21,Self assessment for Decision Making,1
+39,4,Continuous Improvement,3.4,self,2025-03-21,Self assessment for Continuous Improvement,1
+40,4,Accountability,3.7,self,2025-03-21,Self assessment for Accountability,1
+41,4,Initiative,3.3,self,2025-03-21,Self assessment for Initiative,1
+42,4,Personal Development,4.9,self,2025-03-21,Self assessment for Personal Development,1
+43,4,Collaboration,4.0,self,2025-03-21,Self assessment for Collaboration,1
+44,4,Communication,3.3,self,2025-03-21,Self assessment for Communication,1
+45,4,Open Minded,3.6,self,2025-03-21,Self assessment for Open Minded,1
+46,4,Expertise,2.9,manager,2025-03-21,Manager assessment for Expertise,1
+47,4,Decision Making,3.7,manager,2025-03-21,Manager assessment for Decision Making,1
+48,4,Continuous Improvement,3.9,manager,2025-03-21,Manager assessment for Continuous Improvement,1
+49,4,Accountability,3.0,manager,2025-03-21,Manager assessment for Accountability,1
+50,4,Initiative,3.4,manager,2025-03-21,Manager assessment for Initiative,1
+51,4,Personal Development,4.6,manager,2025-03-21,Manager assessment for Personal Development,1
+52,4,Collaboration,3.9,manager,2025-03-21,Manager assessment for Collaboration,1
+53,4,Communication,5.0,manager,2025-03-21,Manager assessment for Communication,1
+54,4,Open Minded,3.2,manager,2025-03-21,Manager assessment for Open Minded,1
+55,5,Expertise,3.1,self,2025-03-21,Self assessment for Expertise,1
+56,5,Decision Making,3.3,self,2025-03-21,Self assessment for Decision Making,1
+57,5,Continuous Improvement,4.5,self,2025-03-21,Self assessment for Continuous Improvement,1
+58,5,Accountability,3.5,self,2025-03-21,Self assessment for Accountability,1
+59,5,Initiative,3.5,self,2025-03-21,Self assessment for Initiative,1
+60,5,Personal Development,4.1,self,2025-03-21,Self assessment for Personal Development,1
+61,5,Collaboration,4.7,self,2025-03-21,Self assessment for Collaboration,1
+62,5,Communication,5.0,self,2025-03-21,Self assessment for Communication,1
+63,5,Open Minded,3.9,self,2025-03-21,Self assessment for Open Minded,1
+64,6,Expertise,4.9,self,2025-03-21,Self assessment for Expertise,1
+65,6,Decision Making,4.7,self,2025-03-21,Self assessment for Decision Making,1
+66,6,Continuous Improvement,3.3,self,2025-03-21,Self assessment for Continuous Improvement,1
+67,6,Accountability,3.8,self,2025-03-21,Self assessment for Accountability,1
+68,6,Initiative,4.3,self,2025-03-21,Self assessment for Initiative,1
+69,6,Personal Development,3.1,self,2025-03-21,Self assessment for Personal Development,1
+70,6,Collaboration,3.0,self,2025-03-21,Self assessment for Collaboration,1
+71,6,Communication,4.8,self,2025-03-21,Self assessment for Communication,1
+72,6,Open Minded,3.6,self,2025-03-21,Self assessment for Open Minded,1
+73,6,Expertise,4.2,manager,2025-03-21,Manager assessment for Expertise,1
+74,6,Decision Making,3.9,manager,2025-03-21,Manager assessment for Decision Making,1
+75,6,Continuous Improvement,3.2,manager,2025-03-21,Manager assessment for Continuous Improvement,1
+76,6,Accountability,3.0,manager,2025-03-21,Manager assessment for Accountability,1
+77,6,Initiative,4.2,manager,2025-03-21,Manager assessment for Initiative,1
+78,6,Personal Development,3.3,manager,2025-03-21,Manager assessment for Personal Development,1
+79,6,Collaboration,3.0,manager,2025-03-21,Manager assessment for Collaboration,1
+80,6,Communication,3.5,manager,2025-03-21,Manager assessment for Communication,1
+81,6,Open Minded,3.6,manager,2025-03-21,Manager assessment for Open Minded,1
+82,7,Expertise,3.3,self,2025-03-21,Self assessment for Expertise,1
+83,7,Decision Making,3.3,self,2025-03-21,Self assessment for Decision Making,1
+84,7,Continuous Improvement,5.0,self,2025-03-21,Self assessment for Continuous Improvement,1
+85,7,Accountability,3.7,self,2025-03-21,Self assessment for Accountability,1
+86,7,Initiative,4.9,self,2025-03-21,Self assessment for Initiative,1
+87,7,Personal Development,4.5,self,2025-03-21,Self assessment for Personal Development,1
+88,7,Collaboration,3.6,self,2025-03-21,Self assessment for Collaboration,1
+89,7,Communication,3.9,self,2025-03-21,Self assessment for Communication,1
+90,7,Open Minded,3.1,self,2025-03-21,Self assessment for Open Minded,1
+91,7,Expertise,4.5,manager,2025-03-21,Manager assessment for Expertise,1
+92,7,Decision Making,4.7,manager,2025-03-21,Manager assessment for Decision Making,1
+93,7,Continuous Improvement,4.3,manager,2025-03-21,Manager assessment for Continuous Improvement,1
+94,7,Accountability,4.8,manager,2025-03-21,Manager assessment for Accountability,1
+95,7,Initiative,3.3,manager,2025-03-21,Manager assessment for Initiative,1
+96,7,Personal Development,4.5,manager,2025-03-21,Manager assessment for Personal Development,1
+97,7,Collaboration,3.4,manager,2025-03-21,Manager assessment for Collaboration,1
+98,7,Communication,3.7,manager,2025-03-21,Manager assessment for Communication,1
+99,7,Open Minded,3.7,manager,2025-03-21,Manager assessment for Open Minded,1
+100,8,Expertise,1.7,self,2025-03-21,Self assessment for Expertise,1
+101,8,Decision Making,2.0,self,2025-03-21,Self assessment for Decision Making,1
+102,8,Continuous Improvement,1.0,self,2025-03-21,Self assessment for Continuous Improvement,1
+103,8,Accountability,1.4,self,2025-03-21,Self assessment for Accountability,1
+104,8,Initiative,2.4,self,2025-03-21,Self assessment for Initiative,1
+105,8,Personal Development,1.2,self,2025-03-21,Self assessment for Personal Development,1
+106,8,Collaboration,1.9,self,2025-03-21,Self assessment for Collaboration,1
+107,8,Communication,1.0,self,2025-03-21,Self assessment for Communication,1
+108,8,Open Minded,2.6,self,2025-03-21,Self assessment for Open Minded,1
+109,8,Expertise,3.0,manager,2025-03-21,Manager assessment for Expertise,1
+110,8,Decision Making,2.0,manager,2025-03-21,Manager assessment for Decision Making,1
+111,8,Continuous Improvement,1.8,manager,2025-03-21,Manager assessment for Continuous Improvement,1
+112,8,Accountability,1.9,manager,2025-03-21,Manager assessment for Accountability,1
+113,8,Initiative,1.7,manager,2025-03-21,Manager assessment for Initiative,1
+114,8,Personal Development,3.4,manager,2025-03-21,Manager assessment for Personal Development,1
+115,8,Collaboration,2.2,manager,2025-03-21,Manager assessment for Collaboration,1
+116,8,Communication,1.0,manager,2025-03-21,Manager assessment for Communication,1
+117,8,Open Minded,1.0,manager,2025-03-21,Manager assessment for Open Minded,1
+118,5,Expertise,3.0,manager,2025-03-21,,1
+119,5,Decision Making,3.0,manager,2025-03-21,,1
+120,5,Continuous Improvement,3.5,manager,2025-03-21,,1
+121,5,Accountability,3.5,manager,2025-03-21,,1
+122,5,Initiative,2.5,manager,2025-03-21,,1
+123,5,Personal Development,4.0,manager,2025-03-21,,1
+124,5,Collaboration,4.0,manager,2025-03-21,,1
+125,5,Communication,4.5,manager,2025-03-21,,1
+126,5,Open Minded,4.0,manager,2025-03-21,,1
+127,2,Expertise,4.5,manager,2025-03-22,,1
+128,2,Decision Making,4.0,manager,2025-03-22,,1
+129,2,Continuous Improvement,4.5,manager,2025-03-22,,1
+130,2,Accountability,3.5,manager,2025-03-22,,1
+131,2,Initiative,4.0,manager,2025-03-22,,1
+132,2,Personal Development,4.0,manager,2025-03-22,,1
+133,2,Collaboration,4.5,manager,2025-03-22,,1
+134,2,Communication,4.5,manager,2025-03-22,,1
+135,2,Open Minded,5.0,manager,2025-03-22,,1
+136,3,Expertise,3.5,manager,2025-03-22,,1
+137,3,Decision Making,3.0,manager,2025-03-22,,1
+138,3,Continuous Improvement,2.5,manager,2025-03-22,,1
+139,3,Accountability,2.5,manager,2025-03-22,,1
+140,3,Initiative,2.5,manager,2025-03-22,,1
+141,3,Personal Development,3.5,manager,2025-03-22,,1
+142,3,Collaboration,3.5,manager,2025-03-22,,1
+143,3,Communication,3.5,manager,2025-03-22,,1
+144,3,Open Minded,3.5,manager,2025-03-22,,1

@@ -1,12 +1,15 @@
 """
 Script to ensure all data tables have organization_id = 1 for existing data.
-This script makes sure organization IDs are consistent across all tables.
+This script makes sure organization IDs are consistent across all tables and 
+converts them to the proper integer format for consistent comparison.
 """
 import pandas as pd
 import os
+import numpy as np
 
 # List of CSV files to process
 files_to_update = [
+    'employees.csv',
     'competencies.csv',
     'skills.csv',
     'job_levels.csv',
@@ -28,20 +31,27 @@ for filename in files_to_update:
         
         # Check if the file has an organization_id column
         if 'organization_id' in df.columns:
-            # Convert to string for consistent comparison
-            df['organization_id'] = df['organization_id'].astype(str)
+            # Convert organization_id to numeric format, coerce errors to NaN
+            df['organization_id'] = pd.to_numeric(df['organization_id'], errors='coerce')
             
-            # Find rows where organization_id is not 1
-            mask = (df['organization_id'] != '1') & (df['organization_id'] != '1.0')
-            if mask.any():
-                # Update organization_id to 1
-                df.loc[mask, 'organization_id'] = '1'
-                print(f"Updated {mask.sum()} rows in {filename}")
-                
-                # Save the updated file
-                df.to_csv(filename, index=False)
-            else:
-                print(f"No rows to update in {filename}")
+            # Count how many non-1 values we have
+            mask = (df['organization_id'] != 1) | df['organization_id'].isna()
+            non_1_count = mask.sum()
+            
+            # Replace NaN and non-1 values with 1
+            df['organization_id'] = df['organization_id'].fillna(1)
+            df.loc[df['organization_id'] != 1, 'organization_id'] = 1
+            
+            # Convert to integer (no decimals)
+            df['organization_id'] = df['organization_id'].astype(int)
+            
+            # Save the updated file
+            df.to_csv(filename, index=False)
+            
+            print(f"Updated {non_1_count} rows in {filename}")
+            if non_1_count > 0:
+                print(f"First 5 rows of {filename} after update:")
+                print(df.head())
         else:
             print(f"File {filename} does not have an organization_id column")
     except Exception as e:

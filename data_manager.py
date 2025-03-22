@@ -112,9 +112,25 @@ def load_data_for_organization(data_type, organization_id):
         if "organization_id" not in df.columns:
             return pd.DataFrame()  # Return empty dataframe if we can't add the column
     
-    # Filter by organization ID, including records where organization_id is NULL/None when needed
-    return df[(df["organization_id"] == organization_id) | 
-              (df["organization_id"].isna() & (data_type in ["expectations", "comp_expectations"]))]
+    # Ensure organization_id in dataframe is numeric and compare with numeric organization_id parameter
+    # Handle different potential data types in the CSV file
+    if not df.empty and "organization_id" in df.columns:
+        try:
+            # Convert to numeric, but keep NaN values where conversion fails
+            df["organization_id"] = pd.to_numeric(df["organization_id"], errors='coerce')
+            
+            # Convert organization_id parameter to int for comparison
+            org_id_int = int(organization_id)
+            
+            # Filter by organization ID, including records where organization_id is NULL/None when needed
+            return df[(df["organization_id"] == org_id_int) | 
+                    (df["organization_id"].isna() & (data_type in ["expectations", "comp_expectations"]))]
+        except (ValueError, TypeError):
+            # If conversion fails, fall back to string comparison
+            print(f"Warning: Data type conversion issue in organization filtering for {data_type}")
+            return df[(df["organization_id"].astype(str) == str(organization_id)) | 
+                    (df["organization_id"].isna() & (data_type in ["expectations", "comp_expectations"]))]
+    return df
 
 def save_data(data_type, df):
     """Save data to a CSV file"""

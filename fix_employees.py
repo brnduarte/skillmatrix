@@ -2,20 +2,28 @@
 Script to fix employee data by ensuring all existing employees have organization_id = 1.
 """
 import pandas as pd
+import numpy as np
 
 # Load the employees data
 df = pd.read_csv('employees.csv')
 
-# Convert organization_id to a string for cleaner display
-df['organization_id'] = df['organization_id'].astype(str)
+# Make sure organization_id is an integer
+# First replace any non-numeric values with NaN
+df['organization_id'] = pd.to_numeric(df['organization_id'], errors='coerce')
 
-# Replace any organization_id that is not 1 with 1
-# This includes empty strings, NaN values, and values like '2025-03-22' that might have been mistakenly added
-mask = (df['organization_id'] != '1.0') & (df['organization_id'] != '1')
-updated_count = mask.sum()
+# Then replace NaN with 1
+df['organization_id'] = df['organization_id'].fillna(1)
 
-# Update the organization_id to 1 for all employees
-df.loc[mask, 'organization_id'] = '1'
+# Convert to integer
+df['organization_id'] = df['organization_id'].astype(int)
+
+# Make sure all organization_id values are 1
+updated_count = (df['organization_id'] != 1).sum()
+df['organization_id'] = 1
+
+# Display the first few rows for verification
+print("First few rows after update:")
+print(df[['employee_id', 'name', 'organization_id']].head())
 
 # Save the updated dataframe
 df.to_csv('employees.csv', index=False)
