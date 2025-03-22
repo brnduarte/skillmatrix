@@ -1067,7 +1067,7 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     skills_df = load_data("skills")
     competencies_df = load_data("competencies")
     expectations_df = load_data("expectations")
-    comp_expectations_df = load_data("competency_expectations")
+    comp_expectations_df = load_data("comp_expectations")
     job_levels_df = load_data("levels")
     
     if competencies_df.empty:
@@ -1101,13 +1101,21 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     
     next_level_name = next_level_row.iloc[0]["name"]
     
-    # Filter expectations for the next job level using the numeric ID
+    # Filter expectations for the next job level using both ID and name formats
     if view_type == "Skills":
-        next_level_expectations = expectations_df[expectations_df["job_level"] == str(next_level_id)]
+        # Try both numeric ID and full name
+        next_level_expectations = expectations_df[
+            (expectations_df["job_level"] == str(next_level_id)) | 
+            (expectations_df["job_level"] == next_level_name)
+        ]
         if next_level_expectations.empty:
             return None, f"No skill expectations defined for next job level '{next_level_name}'."
     else:
-        next_level_expectations = comp_expectations_df[comp_expectations_df["job_level"] == str(next_level_id)]
+        # Try both numeric ID and full name
+        next_level_expectations = comp_expectations_df[
+            (comp_expectations_df["job_level"] == str(next_level_id)) | 
+            (comp_expectations_df["job_level"] == next_level_name)
+        ]
         if next_level_expectations.empty:
             return None, f"No competency expectations defined for next job level '{next_level_name}'."
     

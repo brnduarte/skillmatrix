@@ -8,5 +8,6 @@ dependencies = [
     "pandas>=2.2.3",
     "plotly>=6.0.1",
     "streamlit>=1.43.2",
+    "trafilatura>=2.0.0",
     "xlsxwriter>=3.2.2",
 ]
