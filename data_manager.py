@@ -388,19 +388,51 @@ def get_skill_assessments(employee_id, competency, skill):
         (assessments_df["skill"] == skill)
     ]
 
-def get_latest_assessment(employee_id, competency, skill, assessment_type):
-    """Get the latest assessment for a specific skill"""
+def get_latest_assessment(employee_id, competency, skill, assessment_type, organization_id=None):
+    """Get the latest assessment for a specific skill
+    
+    Args:
+        employee_id: ID of the employee
+        competency: Name of the competency
+        skill: Name of the skill
+        assessment_type: Type of assessment (self/manager)
+        organization_id: Optional organization ID to filter assessments
+        
+    Returns:
+        Latest assessment record or None if not found
+    """
     assessments_df = load_data("assessments")
     
     if assessments_df.empty:
         return None
     
-    relevant = assessments_df[
-        (assessments_df["employee_id"] == employee_id) &
-        (assessments_df["competency"] == competency) &
-        (assessments_df["skill"] == skill) &
+    # If no organization_id provided, get it from the employee record
+    if organization_id is None and employee_id is not None:
+        employees_df = load_data("employees")
+        if not employees_df.empty:
+            employee = employees_df[employees_df["employee_id"] == employee_id]
+            if not employee.empty and "organization_id" in employee.columns:
+                organization_id = employee.iloc[0].get("organization_id")
+    
+    # Base filter conditions
+    conditions = [
+        (assessments_df["employee_id"] == employee_id),
+        (assessments_df["competency"] == competency),
+        (assessments_df["skill"] == skill),
         (assessments_df["assessment_type"] == assessment_type)
     ]
+    
+    # Add organization filter if needed
+    if organization_id is not None and "organization_id" in assessments_df.columns:
+        conditions.append(
+            (assessments_df["organization_id"] == organization_id) | 
+            (assessments_df["organization_id"].isna())
+        )
+    
+    # Apply all filters
+    relevant = assessments_df[pd.Series(True, index=assessments_df.index)]
+    for condition in conditions:
+        relevant = relevant[condition]
     
     if relevant.empty:
         return None
@@ -453,30 +485,81 @@ def calculate_employee_competency_means(employee_id):
     
     return means
 
-def get_employees_for_manager(manager_id):
-    """Get all employees reporting to a manager"""
+def get_employees_for_manager(manager_id, organization_id=None):
+    """Get all employees reporting to a manager
+    
+    Args:
+        manager_id: ID of the manager
+        organization_id: Optional organization ID to filter employees
+        
+    Returns:
+        DataFrame of employees reporting to this manager
+    """
     try:
         employees_df = load_data("employees")
-        return employees_df[employees_df["manager_id"] == manager_id]
-    except Exception:
+        
+        if employees_df.empty:
+            return pd.DataFrame()
+        
+        # If no organization_id provided, get it from the manager's record
+        if organization_id is None and manager_id is not None:
+            manager = employees_df[employees_df["employee_id"] == manager_id]
+            if not manager.empty and "organization_id" in manager.columns:
+                organization_id = manager.iloc[0].get("organization_id")
+        
+        # Always filter by manager_id
+        filtered = employees_df[employees_df["manager_id"] == manager_id]
+        
+        # Add organization filter if needed
+        if organization_id is not None and "organization_id" in filtered.columns:
+            filtered = filtered[filtered["organization_id"] == organization_id]
+        
+        return filtered
+        
+    except Exception as e:
+        print(f"Error getting employees for manager: {str(e)}")
         return pd.DataFrame()
 
-def get_team_skill_means(manager_id):
-    """Calculate team skill means for a manager's team"""
-    employees_df = load_data("employees")
+def get_team_skill_means(manager_id, organization_id=None):
+    """Calculate team skill means for a manager's team
+    
+    Args:
+        manager_id: ID of the manager
+        organization_id: Optional organization ID to filter data
+        
+    Returns:
+        DataFrame with mean scores by competency, skill, and assessment type
+    """
+    # Get employees from the same organization as the manager
+    team_members = get_employees_for_manager(manager_id, organization_id)
     assessments_df = load_data("assessments")
     
-    if employees_df.empty or assessments_df.empty:
+    if team_members.empty or assessments_df.empty:
         return pd.DataFrame()
     
-    # Get all employees under this manager
-    team_employees = employees_df[employees_df["manager_id"] == manager_id]["employee_id"].tolist()
+    # Extract employee IDs
+    team_employee_ids = team_members["employee_id"].tolist()
     
-    if not team_employees:
+    if not team_employee_ids:
         return pd.DataFrame()
+    
+    # If no organization_id provided, get it from the manager's record
+    if organization_id is None and manager_id is not None:
+        employees_df = load_data("employees")
+        if not employees_df.empty:
+            manager = employees_df[employees_df["employee_id"] == manager_id]
+            if not manager.empty and "organization_id" in manager.columns:
+                organization_id = manager.iloc[0].get("organization_id")
     
     # Get assessments for all team members
-    team_assessments = assessments_df[assessments_df["employee_id"].isin(team_employees)]
+    team_assessments = assessments_df[assessments_df["employee_id"].isin(team_employee_ids)]
+    
+    # Add organization filter if needed
+    if organization_id is not None and "organization_id" in team_assessments.columns:
+        team_assessments = team_assessments[
+            (team_assessments["organization_id"] == organization_id) | 
+            (team_assessments["organization_id"].isna())
+        ]
     
     if team_assessments.empty:
         return pd.DataFrame()
@@ -486,22 +569,46 @@ def get_team_skill_means(manager_id):
     
     return means
 
-def get_team_competency_means(manager_id):
-    """Calculate team competency means for a manager's team (separate from skills)"""
-    employees_df = load_data("employees")
+def get_team_competency_means(manager_id, organization_id=None):
+    """Calculate team competency means for a manager's team (separate from skills)
+    
+    Args:
+        manager_id: ID of the manager
+        organization_id: Optional organization ID to filter data
+        
+    Returns:
+        DataFrame with mean scores by competency and assessment type
+    """
+    # Get employees from the same organization as the manager
+    team_members = get_employees_for_manager(manager_id, organization_id)
     assessments_df = load_data("assessments")
     
-    if employees_df.empty or assessments_df.empty:
+    if team_members.empty or assessments_df.empty:
         return pd.DataFrame()
     
-    # Get all employees under this manager
-    team_employees = employees_df[employees_df["manager_id"] == manager_id]["employee_id"].tolist()
+    # Extract employee IDs
+    team_employee_ids = team_members["employee_id"].tolist()
     
-    if not team_employees:
+    if not team_employee_ids:
         return pd.DataFrame()
+    
+    # If no organization_id provided, get it from the manager's record
+    if organization_id is None and manager_id is not None:
+        employees_df = load_data("employees")
+        if not employees_df.empty:
+            manager = employees_df[employees_df["employee_id"] == manager_id]
+            if not manager.empty and "organization_id" in manager.columns:
+                organization_id = manager.iloc[0].get("organization_id")
     
     # Get assessments for all team members
-    team_assessments = assessments_df[assessments_df["employee_id"].isin(team_employees)]
+    team_assessments = assessments_df[assessments_df["employee_id"].isin(team_employee_ids)]
+    
+    # Add organization filter if needed
+    if organization_id is not None and "organization_id" in team_assessments.columns:
+        team_assessments = team_assessments[
+            (team_assessments["organization_id"] == organization_id) | 
+            (team_assessments["organization_id"].isna())
+        ]
     
     if team_assessments.empty:
         return pd.DataFrame()
