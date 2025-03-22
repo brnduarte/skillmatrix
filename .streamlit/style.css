@@ -1,281 +1,54 @@
-/* Import Lato font from Google Fonts with more weights */
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+/* Import Lato font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
 
-/* Apply Lato font to all elements and set base styles */
+/* Apply Lato font to all elements */
 html, body, [class*="css"] {
   font-family: 'Lato', sans-serif !important;
 }
 
-/* ------- LAYOUT & CONTAINERS ------- */
-/* Main app container */
-[data-testid="stAppViewContainer"] {
-  background-color: #f5f0d2;
-}
-
-/* Header styling */
-header {
-  background-color: #0e2b3d;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  position: relative;
-  z-index: 999;
-}
-
-/* Main title logo header */
-header .decoration {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 5px;
-  height: 100%;
-  background-color: #d13c35;
-}
-
-/* Page headers */
-h1, h2, h3 {
-  color: #0e2b3d;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  line-height: 1.3;
-}
-
-h1 {
-  border-bottom: 2px solid #d13c35;
-  padding-bottom: 0.5rem;
-  font-size: 2.2rem;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-
-h1::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 50px;
-  height: 4px;
-  background-color: #d13c35;
-  border-radius: 2px;
-}
-
-h2 {
-  font-size: 1.6rem;
-  color: #0e2b3d;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-h3 {
-  font-size: 1.25rem;
-  color: #333;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Page subtitle */
-.page-subtitle {
-  color: #666;
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  border-left: 3px solid #f2bc54;
-  padding-left: 1rem;
-}
-
-/* Content containers */
-.stContainer, .main {
-  padding: 1rem;
-}
-
-/* Cards and sections */
-[data-testid="stVerticalBlock"] {
-  padding: 0.5rem 0;
-}
-
-/* Card containers with shadow and border */
-.css-1r6slb0, .css-12oz5g7 {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  margin: 1rem 0;
-  border-left: 4px solid #d13c35;
-}
-
-/* Sidebar styling */
-[data-testid="stSidebar"] {
-  background-color: #0e2b3d;
-  padding-top: 2rem;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-}
-
-[data-testid="stSidebar"] [data-testid="stMarkdown"] {
-  color: #f5f0d2;
-}
-
-/* Sidebar title styling */
-[data-testid="stSidebar"] [data-testid="stMarkdown"] h1,
-[data-testid="stSidebar"] [data-testid="stMarkdown"] h2,
-[data-testid="stSidebar"] [data-testid="stMarkdown"] h3 {
-  color: #f5f0d2;
-  border-bottom: 1px solid #f2bc54;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-
-/* Sidebar links and text */
-[data-testid="stSidebar"] a {
-  color: #f2bc54;
-  font-weight: 500;
-  text-decoration: none;
-  display: block;
-  padding: 0.5rem 0;
-  transition: all 0.2s ease;
-}
-
-[data-testid="stSidebar"] a:hover {
-  color: #d13c35;
-  transform: translateX(2px);
-}
-
-/* Sidebar buttons */
-[data-testid="stSidebar"] .stButton > button {
-  background-color: #f2bc54;
-  color: #0e2b3d;
-  width: 100%;
-  margin: 0.5rem 0;
-  border-radius: 4px;
-}
-
-[data-testid="stSidebar"] .stButton > button:hover {
-  background-color: #d13c35;
-  color: #f5f0d2;
-}
-
-/* Sidebar navigation sections */
-.sidebar-nav-section {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(242, 188, 84, 0.3);
-}
-
-/* Sidebar organization selector */
-[data-testid="stSidebar"] .stSelectbox > div {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-  margin-bottom: 1rem;
-}
-
-[data-testid="stSidebar"] .stSelectbox > div > div {
-  background-color: transparent;
-  color: #f5f0d2;
-}
-
-/* Make sidebar items more spacious */
-[data-testid="stSidebar"] section > div {
-  padding: 0.5rem 1rem;
-}
-
-/* Expanders */
-.streamlit-expanderHeader {
-  background-color: #f2bc54;
-  border-radius: 5px;
-  padding: 0.5rem 1rem !important;
-  font-weight: 600;
-}
-
-.streamlit-expanderContent {
-  border: 1px solid #f2bc54;
-  border-top: none;
-  border-radius: 0 0 5px 5px;
-  padding: 1rem;
-}
-
-/* ------- INTERACTIVE ELEMENTS ------- */
-/* Buttons */
+/* Custom styles for buttons using the color scheme */
 .stButton>button {
   background-color: #0e2b3d;
   color: #f5f0d2;
   border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }
 
 .stButton>button:hover {
   background-color: #d13c35;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.stButton>button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Links */
+/* Style for links */
 a {
   color: #d13c35;
   text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s ease;
 }
 
 a:hover {
-  color: #0e2b3d;
+  color: #e67e22;
   text-decoration: underline;
 }
 
-/* Tabs styling */
+/* Style for tabs */
 .stTabs [data-baseweb="tab-list"] {
   gap: 8px;
-  border-bottom: 2px solid #f2bc54;
-  padding-bottom: 0;
-  margin-bottom: 1rem;
 }
 
 .stTabs [data-baseweb="tab"] {
-  background-color: #f5f0d2;
+  background-color: #f2bc54;
   color: #0e2b3d;
-  border-radius: 8px 8px 0 0;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
-  transition: all 0.2s ease;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(242, 188, 84, 0.5);
-  border-bottom: none;
+  border-radius: 4px 4px 0 0;
 }
 
 .stTabs [aria-selected="true"] {
   background-color: #d13c35 !important;
   color: #f5f0d2 !important;
-  transform: translateY(-4px);
-  box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
-  border-color: #d13c35;
-  position: relative;
-  z-index: 1;
 }
 
-/* Content area of tabs */
-.stTabs [data-baseweb="tab-panel"] {
-  padding: 1rem;
-  border: 1px solid #f2bc54;
-  border-top: none;
-  border-radius: 0 0 8px 8px;
-  background-color: white;
-  margin-top: -1px;
-  position: relative;
-  z-index: 0;
-}
-
-/* Form elements */
-/* Text inputs */
+/* Style for text inputs */
 .stTextInput>div>div>input {
-  border: 1px solid #dddcc3;
-  border-radius: 6px;
-  padding: 0.5rem;
-  transition: all 0.2s ease;
+  border: 1px solid #f2bc54;
 }
 
 .stTextInput>div>div>input:focus {
@@ -283,12 +56,10 @@ a:hover {
   box-shadow: 0 0 0 1px #d13c35;
 }
 
-/* Select boxes */
+/* Style for select boxes */
 .stSelectbox > div > div {
-  background-color: white;
+  background-color: #f5f0d2;
   border: 1px solid #f2bc54;
-  border-radius: 6px;
-  transition: all 0.2s ease;
 }
 
 .stSelectbox > div > div:focus {
@@ -296,12 +67,10 @@ a:hover {
   box-shadow: 0 0 0 1px #d13c35;
 }
 
-/* Multiselect */
+/* Style for multiselect */
 .stMultiSelect > div > div {
-  background-color: white;
+  background-color: #f5f0d2;
   border: 1px solid #f2bc54;
-  border-radius: 6px;
-  transition: all 0.2s ease;
 }
 
 .stMultiSelect > div > div:focus {
@@ -309,185 +78,7 @@ a:hover {
   box-shadow: 0 0 0 1px #d13c35;
 }
 
-/* Radio & Checkbox */
-.stRadio > div {
-  padding: 0.5rem;
-}
-
-.stCheckbox label {
-  font-weight: 500;
-}
-
-/* Sliders */
-.stSlider [data-baseweb="slider"] {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-/* Metrics */
-[data-testid="stMetric"] {
-  background-color: #f2bc54;
-  padding: 1rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-[data-testid="stMetricLabel"] {
-  font-weight: 700;
-}
-
-[data-testid="stMetricValue"] {
-  font-size: 2rem !important;
-  font-weight: 900 !important;
-  color: #d13c35;
-}
-
-/* ------- SPECIAL ELEMENTS ------- */
-/* Skill rating containers */
-.skills-container {
-  border: 1px solid #f2bc54;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: white;
-}
-
-.skill-header {
-  font-weight: 700;
-  color: #0e2b3d;
-  margin-bottom: 0.5rem;
-  border-bottom: 1px solid #f2bc54;
-  padding-bottom: 0.5rem;
-}
-
-/* Rating scale */
-.rating-scale {
-  display: flex;
-  justify-content: space-between;
-  margin: 0.5rem 0;
-}
-
-.rating-option {
-  text-align: center;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.9rem;
-  border-radius: 4px;
+/* Style for main containers */
+div.stContainer, [data-testid="stAppViewContainer"] {
   background-color: #f5f0d2;
-}
-
-/* Assessment scores */
-.assessment-score {
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #d13c35;
-}
-
-/* Tables */
-.stDataFrame {
-  border: 1px solid #f2bc54;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.stDataFrame thead {
-  background-color: #0e2b3d;
-  color: #f5f0d2;
-}
-
-.stDataFrame th {
-  font-weight: 600;
-  padding: 0.75rem 1rem;
-}
-
-.stDataFrame td {
-  padding: 0.5rem 1rem;
-}
-
-.stDataFrame tr:nth-child(even) {
-  background-color: #f5f0d2;
-}
-
-/* Alert messages */
-.success-message {
-  background-color: #d4edda;
-  color: #155724;
-  padding: 1rem;
-  border-radius: 6px;
-  border-left: 4px solid #28a745;
-  margin: 1rem 0;
-}
-
-.error-message {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 1rem;
-  border-radius: 6px;
-  border-left: 4px solid #dc3545;
-  margin: 1rem 0;
-}
-
-/* Footer styling */
-footer {
-  margin-top: 3rem;
-  padding-top: 1rem;
-  border-top: 1px solid #f2bc54;
-  text-align: center;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.footer-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.footer-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.footer-links a {
-  color: #0e2b3d;
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-
-.footer-links a:hover {
-  color: #d13c35;
-  text-decoration: underline;
-}
-
-.footer-copyright {
-  font-size: 0.85rem;
-  color: #777;
-  margin-top: 0.5rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .stContainer, .main {
-    padding: 0.5rem;
-  }
-  
-  .css-1r6slb0, .css-12oz5g7 {
-    padding: 1rem;
-  }
-  
-  .footer-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  h1 {
-    font-size: 1.8rem;
-  }
-  
-  h2 {
-    font-size: 1.4rem;
-  }
 }
