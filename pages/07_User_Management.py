@@ -27,13 +27,9 @@ def get_invitation_url(token):
     Returns:
         Full URL string that can be used in emails or direct sharing
     """
-    # Get the base URL from environment variable or use a default for local testing
-    base_url = os.environ.get('BASE_URL', 'https://skill-matrix.replit.app')
+    # Use the specific URL for the application
+    base_url = 'https://skilltracker.replit.app'
     
-    # Ensure the base URL doesn't end with a slash
-    if base_url.endswith('/'):
-        base_url = base_url[:-1]
-        
     # Create full URL with token parameter
     return f"{base_url}/?token={token}"
 

@@ -122,11 +122,8 @@ def send_invitation_email(email, token, name=None, organization_name=None):
     
     # Construct the invitation URL with full path
     # Get the base URL from environment variable or use a default for local testing
-    base_url = os.environ.get('BASE_URL', 'https://skill-matrix.replit.app')
-    
-    # Ensure the base URL doesn't end with a slash
-    if base_url.endswith('/'):
-        base_url = base_url[:-1]
+    # Use the specific URL for the application
+    base_url = 'https://skilltracker.replit.app'
         
     # Create full URL with token parameter
     invite_url = f"{base_url}/?token={token}"
