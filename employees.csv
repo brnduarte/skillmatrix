@@ -5,5 +5,5 @@ employee_id,name,email,job_title,job_level,department,manager_id,hire_date,organ
 5,Afonso Solano,test@test.com,Product Designer,IC3 - Senior,Design,6.0,2025-03-21,1
 6,Cher,test@test.com,Product Designer,Manager,Design,7.0,2025-03-21,1
 7,Admin,admin@test.com,Product Designer,Manager,Design,6.0,2025-03-21,1
-10,Zedas Cove,zedas@cove.com,Software Engineer,IC2 - Mid Level,Engineering,,2025-03-22,1
 11,Jonhy Test 1,jojo@test.com,Designer,IC4 - Staff,Design,,2025-03-22,1
+12,Zedas Cove,brnduarte@gmail.com,Product Design,IC3 - Senior,Design,,2025-03-22,1

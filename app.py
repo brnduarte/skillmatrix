@@ -13,6 +13,7 @@ import numpy as np
 import os
 from utils import authenticate_user, get_user_role, initialize_session_state
 from data_manager import load_data, save_data
+from email_manager import verify_invitation, mark_invitation_accepted
 
 # Load custom CSS
 with open(os.path.join('.streamlit', 'style.css')) as f:
@@ -20,6 +21,130 @@ with open(os.path.join('.streamlit', 'style.css')) as f:
 
 # Initialize session state variables
 initialize_session_state()
+
+# Check for invitation token in query parameters
+def handle_invitation():
+    """Handle invitation token from URL query parameters"""
+    query_params = st.experimental_get_query_params()
+    
+    if "token" in query_params:
+        token = query_params["token"][0]
+        
+        # Verify the token
+        is_valid, invitation = verify_invitation(token)
+        
+        if is_valid and invitation:
+            st.success(f"Welcome! Your invitation is valid.")
+            
+            # Pre-fill registration form with invitation data
+            st.session_state.invitation_token = token
+            st.session_state.invitation_username = invitation.get("username", "")
+            st.session_state.invitation_email = invitation.get("email", "")
+            st.session_state.invitation_role = invitation.get("role", "employee")
+            st.session_state.invitation_organization_id = invitation.get("organization_id")
+            
+            # Show invitation acceptance form
+            with st.form(key="accept_invitation_form"):
+                st.subheader("Accept Invitation")
+                st.write(f"You've been invited to join the Skill Matrix platform with the username: **{invitation.get('username')}**")
+                
+                # Personal information
+                name = st.text_input("Full Name", key="inv_accept_name")
+                
+                # Email is pre-filled and not editable
+                st.text_input("Email", value=invitation.get("email", ""), disabled=True)
+                
+                # Account setup
+                username = st.text_input("Username", value=invitation.get("username", ""), key="inv_accept_username")
+                password = st.text_input("Set Password", type="password", key="inv_accept_password")
+                confirm_password = st.text_input("Confirm Password", type="password", key="inv_accept_confirm_password")
+                
+                # Job information
+                job_title = st.text_input("Job Title", key="inv_accept_job_title", placeholder="Software Engineer")
+                
+                # Get job levels for dropdown
+                job_levels_df = load_data("levels")
+                job_level_options = [""] + job_levels_df["name"].tolist() if not job_levels_df.empty else [""]
+                job_level = st.selectbox("Job Level", options=job_level_options, key="inv_accept_job_level")
+                
+                department = st.text_input("Department", key="inv_accept_department", placeholder="Engineering")
+                
+                # Get managers for dropdown
+                employees_df = load_data("employees")
+                managers = employees_df[["employee_id", "name"]].copy()
+                manager_options = [("", "None")] + list(zip(managers["employee_id"].astype(str), managers["name"])) if not employees_df.empty else [("", "None")]
+                manager_id = st.selectbox("Manager", options=manager_options, format_func=lambda x: x[1], key="inv_accept_manager_id")
+                
+                submit_button = st.form_submit_button(label="Accept Invitation")
+                
+                if submit_button:
+                    # Validate form
+                    if not name or not username or not password:
+                        st.error("Please fill in all required fields")
+                    elif password != confirm_password:
+                        st.error("Passwords do not match")
+                    else:
+                        # Add user to database
+                        from data_manager import add_user, add_employee
+                        
+                        # Extract manager ID (first element of the tuple)
+                        manager_id_value = manager_id[0] if manager_id and manager_id[0] else None
+                        
+                        # Get organization ID from invitation
+                        organization_id = None
+                        if invitation.get("organization_id") and pd.notnull(invitation["organization_id"]):
+                            # Convert to int for consistency
+                            try:
+                                organization_id = int(float(invitation["organization_id"]))
+                            except (ValueError, TypeError):
+                                st.error(f"Invalid organization ID in invitation data")
+                        
+                        # Create user account first
+                        user_success, user_message = add_user(
+                            username=username,
+                            password=password,
+                            role=invitation.get("role", "employee"),
+                            name=name,
+                            email=invitation.get("email", "")
+                        )
+                        
+                        if user_success:
+                            # Create employee record with organization
+                            employee_success, employee_message, employee_id = add_employee(
+                                name=name,
+                                email=invitation.get("email", ""),
+                                job_title=job_title,
+                                job_level=job_level,
+                                department=department,
+                                manager_id=manager_id_value,
+                                organization_id=organization_id
+                            )
+                            
+                            if employee_success:
+                                # Mark invitation as accepted
+                                mark_invitation_accepted(token)
+                                
+                                st.success("Invitation accepted! You can now log in with your username and password.")
+                                
+                                # Clear invitation data and params
+                                for key in list(st.session_state.keys()):
+                                    if key.startswith("invitation_"):
+                                        del st.session_state[key]
+                                
+                                # Clear query params and redirect to login
+                                st.experimental_set_query_params()
+                                st.rerun()
+                            else:
+                                st.error(f"Failed to create employee record: {employee_message}")
+                        else:
+                            st.error(f"Failed to create user account: {user_message}")
+            
+            # Stop further execution
+            st.stop()
+        else:
+            st.error("This invitation link is invalid or has expired.")
+            # Clear query params
+            st.experimental_set_query_params()
 
 # User authentication
 def display_login():

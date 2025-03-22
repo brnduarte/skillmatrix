@@ -11,7 +11,10 @@ st.set_page_config(
 import pandas as pd
 import os
 from utils import initialize_session_state, check_permission
-from data_manager import load_data, save_data
+from data_manager import load_data, save_data, get_organization
+from email_manager import (
+    create_invitation, send_invitation_email, get_pending_invitations
+)
 
 # Load custom CSS
 with open(os.path.join('.streamlit', 'style.css')) as f:
@@ -31,10 +34,10 @@ if not check_permission("admin"):
     st.stop()
 
 st.title("User Management")
-st.write("Manage users in the system. Add, update, or delete user accounts.")
+st.write("Manage users in the system. Add, update, or delete user accounts, and send invitations to new users.")
 
 # Main interface
-tab1, tab2, tab3 = st.tabs(["View Users", "Add User", "Edit/Delete User"])
+tab1, tab2, tab3, tab4 = st.tabs(["View Users", "Add User", "Edit/Delete User", "Invitations"])
 
 with tab1:
     st.header("All Users")
@@ -322,3 +325,193 @@ with tab3:
                                 st.rerun()
                             except Exception as e:
                                 st.error(f"Error deleting user: {str(e)}")
+                                
+with tab4:
+    st.header("User Invitations")
+    
+    invitation_tab1, invitation_tab2 = st.tabs(["Send Invitations", "View Pending Invitations"])
+    
+    with invitation_tab1:
+        st.subheader("Send New Invitation")
+        
+        # Get current organization for context
+        from utils import get_current_organization_id
+        current_org_id = get_current_organization_id()
+        current_org_name = None
+        
+        if current_org_id:
+            try:
+                org_info = get_organization(current_org_id)
+                if org_info is not None:
+                    current_org_name = org_info.get("name")
+            except Exception as e:
+                st.error(f"Error retrieving organization info: {str(e)}")
+        
+        # Form for sending an invitation
+        with st.form(key="send_invitation_form"):
+            st.write("Invite a new user to join the platform via email")
+            
+            inv_name = st.text_input("Full Name", key="inv_name")
+            inv_email = st.text_input("Email Address", key="inv_email")
+            inv_username = st.text_input("Suggested Username", key="inv_username")
+            
+            inv_role = st.selectbox("User Role", options=user_roles, key="inv_role")
+            
+            # Get organizations for dropdown
+            from data_manager import get_organizations
+            orgs_df = get_organizations()
+            if not orgs_df.empty:
+                # Ensure organization_id is properly formatted as a string
+                orgs_df["organization_id"] = orgs_df["organization_id"].apply(lambda x: str(int(float(x))) if pd.notnull(x) else "")
+                org_options = list(zip(orgs_df["organization_id"], orgs_df["name"]))
+                
+                # If current organization is set, pre-select it
+                default_index = 0
+                if current_org_id:
+                    for i, (org_id, _) in enumerate(org_options):
+                        if str(org_id) == str(current_org_id):
+                            default_index = i
+                            break
+            else:
+                org_options = []
+                default_index = 0
+            
+            inv_organization = st.selectbox(
+                "Organization", 
+                options=org_options, 
+                format_func=lambda x: x[1], 
+                index=default_index,
+                key="inv_org_id"
+            )
+            
+            send_button = st.form_submit_button(label="Send Invitation")
+            
+            if send_button:
+                # Validate form
+                if not inv_name or not inv_email or not inv_username:
+                    st.error("Please fill in all required fields.")
+                elif "@" not in inv_email or "." not in inv_email:
+                    st.error("Please enter a valid email address.")
+                else:
+                    try:
+                        # Extract organization_id (first element of the tuple)
+                        organization_id = None
+                        if inv_organization and inv_organization[0]:
+                            # Handle potential float strings like '1.0'
+                            try:
+                                # First convert to float, then to int to handle '1.0' values
+                                organization_id = int(float(inv_organization[0]))
+                            except (ValueError, TypeError):
+                                st.error(f"Invalid organization ID format: {inv_organization[0]}")
+                                organization_id = None
+                        
+                        # Create invitation
+                        inv_success, inv_message, token = create_invitation(
+                            username=inv_username,
+                            email=inv_email,
+                            role=inv_role,
+                            organization_id=organization_id,
+                            expiry_days=7
+                        )
+                        
+                        if inv_success:
+                            # Get organization name for email
+                            org_name = None
+                            if organization_id:
+                                try:
+                                    org_info = get_organization(organization_id)
+                                    if org_info:
+                                        org_name = org_info.get("name")
+                                except:
+                                    pass
+                            
+                            # Send email
+                            email_success, email_message = send_invitation_email(
+                                email=inv_email,
+                                token=token,
+                                name=inv_name,
+                                organization_name=org_name
+                            )
+                            
+                            if email_success:
+                                st.success(f"Invitation sent successfully to {inv_email}")
+                            else:
+                                st.warning(f"Invitation created but email failed to send: {email_message}")
+                        else:
+                            st.error(f"Failed to create invitation: {inv_message}")
+                    except Exception as e:
+                        st.error(f"Error sending invitation: {str(e)}")
+    
+    with invitation_tab2:
+        st.subheader("Pending Invitations")
+        
+        # Get current organization for filtering
+        from utils import get_current_organization_id
+        current_org_id = get_current_organization_id()
+        
+        # Load pending invitations
+        try:
+            pending_invitations = get_pending_invitations(organization_id=current_org_id)
+            
+            if pending_invitations.empty:
+                st.info("No pending invitations found.")
+            else:
+                # Clean up the display
+                display_cols = ["username", "email", "role", "created_at", "expires_at", "status"]
+                
+                # If showing all organizations, include organization_id
+                if current_org_id is None and "organization_id" in pending_invitations.columns:
+                    display_cols.insert(3, "organization_id")
+                
+                # Format dates for better readability
+                if "created_at" in pending_invitations.columns:
+                    pending_invitations["created_at"] = pd.to_datetime(pending_invitations["created_at"]).dt.strftime("%Y-%m-%d %H:%M")
+                
+                if "expires_at" in pending_invitations.columns:
+                    pending_invitations["expires_at"] = pd.to_datetime(pending_invitations["expires_at"]).dt.strftime("%Y-%m-%d %H:%M")
+                
+                # Display the invitations
+                st.dataframe(pending_invitations[display_cols])
+                
+                # Option to resend invitation
+                if not pending_invitations.empty:
+                    st.subheader("Resend Invitation")
+                    
+                    # Create email list for selection
+                    email_options = pending_invitations["email"].tolist()
+                    selected_email = st.selectbox("Select Email", options=email_options, key="resend_email")
+                    
+                    if st.button("Resend Invitation Email", key="resend_button"):
+                        try:
+                            # Get the invitation details
+                            invitation = pending_invitations[pending_invitations["email"] == selected_email].iloc[0]
+                            token = invitation["token"]
+                            username = invitation["username"]
+                            org_id = invitation.get("organization_id")
+                            
+                            # Get organization name
+                            org_name = None
+                            if org_id and pd.notnull(org_id):
+                                try:
+                                    org_info = get_organization(int(float(org_id)))
+                                    if org_info:
+                                        org_name = org_info.get("name")
+                                except:
+                                    pass
+                            
+                            # Resend email
+                            email_success, email_message = send_invitation_email(
+                                email=selected_email,
+                                token=token,
+                                name=username,  # Using username as name (could improve by storing name in invitations)
+                                organization_name=org_name
+                            )
+                            
+                            if email_success:
+                                st.success(f"Invitation resent successfully to {selected_email}")
+                            else:
+                                st.error(f"Failed to resend invitation email: {email_message}")
+                        except Exception as e:
+                            st.error(f"Error resending invitation: {str(e)}")
+        except Exception as e:
+            st.error(f"Error loading pending invitations: {str(e)}")
