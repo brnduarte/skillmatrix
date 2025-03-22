@@ -8,7 +8,7 @@ from data_manager import (
 from utils import check_permission, get_user_id, calculate_mean
 from visualizations import (
     team_skill_radar, team_competency_radar, competency_bar_chart, team_heatmap,
-    create_radar_chart
+    create_radar_chart, combined_team_skill_radar, combined_team_competency_radar
 )
 
 # Page configuration
@@ -113,74 +113,41 @@ with tab1:
     col1, col2 = st.columns(2)
     
     with col1:
-        # Filter by assessment type
-        assessment_type = st.radio(
-            "Assessment Type", 
-            ["self", "manager", "both"], 
+        # Filter by visualization type
+        visual_type = st.radio(
+            "Visualization Type", 
+            ["Skills", "Competences"], 
             horizontal=True,
-            format_func=lambda x: "Self Assessment" if x == "self" else "Manager Assessment" if x == "manager" else "Combined"
+            key="team_overview_visual_type"
         )
         
-        # Filter assessments by type
-        filtered_assessments = team_assessments
-        if assessment_type != "both":
-            filtered_assessments = team_assessments[team_assessments["assessment_type"] == assessment_type]
-        
         # Create team skills radar chart
-        st.subheader("Team Skills Radar")
-        fig, error = team_skill_radar(filtered_assessments)
-        if fig:
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.info(error or "Could not create team skills radar chart.")
-    
-    with col2:
-        # Create team competencies radar chart
-        st.subheader("Team Competencies")
-        
-        if manager_id and assessment_type != "both":
-            # Use the dedicated competency means function for better accuracy
-            team_comp_means = get_team_competency_means(manager_id)
-            if not team_comp_means.empty:
-                # Filter by assessment type
-                team_comp_filtered = team_comp_means[team_comp_means["assessment_type"] == assessment_type]
-                if not team_comp_filtered.empty:
-                    # Create labels and values for radar chart
-                    labels = team_comp_filtered["competency"].tolist()
-                    values = team_comp_filtered["score"].tolist()
-                    
-                    # Create radar chart using the visualization function
-                    fig = create_radar_chart(
-                        data=values,
-                        categories=labels,
-                        title=f"Team Competency Assessment ({assessment_type.capitalize()})",
-                        scale=5
-                    )
-                    st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.info(f"No {assessment_type} assessments found for competencies.")
+        if visual_type == "Skills":
+            st.subheader("Team Skills Radar")
+            fig, error = combined_team_skill_radar(team_assessments)
+            if fig:
+                st.plotly_chart(fig, use_container_width=True)
             else:
-                # Fallback to the original function
-                fig, error = team_competency_radar(filtered_assessments)
-                if fig:
-                    st.plotly_chart(fig, use_container_width=True)
-                else:
-                    st.info(error or "Could not create team competencies radar chart.")
+                st.info(error or "Could not create team skills radar chart.")
         else:
-            # Use the original function for department filtering or combined view
-            fig, error = team_competency_radar(filtered_assessments)
+            # Create team competencies radar chart
+            st.subheader("Team Competencies")
+            fig, error = combined_team_competency_radar(team_assessments)
             if fig:
                 st.plotly_chart(fig, use_container_width=True)
             else:
                 st.info(error or "Could not create team competencies radar chart.")
     
-    # Team skills heatmap
-    st.subheader("Skills Heatmap")
-    fig, error = team_heatmap(filtered_assessments)
-    if fig:
-        st.plotly_chart(fig, use_container_width=True)
-    else:
-        st.info(error or "Could not create skills heatmap.")
+    with col2:
+        # Team skills heatmap
+        st.subheader("Skills Heatmap")
+        # Display the heatmap for the selected assessment type (for now use "self")
+        filtered_assessments = team_assessments[team_assessments["assessment_type"] == "self"]
+        fig, error = team_heatmap(filtered_assessments)
+        if fig:
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info(error or "Could not create skills heatmap.")
 
 # Competency Analysis Tab
 with tab2:
