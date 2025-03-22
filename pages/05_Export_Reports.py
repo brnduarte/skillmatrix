@@ -27,6 +27,10 @@ from visualizations import (
 # Load custom CSS for consistent styling
 load_custom_css()
 
+# This page is accessible only to managers and admins
+if not check_page_access(["admin", "manager"]):
+    st.stop()
+
 # Check if user is authenticated
 if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
     st.warning("Please login from the Home page.")

@@ -10,7 +10,7 @@ st.set_page_config(
 
 import pandas as pd
 import os
-from utils import initialize_session_state, check_permission, get_current_organization_id
+from utils import initialize_session_state, check_permission, check_page_access, get_current_organization_id
 from data_manager import get_organizations, add_organization, update_organization, delete_organization, get_user_organizations
 
 # Load custom CSS
@@ -19,6 +19,10 @@ with open(os.path.join('.streamlit', 'style.css')) as f:
 
 # Initialize session state variables
 initialize_session_state()
+
+# This page is accessible only to admins
+if not check_page_access(["admin"]):
+    st.stop()
 
 # Check if user is logged in
 if not st.session_state.authenticated:

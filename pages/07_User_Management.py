@@ -10,7 +10,7 @@ st.set_page_config(
 
 import pandas as pd
 import os
-from utils import initialize_session_state, check_permission
+from utils import initialize_session_state, check_permission, check_page_access, get_current_organization_id
 from data_manager import load_data, save_data, get_organization
 from email_manager import (
     create_invitation, send_invitation_email, get_pending_invitations
@@ -39,6 +39,10 @@ with open(os.path.join('.streamlit', 'style.css')) as f:
 
 # Initialize session state variables
 initialize_session_state()
+
+# This page is accessible only to admins
+if not check_page_access(["admin"]):
+    st.stop()
 
 # Check if user is logged in
 if not st.session_state.authenticated:
