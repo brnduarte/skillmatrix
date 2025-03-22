@@ -49,7 +49,8 @@ def create_comparison_radar_chart(actual_data, expected_data, categories, title=
         theta=categories,
         fill='toself',
         name='Current Level',
-        line=dict(color='blue')
+        line=dict(color='#0A1A2A', width=2),  # Darker blue for better contrast
+        fillcolor='rgba(10, 26, 42, 0.2)'  # Transparent dark blue
     ))
     
     # Add expected data
@@ -58,7 +59,8 @@ def create_comparison_radar_chart(actual_data, expected_data, categories, title=
         theta=categories,
         fill='toself',
         name='Expected Level',
-        line=dict(color='red')
+        line=dict(color='#B22222', width=2),  # Darker red for better contrast
+        fillcolor='rgba(178, 34, 34, 0.2)'  # Transparent dark red
     ))
     
     # Set layout
@@ -203,7 +205,7 @@ def combined_skill_radar(employee_id):
             theta=labels,
             fill='toself',
             name='Self Assessment',
-            line=dict(color='blue')
+            line=dict(color='#0A1A2A', width=2)
         ))
     
     # Add manager assessment data
@@ -216,7 +218,7 @@ def combined_skill_radar(employee_id):
             theta=labels,
             fill='toself',
             name='Manager Assessment',
-            line=dict(color='green')
+            line=dict(color='#006400', width=2)
         ))
     
     # Set layout
@@ -535,7 +537,7 @@ def combined_competency_radar(employee_id):
             theta=labels,
             fill='toself',
             name='Self Assessment',
-            line=dict(color='blue')
+            line=dict(color='#0A1A2A', width=2)
         ))
     
     # Add manager assessment data
@@ -548,7 +550,7 @@ def combined_competency_radar(employee_id):
             theta=labels,
             fill='toself',
             name='Manager Assessment',
-            line=dict(color='green')
+            line=dict(color='#006400', width=2)
         ))
     
     # Set layout
@@ -916,8 +918,8 @@ def combined_team_skill_radar(team_assessments, title="Team Skills Assessment"):
             theta=labels,
             fill='toself',
             name='Self Assessment',
-            line=dict(color='#0e2b3d'),  # Dark blue
-            fillcolor='rgba(14, 43, 61, 0.2)'  # Transparent dark blue
+            line=dict(color='#0A1A2A', width=2),  # Dark blue
+            fillcolor='rgba(10, 26, 42, 0.2)'  # Transparent dark blue
         ))
     
     # Add manager assessment data
@@ -930,8 +932,8 @@ def combined_team_skill_radar(team_assessments, title="Team Skills Assessment"):
             theta=labels,
             fill='toself',
             name='Manager Assessment',
-            line=dict(color='#d13c35'),  # Red
-            fillcolor='rgba(209, 60, 53, 0.2)'  # Transparent red
+            line=dict(color='#B22222', width=2),  # Red
+            fillcolor='rgba(178, 34, 34, 0.2)'  # Transparent red
         ))
     
     # Set layout
@@ -1053,8 +1055,8 @@ def combined_team_competency_radar(team_assessments, title="Team Competency Asse
             theta=labels,
             fill='toself',
             name='Self Assessment',
-            line=dict(color='#0e2b3d'),  # Dark blue
-            fillcolor='rgba(14, 43, 61, 0.2)'  # Transparent dark blue
+            line=dict(color='#0A1A2A', width=2),  # Dark blue
+            fillcolor='rgba(10, 26, 42, 0.2)'  # Transparent dark blue
         ))
     
     # Add manager assessment data
@@ -1067,8 +1069,8 @@ def combined_team_competency_radar(team_assessments, title="Team Competency Asse
             theta=labels,
             fill='toself',
             name='Manager Assessment',
-            line=dict(color='#d13c35'),  # Red
-            fillcolor='rgba(209, 60, 53, 0.2)'  # Transparent red
+            line=dict(color='#B22222', width=2),  # Red
+            fillcolor='rgba(178, 34, 34, 0.2)'  # Transparent red
         ))
     
     # Set layout
@@ -1261,8 +1263,8 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
         theta=labels,
         fill='toself',
         name='Current Performance (Mean)',
-        line=dict(color='#0e2b3d'),  # Dark blue
-        fillcolor='rgba(14, 43, 61, 0.2)'  # Transparent dark blue
+        line=dict(color='#0A1A2A', width=2),  # Dark blue
+        fillcolor='rgba(10, 26, 42, 0.2)'  # Transparent dark blue
     ))
     
     # Add next level expected values trace
@@ -1272,7 +1274,7 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
         fill='toself',
         name=f'Expected ({next_level_name})',
         line=dict(color='#d13c35', dash='dash'),  # Red
-        fillcolor='rgba(209, 60, 53, 0.2)'  # Transparent red
+        fillcolor='rgba(178, 34, 34, 0.2)'  # Transparent red
     ))
     
     # Set layout
