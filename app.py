@@ -14,10 +14,10 @@ import os
 from utils import authenticate_user, get_user_role, initialize_session_state
 from data_manager import load_data, save_data
 from email_manager import verify_invitation, mark_invitation_accepted
+from ui_helpers import load_custom_css, success_message, error_message, info_message, warning_message, section_divider
 
 # Load custom CSS
-with open(os.path.join('.streamlit', 'style.css')) as f:
-    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+load_custom_css()
 
 # Initialize session state variables
 initialize_session_state()

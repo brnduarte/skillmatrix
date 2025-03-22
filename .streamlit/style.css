@@ -1,54 +1,144 @@
-/* Import Lato font from Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+/* Import Lato font from Google Fonts with more weights */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
 
-/* Apply Lato font to all elements */
+/* Apply Lato font to all elements and set base styles */
 html, body, [class*="css"] {
   font-family: 'Lato', sans-serif !important;
 }
 
-/* Custom styles for buttons using the color scheme */
+/* ------- LAYOUT & CONTAINERS ------- */
+/* Main app container */
+[data-testid="stAppViewContainer"] {
+  background-color: #f5f0d2;
+}
+
+/* Header styling */
+header {
+  background-color: #0e2b3d;
+}
+
+h1, h2, h3 {
+  color: #0e2b3d;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  border-bottom: 2px solid #d13c35;
+  padding-bottom: 0.5rem;
+}
+
+/* Content containers */
+.stContainer, .main {
+  padding: 1rem;
+}
+
+/* Cards and sections */
+[data-testid="stVerticalBlock"] {
+  padding: 0.5rem 0;
+}
+
+/* Card containers with shadow and border */
+.css-1r6slb0, .css-12oz5g7 {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  border-left: 4px solid #d13c35;
+}
+
+/* Sidebar styling */
+[data-testid="stSidebar"] {
+  background-color: #0e2b3d;
+  padding-top: 2rem;
+}
+
+[data-testid="stSidebar"] [data-testid="stMarkdown"] {
+  color: #f5f0d2;
+}
+
+/* Expanders */
+.streamlit-expanderHeader {
+  background-color: #f2bc54;
+  border-radius: 5px;
+  padding: 0.5rem 1rem !important;
+  font-weight: 600;
+}
+
+.streamlit-expanderContent {
+  border: 1px solid #f2bc54;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  padding: 1rem;
+}
+
+/* ------- INTERACTIVE ELEMENTS ------- */
+/* Buttons */
 .stButton>button {
   background-color: #0e2b3d;
   color: #f5f0d2;
   border: none;
-  border-radius: 4px;
-  transition: background-color 0.3s;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .stButton>button:hover {
   background-color: #d13c35;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Style for links */
+.stButton>button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Links */
 a {
   color: #d13c35;
   text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
 a:hover {
-  color: #e67e22;
+  color: #0e2b3d;
   text-decoration: underline;
 }
 
-/* Style for tabs */
+/* Tabs styling */
 .stTabs [data-baseweb="tab-list"] {
   gap: 8px;
+  border-bottom: 2px solid #f2bc54;
+  padding-bottom: 0;
 }
 
 .stTabs [data-baseweb="tab"] {
   background-color: #f2bc54;
   color: #0e2b3d;
-  border-radius: 4px 4px 0 0;
+  border-radius: 8px 8px 0 0;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
 }
 
 .stTabs [aria-selected="true"] {
   background-color: #d13c35 !important;
   color: #f5f0d2 !important;
+  transform: translateY(-2px);
 }
 
-/* Style for text inputs */
+/* Form elements */
+/* Text inputs */
 .stTextInput>div>div>input {
   border: 1px solid #f2bc54;
+  border-radius: 6px;
+  padding: 0.5rem;
+  transition: all 0.2s ease;
 }
 
 .stTextInput>div>div>input:focus {
@@ -56,10 +146,12 @@ a:hover {
   box-shadow: 0 0 0 1px #d13c35;
 }
 
-/* Style for select boxes */
+/* Select boxes */
 .stSelectbox > div > div {
-  background-color: #f5f0d2;
+  background-color: white;
   border: 1px solid #f2bc54;
+  border-radius: 6px;
+  transition: all 0.2s ease;
 }
 
 .stSelectbox > div > div:focus {
@@ -67,10 +159,12 @@ a:hover {
   box-shadow: 0 0 0 1px #d13c35;
 }
 
-/* Style for multiselect */
+/* Multiselect */
 .stMultiSelect > div > div {
-  background-color: #f5f0d2;
+  background-color: white;
   border: 1px solid #f2bc54;
+  border-radius: 6px;
+  transition: all 0.2s ease;
 }
 
 .stMultiSelect > div > div:focus {
@@ -78,7 +172,130 @@ a:hover {
   box-shadow: 0 0 0 1px #d13c35;
 }
 
-/* Style for main containers */
-div.stContainer, [data-testid="stAppViewContainer"] {
+/* Radio & Checkbox */
+.stRadio > div {
+  padding: 0.5rem;
+}
+
+.stCheckbox label {
+  font-weight: 500;
+}
+
+/* Sliders */
+.stSlider [data-baseweb="slider"] {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Metrics */
+[data-testid="stMetric"] {
+  background-color: #f2bc54;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+[data-testid="stMetricLabel"] {
+  font-weight: 700;
+}
+
+[data-testid="stMetricValue"] {
+  font-size: 2rem !important;
+  font-weight: 900 !important;
+  color: #d13c35;
+}
+
+/* ------- SPECIAL ELEMENTS ------- */
+/* Skill rating containers */
+.skills-container {
+  border: 1px solid #f2bc54;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: white;
+}
+
+.skill-header {
+  font-weight: 700;
+  color: #0e2b3d;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #f2bc54;
+  padding-bottom: 0.5rem;
+}
+
+/* Rating scale */
+.rating-scale {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+}
+
+.rating-option {
+  text-align: center;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  border-radius: 4px;
   background-color: #f5f0d2;
+}
+
+/* Assessment scores */
+.assessment-score {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #d13c35;
+}
+
+/* Tables */
+.stDataFrame {
+  border: 1px solid #f2bc54;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stDataFrame thead {
+  background-color: #0e2b3d;
+  color: #f5f0d2;
+}
+
+.stDataFrame th {
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+}
+
+.stDataFrame td {
+  padding: 0.5rem 1rem;
+}
+
+.stDataFrame tr:nth-child(even) {
+  background-color: #f5f0d2;
+}
+
+/* Alert messages */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid #28a745;
+  margin: 1rem 0;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid #dc3545;
+  margin: 1rem 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stContainer, .main {
+    padding: 0.5rem;
+  }
+  
+  .css-1r6slb0, .css-12oz5g7 {
+    padding: 1rem;
+  }
 }

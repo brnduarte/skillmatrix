@@ -4,11 +4,18 @@ address = "0.0.0.0"
 port = 5000
 
 [theme]
-# Primary colors
+# Primary accent color for interactive elements
 primaryColor = "#d13c35"  # Red for primary buttons and interactive elements
+
+# Background colors
 backgroundColor = "#f5f0d2"  # Light yellow for page background
 secondaryBackgroundColor = "#f2bc54"  # Yellow-orange for container backgrounds
+
+# Text and content colors
 textColor = "#0e2b3d"  # Dark blue for text
 
-# Additional customizations
+# Font configuration
 font = "Lato"
+
+# Base font size
+base = 16  # Base font size in pixels
