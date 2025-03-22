@@ -1,23 +1,23 @@
-competency_id,name,description
+competency_id,name,description,organization_id
 1,Expertise,"""Define and shapes the roadmap together with product leads. Act autonomously with minimal guidance or support, ensuring that designs meet user needs and business objectives. Contribute to the prioritization of the highest impact features based previous customer research or data. 
 
 Demonstrates strong understanding of design tools and methods. Promote workshops and facilitate working sessions with counterparts in product and engineering.
 
 Contribute and helps to shape the design vision and strategy.
  
-Justify design decisions based on customer insights, technical capabilities and its able to negotiate trade-offs in face of technical constraints. """
-2,Decision Making,Leads design decision-making in complex projects and initiatives. Provide guidance and mentorship in data-driven design choices to less experienced designers . Combine users insights and business needs to align or challenge product decisions with their counterpart in product and tech.
+Justify design decisions based on customer insights, technical capabilities and its able to negotiate trade-offs in face of technical constraints. """,
+2,Decision Making,Leads design decision-making in complex projects and initiatives. Provide guidance and mentorship in data-driven design choices to less experienced designers . Combine users insights and business needs to align or challenge product decisions with their counterpart in product and tech.,
 3,Continuous Improvement,"""Drives significant improvements in their product space. Contributes to design of processes and evaluate methodologies, influencing the design and product strategy.
 Actively identify improvement and drives discovery opportunities, knowing how to use users insights and feedback as a tool to improve the product and projects.
 
 Is capable of reflect on quantitative and qualitative data and use it to propose improvements in product and make informed decisions.
 
-Seeks continuous feedback from designers but also peers in product and engineering"""
-4,Accountability,"Lead design initiatives, taking ownership of product outcomes. It is capable of solving problems of strategic relevance under supervision, acting as an enabler between product, business, and customer needs. Steps in when design decisions are needed, acting hands on or providing mentorship and support for less experience designers."
+Seeks continuous feedback from designers but also peers in product and engineering""",
+4,Accountability,"Lead design initiatives, taking ownership of product outcomes. It is capable of solving problems of strategic relevance under supervision, acting as an enabler between product, business, and customer needs. Steps in when design decisions are needed, acting hands on or providing mentorship and support for less experience designers.",
 5,Initiative,"Explores new methodologies and technologies, integrating them into design practices. Promotes and organize workshops, sharing sessions and talks to share knowledge across teams.
 
-Promotes changes and improvements in existing design processes and is capable of influence and coordinate initiative across departments."
-6,Personal Development,"Pursues advanced learning opportunities autonomously attending to workshops, conferences, and industry related events. Demonstrate good soft skills with a great sense of responsibility and communication skills.  Proactively offers guidance and mentorship to less experience designers, contributing to their professional growth."
-7,Collaboration,"Facilitates collaboration across product teams, aligning design with product and engineering goals. Is capable or manage and resolve small conflicts and aligns objective with senior stakeholders."
-8,Communication,Influences product strategy and decision-making cross departments through compelling communication. Guides stakeholders and teams using great storytelling techniques always articulating design decisions based on user research and data insights.
-9,Open Minded,"Embraces and advocates for diversity in design thinking. Foster an inclusive environment that enhances creativity, innovation and promotes psychological safety."
+Promotes changes and improvements in existing design processes and is capable of influence and coordinate initiative across departments.",
+6,Personal Development,"Pursues advanced learning opportunities autonomously attending to workshops, conferences, and industry related events. Demonstrate good soft skills with a great sense of responsibility and communication skills.  Proactively offers guidance and mentorship to less experience designers, contributing to their professional growth.",
+7,Collaboration,"Facilitates collaboration across product teams, aligning design with product and engineering goals. Is capable or manage and resolve small conflicts and aligns objective with senior stakeholders.",
+8,Communication,Influences product strategy and decision-making cross departments through compelling communication. Guides stakeholders and teams using great storytelling techniques always articulating design decisions based on user research and data insights.,
+9,Open Minded,"Embraces and advocates for diversity in design thinking. Foster an inclusive environment that enhances creativity, innovation and promotes psychological safety.",

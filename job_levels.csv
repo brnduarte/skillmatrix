@@ -1,7 +1,7 @@
-level_id,name,description
-1,IC1 - Associate,Entry level individual contributor
-2,IC2 - Mid Level,Mid-level individual contributor
-3,IC3 - Senior,Senior individual contributor
-4,IC4 - Staff,Staff level individual contributor
-5,IC5 - Principal,Principal level individual contributor
-6,Manager,Team management role
+level_id,name,description,organization_id
+1,IC1 - Associate,Entry level individual contributor,
+2,IC2 - Mid Level,Mid-level individual contributor,
+3,IC3 - Senior,Senior individual contributor,
+4,IC4 - Staff,Staff level individual contributor,
+5,IC5 - Principal,Principal level individual contributor,
+6,Manager,Team management role,

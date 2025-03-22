@@ -108,32 +108,70 @@ def display_login():
                     # Extract manager ID (first element of the tuple)
                     manager_id = reg_manager_id[0] if reg_manager_id and reg_manager_id[0] else None
                     
-                    # Create employee record first
-                    success, message, employee_id = add_employee(
+                    # Add organization selection
+                    st.subheader("Organization Information")
+                    
+                    from data_manager import get_organizations, add_organization
+                    orgs_df = get_organizations()
+                    
+                    org_tab1, org_tab2 = st.tabs(["Select Existing Organization", "Create New Organization"])
+                    organization_id = None
+                    
+                    with org_tab1:
+                        if not orgs_df.empty:
+                            org_options = list(zip(orgs_df["organization_id"].astype(str), orgs_df["name"]))
+                            selected_org = st.selectbox(
+                                "Select an organization", 
+                                options=org_options,
+                                format_func=lambda x: x[1],
+                                key="org_select"
+                            )
+                            if selected_org:
+                                organization_id = int(selected_org[0])
+                        else:
+                            st.warning("No organizations found. Please create a new organization.")
+                    
+                    with org_tab2:
+                        org_name = st.text_input("Organization Name", key="new_org_name")
+                        create_org = st.button("Create New Organization", key="create_org")
+                        
+                        if create_org and org_name:
+                            # Add new organization
+                            org_success, org_message, org_id = add_organization(org_name, reg_username)
+                            
+                            if org_success:
+                                st.success(f"Organization '{org_name}' created successfully!")
+                                organization_id = org_id
+                            else:
+                                st.error(f"Failed to create organization: {org_message}")
+                    
+                    # Create user account first
+                    user_success, user_message = add_user(
+                        username=reg_username,
+                        password=reg_password,
+                        role="employee",  # Default role for new registrations
                         name=reg_name,
-                        email=reg_email,
-                        job_title=reg_job_title,
-                        job_level=reg_job_level,
-                        department=reg_department,
-                        manager_id=manager_id
+                        email=reg_email
                     )
                     
-                    if success:
-                        # Create user account
-                        user_success, user_message = add_user(
-                            username=reg_username,
-                            password=reg_password,
-                            role="employee",  # Default role for new registrations
+                    if user_success:
+                        # Create employee record with organization
+                        employee_success, employee_message, employee_id = add_employee(
                             name=reg_name,
-                            email=reg_email
+                            email=reg_email,
+                            job_title=reg_job_title,
+                            job_level=reg_job_level,
+                            department=reg_department,
+                            manager_id=manager_id,
+                            organization_id=organization_id  # Link to organization
                         )
                         
-                        if user_success:
+                        if employee_success:
                             st.success("Registration successful! You can now log in with your username and password.")
                         else:
-                            st.error(f"Failed to create user account: {user_message}")
+                            st.error(f"Failed to create employee record: {employee_message}")
                     else:
-                        st.error(f"Failed to create employee record: {message}")
+                        st.error(f"Failed to create user account: {user_message}")
 
 # Main application
 def main_app():

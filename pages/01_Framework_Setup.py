@@ -1177,8 +1177,13 @@ with tab5:
         emp_id_to_name = dict(zip(employees_df["employee_id"], employees_df["name"]))
         
         # Create filter options
-        departments = sorted(employees_df["department"].unique().tolist())
-        job_levels = sorted(employees_df["job_level"].unique().tolist())
+        # Handle case where department contains both string and NaN values
+        departments = employees_df["department"].dropna().unique().tolist()
+        departments = sorted([str(d) for d in departments])
+        
+        # Handle job_levels the same way
+        job_levels = employees_df["job_level"].dropna().unique().tolist()
+        job_levels = sorted([str(j) for j in job_levels])
         
         # Show filter controls
         filter_col1, filter_col2, filter_col3 = st.columns([1, 1, 1])

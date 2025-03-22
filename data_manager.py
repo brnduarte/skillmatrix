@@ -77,12 +77,25 @@ def load_data_for_organization(data_type, organization_id):
     """
     df = load_data(data_type)
     
-    # Check if this data type has organization_id field
-    if df.empty or "organization_id" not in df.columns:
+    # Skip filtering for users and organizations
+    if data_type in ["users", "organizations"]:
         return df
     
-    # Filter by organization ID
-    return df[df["organization_id"] == organization_id]
+    # Check if this data type has organization_id field
+    if df.empty:
+        return df
+    
+    # Ensure organization_id column exists
+    if "organization_id" not in df.columns:
+        # Update the schema to include organization_id
+        update_csv_structure(data_type, {"organization_id": None})
+        df = load_data(data_type)
+        if "organization_id" not in df.columns:
+            return pd.DataFrame()  # Return empty dataframe if we can't add the column
+    
+    # Filter by organization ID and handle None values
+    return df[(df["organization_id"] == organization_id) | 
+              (df["organization_id"].isna() & (organization_id is None))]
 
 def save_data(data_type, df):
     """Save data to a CSV file"""
