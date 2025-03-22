@@ -165,93 +165,57 @@ def handle_invitation():
 # User authentication
 def display_login():
     st.title("Skill Matrix & Competency Framework")
-    
-    # Stylish header with accent underline
-    st.markdown("""
-    <h2 style="border-bottom: 2px solid #d13c35; padding-bottom: 8px; margin-bottom: 24px;">
-      Welcome to the Skill Matrix Platform
-    </h2>
-    """, unsafe_allow_html=True)
+    st.subheader("Login")
     
     login_tab1, login_tab2, login_tab3 = st.tabs(["Account Login", "Email Self-Assessment", "Register"])
     
     with login_tab1:
-        # Login card with shadow styling
-        st.markdown("""
-        <div style="background-color: white; padding: 24px; border-radius: 8px; 
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #d13c35;">
-          <h3 style="margin-bottom: 16px; color: #0e2b3d;">Sign In</h3>
-          <p style="margin-bottom: 24px; color: #666;">Enter your credentials to access your dashboard.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
         username = st.text_input("Username", key="username_login")
         password = st.text_input("Password", type="password", key="password_login")
         
-        col1, col2 = st.columns([1, 3])
-        with col1:
-            if st.button("Login", key="login_button", use_container_width=True):
-                if authenticate_user(username, password):
-                    st.session_state.authenticated = True
-                    st.session_state.username = username
-                    st.session_state.user_role = get_user_role(username)
-                    st.rerun()
-                else:
-                    error_message("Invalid username or password. Please try again.")
+        if st.button("Login", key="login_button"):
+            if authenticate_user(username, password):
+                st.session_state.authenticated = True
+                st.session_state.username = username
+                st.session_state.user_role = get_user_role(username)
+                st.rerun()
+            else:
+                st.error("Invalid username or password")
     
     with login_tab2:
-        # Email access card with shadow styling
-        st.markdown("""
-        <div style="background-color: white; padding: 24px; border-radius: 8px; 
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #f2bc54;">
-          <h3 style="margin-bottom: 16px; color: #0e2b3d;">Access with Email</h3>
-          <p style="margin-bottom: 24px; color: #666;">Use your email to view your self-assessment.</p>
-        </div>
-        """, unsafe_allow_html=True)
-        
+        st.write("Access your self-assessment using your email address")
         email = st.text_input("Your Email", key="email_login", placeholder="name@company.com") 
         
-        col1, col2 = st.columns([1, 3])
-        with col1:
-            if st.button("Access Assessment", key="email_login_button", use_container_width=True):
-                # Check if email exists in the employees database
-                employees_df = load_data("employees")
-                employee = employees_df[employees_df["email"] == email]
-                
-                if not employee.empty:
-                    # Create a temporary user session for self-assessment only
-                    st.session_state.authenticated = True
-                    st.session_state.username = f"email_{email}"  # Special format to identify email login
-                    st.session_state.user_role = "email_user"  # Special role with limited access
-                    st.session_state.employee_email = email
-                    st.rerun()
-                else:
-                    error_message("Email not found. Please contact your manager or administrator.")
+        if st.button("Access Self-Assessment", key="email_login_button"):
+            # Check if email exists in the employees database
+            employees_df = load_data("employees")
+            employee = employees_df[employees_df["email"] == email]
+            
+            if not employee.empty:
+                # Create a temporary user session for self-assessment only
+                st.session_state.authenticated = True
+                st.session_state.username = f"email_{email}"  # Special format to identify email login
+                st.session_state.user_role = "email_user"  # Special role with limited access
+                st.session_state.employee_email = email
+                st.rerun()
+            else:
+                st.error("Email not found. Please contact your manager or administrator.")
     
     with login_tab3:
-        # Registration card with shadow styling
-        st.markdown("""
-        <div style="background-color: white; padding: 24px; border-radius: 8px; 
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #0e2b3d;">
-          <h3 style="margin-bottom: 16px; color: #0e2b3d;">Create a New Account</h3>
-          <p style="margin-bottom: 24px; color: #666;">Register to use the Skill Matrix platform.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.write("Create a new account to access the Skill Matrix")
         
         # Registration form
         with st.form(key="registration_form"):
-            st.markdown('<div class="skill-header">Personal Information</div>', unsafe_allow_html=True)
+            st.subheader("Personal Information")
             reg_name = st.text_input("Full Name", key="reg_name", placeholder="John Doe")
             reg_email = st.text_input("Email", key="reg_email", placeholder="john.doe@company.com")
             
-            section_divider()
-            st.markdown('<div class="skill-header">Account Information</div>', unsafe_allow_html=True)
+            st.subheader("Account Information")
             reg_username = st.text_input("Username", key="reg_username", placeholder="johndoe")
             reg_password = st.text_input("Password", type="password", key="reg_password")
             reg_confirm_password = st.text_input("Confirm Password", type="password", key="reg_confirm_password")
             
-            section_divider()
-            st.markdown('<div class="skill-header">Job Information</div>', unsafe_allow_html=True)
+            st.subheader("Job Information")
             reg_job_title = st.text_input("Job Title", key="reg_job_title", placeholder="Software Engineer")
             
             # Get job levels for dropdown
@@ -466,58 +430,46 @@ def main_app():
     # Home Page Content
     st.title("Skill Matrix & Competency Framework")
     
-    # Display role-specific dashboard with enhanced styling
+    # Display overview based on role
     if st.session_state.user_role == "admin":
-        # Admin dashboard card
-        st.markdown("""
-        <div style="background-color: white; padding: 24px; border-radius: 8px; 
-                   box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #0e2b3d;">
-          <h3 style="margin-bottom: 16px; color: #0e2b3d;">Admin Dashboard</h3>
-          <p>As an administrator, you can:</p>
-          <ul style="margin-bottom: 16px;">
-            <li>Set up and manage the competency framework</li>
-            <li>Create and modify skills within competencies</li>
-            <li>Define expected skill levels for each role/position</li>
-            <li>Add and manage users</li>
-            <li>View team and individual performance</li>
-          </ul>
-          <p>Navigate using the pages in the sidebar.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.info("""
+        ### Admin Dashboard
+        
+        As an administrator, you can:
+        - Set up and manage the competency framework
+        - Create and modify skills within competencies
+        - Define expected skill levels for each role/position
+        - Add and manage users
+        - View team and individual performance
+        
+        Navigate using the pages in the sidebar.
+        """)
         
     elif st.session_state.user_role == "manager":
-        # Manager dashboard card
-        st.markdown("""
-        <div style="background-color: white; padding: 24px; border-radius: 8px; 
-                   box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #d13c35;">
-          <h3 style="margin-bottom: 16px; color: #0e2b3d;">Manager Dashboard</h3>
-          <p>As a manager, you can:</p>
-          <ul style="margin-bottom: 16px;">
-            <li>Evaluate team members' skills</li>
-            <li>View individual and team performance metrics</li>
-            <li>Compare performance against expected levels</li>
-            <li>Generate and export reports</li>
-          </ul>
-          <p>Navigate using the pages in the sidebar.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.info("""
+        ### Manager Dashboard
+        
+        As a manager, you can:
+        - Evaluate team members' skills
+        - View individual and team performance metrics
+        - Compare performance against expected levels
+        - Generate and export reports
+        
+        Navigate using the pages in the sidebar.
+        """)
         
     elif st.session_state.user_role == "employee":
-        # Employee dashboard card
-        st.markdown("""
-        <div style="background-color: white; padding: 24px; border-radius: 8px; 
-                   box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #f2bc54;">
-          <h3 style="margin-bottom: 16px; color: #0e2b3d;">Employee Dashboard</h3>
-          <p>As an employee, you can:</p>
-          <ul style="margin-bottom: 16px;">
-            <li>Complete self-assessments of your skills</li>
-            <li>View your performance metrics and manager feedback</li>
-            <li>Compare your current skills with expected levels</li>
-            <li>Track your progress over time</li>
-          </ul>
-          <p>Navigate using the pages in the sidebar.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.info("""
+        ### Employee Dashboard
+        
+        As an employee, you can:
+        - Complete self-assessments of your skills
+        - View your performance metrics and manager feedback
+        - Compare your current skills with expected levels
+        - Track your progress over time
+        
+        Navigate using the pages in the sidebar.
+        """)
     
     elif st.session_state.user_role == "email_user":
         # Display email user dashboard
@@ -527,19 +479,15 @@ def main_app():
         
         if not employee.empty:
             employee_name = employee.iloc[0]["name"]
-            # Email-access only dashboard card
-            st.markdown(f"""
-            <div style="background-color: white; padding: 24px; border-radius: 8px; 
-                       box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #f2bc54;">
-              <h3 style="margin-bottom: 16px; color: #0e2b3d;">Self-Assessment Portal for {employee_name}</h3>
-              <p>Welcome to your self-assessment portal. Here you can:</p>
-              <ul style="margin-bottom: 16px;">
-                <li>Complete skill self-assessments</li>
-                <li>View your current skills and ratings</li>
-              </ul>
-              <p>Please go to the Employee Assessment page in the sidebar to complete your assessment.</p>
-            </div>
-            """, unsafe_allow_html=True)
+            st.info(f"""
+            ### Self-Assessment Portal for {employee_name}
+            
+            Welcome to your self-assessment portal. Here you can:
+            - Complete skill self-assessments
+            - View your current skills and ratings
+            
+            Please go to the Employee Assessment page in the sidebar to complete your assessment.
+            """)
     
     # Key metrics overview
     st.header("Overview")
@@ -567,10 +515,9 @@ def main_app():
         with col3:
             st.metric("Skills", len(skills_df))
         
-        # Show recent updates with improved styling
+        # Show recent updates
         if not assessments_df.empty:
-            st.markdown('<h3 style="border-bottom: 2px solid #f2bc54; padding-bottom: 8px; margin: 24px 0 16px 0;">Recent Assessments</h3>', unsafe_allow_html=True)
-            
+            st.subheader("Recent Assessments")
             recent_assessments = assessments_df.sort_values(
                 by="assessment_date", ascending=False
             ).head(5)
@@ -582,33 +529,12 @@ def main_app():
                     on="employee_id"
                 )
                 
-                # Create a container for the assessment cards
-                st.markdown('<div style="margin-top: 16px;">', unsafe_allow_html=True)
-                
                 for _, row in recent_assessments.iterrows():
-                    # Format date
-                    date_str = pd.to_datetime(row['assessment_date']).strftime('%Y-%m-%d')
-                    
-                    # Determine color based on assessment_type
-                    accent_color = "#d13c35" if row['assessment_type'] == 'manager' else "#f2bc54"
-                    
-                    # Create styled assessment card
-                    st.markdown(f"""
-                    <div style="background-color: white; padding: 16px; border-radius: 8px; 
-                               margin-bottom: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-                               border-left: 4px solid {accent_color}; display: flex; align-items: center;">
-                        <div style="flex: 1;">
-                            <p style="margin: 0; font-weight: 700; color: #0e2b3d;">{row['name']}</p>
-                            <p style="margin: 0; color: #666; font-size: 0.9rem;">{row['competency']} / {row['skill']}</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <p style="margin: 0; font-weight: 700; color: {accent_color}; font-size: 1.2rem;">{row['score']}</p>
-                            <p style="margin: 0; color: #666; font-size: 0.8rem;">{row['assessment_type']} • {date_str}</p>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                
-                st.markdown('</div>', unsafe_allow_html=True)
+                    st.markdown(
+                        f"**{row['name']}** - {row['competency']} / {row['skill']} - "
+                        f"Score: {row['score']} ({row['assessment_type']}) - "
+                        f"{pd.to_datetime(row['assessment_date']).strftime('%Y-%m-%d')}"
+                    )
         
     except Exception as e:
         st.warning(f"Could not load overview data. You may need to set up the framework first.")
