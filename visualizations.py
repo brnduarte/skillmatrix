@@ -1057,7 +1057,7 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     
     Args:
         employee_id: ID of the employee to display
-        job_level: Current job level of the employee 
+        job_level: Current job level of the employee (e.g., "IC1 - Associate")
         view_type: Whether to show "Skills" or "Competencies"
     """
     import plotly.graph_objects as go
@@ -1101,13 +1101,13 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     
     next_level_name = next_level_row.iloc[0]["name"]
     
-    # Filter expectations for the next job level
+    # Filter expectations for the next job level using the numeric ID
     if view_type == "Skills":
-        next_level_expectations = expectations_df[expectations_df["job_level"].astype(int) == next_level_id]
+        next_level_expectations = expectations_df[expectations_df["job_level"] == str(next_level_id)]
         if next_level_expectations.empty:
             return None, f"No skill expectations defined for next job level '{next_level_name}'."
     else:
-        next_level_expectations = comp_expectations_df[comp_expectations_df["job_level"].astype(int) == next_level_id]
+        next_level_expectations = comp_expectations_df[comp_expectations_df["job_level"] == str(next_level_id)]
         if next_level_expectations.empty:
             return None, f"No competency expectations defined for next job level '{next_level_name}'."
     
