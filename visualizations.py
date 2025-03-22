@@ -1082,23 +1082,34 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
     if view_type == "Competencies" and comp_expectations_df.empty:
         return None, "No competency expectations defined."
     
-    # Calculate the next job level
-    job_level_int = int(job_level)
-    next_level = job_level_int + 1
+    # Get the numeric level_id for the current job level
+    if job_levels_df.empty:
+        return None, "No job levels defined in the system."
     
-    # Check if next level exists
-    if job_levels_df.empty or not any(job_levels_df["level_id"].astype(int) == next_level):
-        return None, f"No next job level defined after level {job_level}."
+    # Map the text-based job level to its numeric ID
+    level_id_row = job_levels_df[job_levels_df["name"] == job_level]
+    if level_id_row.empty:
+        return None, f"Job level '{job_level}' not found in the system."
+    
+    current_level_id = int(level_id_row.iloc[0]["level_id"])
+    next_level_id = current_level_id + 1
+    
+    # Find the next level in the job_levels_df
+    next_level_row = job_levels_df[job_levels_df["level_id"].astype(int) == next_level_id]
+    if next_level_row.empty:
+        return None, f"No next job level defined after {job_level}."
+    
+    next_level_name = next_level_row.iloc[0]["name"]
     
     # Filter expectations for the next job level
     if view_type == "Skills":
-        next_level_expectations = expectations_df[expectations_df["job_level"].astype(int) == next_level]
+        next_level_expectations = expectations_df[expectations_df["job_level"].astype(int) == next_level_id]
         if next_level_expectations.empty:
-            return None, f"No skill expectations defined for next job level {next_level}."
+            return None, f"No skill expectations defined for next job level '{next_level_name}'."
     else:
-        next_level_expectations = comp_expectations_df[comp_expectations_df["job_level"].astype(int) == next_level]
+        next_level_expectations = comp_expectations_df[comp_expectations_df["job_level"].astype(int) == next_level_id]
         if next_level_expectations.empty:
-            return None, f"No competency expectations defined for next job level {next_level}."
+            return None, f"No competency expectations defined for next job level '{next_level_name}'."
     
     # Create lists for chart data
     labels = []
@@ -1214,7 +1225,7 @@ def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
         r=next_level_expected_values,
         theta=labels,
         fill='toself',
-        name=f'Expected (Level {next_level})',
+        name=f'Expected ({next_level_name})',
         line=dict(color='red', dash='dash')
     ))
     
