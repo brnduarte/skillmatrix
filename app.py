@@ -253,12 +253,17 @@ def main_app():
     # Key metrics overview
     st.header("Overview")
     
-    # Load summary data
+    # Load summary data filtered by organization
     try:
-        employees_df = load_data("employees")
-        competencies_df = load_data("competencies")
-        skills_df = load_data("skills")
-        assessments_df = load_data("assessments")
+        from utils import get_current_organization_id
+        from data_manager import load_data_for_organization
+        
+        organization_id = get_current_organization_id()
+        
+        employees_df = load_data_for_organization("employees", organization_id)
+        competencies_df = load_data_for_organization("competencies", organization_id)
+        skills_df = load_data_for_organization("skills", organization_id)
+        assessments_df = load_data_for_organization("assessments", organization_id)
         
         col1, col2, col3 = st.columns(3)
         

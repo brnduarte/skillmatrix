@@ -176,3 +176,13 @@ def is_manager_of(manager_id, employee_id):
     except Exception:
         pass
     return False
+
+def get_current_organization_id():
+    """Get the current organization ID from session state
+    
+    Returns:
+        int or None: The organization ID or None if not selected
+    """
+    if hasattr(st.session_state, "organization_id") and st.session_state.organization_id is not None:
+        return st.session_state.organization_id
+    return None

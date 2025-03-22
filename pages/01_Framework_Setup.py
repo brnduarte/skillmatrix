@@ -9,12 +9,13 @@ st.set_page_config(
 
 import pandas as pd
 from data_manager import (
-    load_data, save_data, add_competency, add_skill, 
+    load_data, load_data_for_organization, save_data, add_competency, add_skill, 
     add_job_level, set_skill_expectation, set_competency_expectation, get_competency_skills,
     delete_competency, delete_skill, delete_job_level, delete_employee,
     delete_expectation, delete_competency_expectation, update_competency, update_skill, update_job_level,
     update_employee
 )
+from utils import get_current_organization_id
 from utils import check_permission
 from ui_helpers import load_custom_css
 
