@@ -6,6 +6,7 @@ from data_manager import (
     get_team_competency_means
 )
 from utils import check_permission, get_user_id, calculate_mean
+from ui_helpers import load_custom_css
 from visualizations import (
     team_skill_radar, team_competency_radar, competency_bar_chart, team_heatmap,
     create_radar_chart, combined_team_skill_radar, combined_team_competency_radar

@@ -8,6 +8,10 @@ from data_manager import (
     get_latest_competency_assessment
 )
 from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
+from ui_helpers import load_custom_css
+
+# Load custom CSS for consistent styling
+load_custom_css()
 
 # Page configuration
 st.set_page_config(

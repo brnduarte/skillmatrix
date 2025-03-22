@@ -8,6 +8,10 @@ from data_manager import (
     update_employee
 )
 from utils import check_permission
+from ui_helpers import load_custom_css
+
+# Load custom CSS for consistent styling
+load_custom_css()
 
 # Page configuration
 st.set_page_config(
