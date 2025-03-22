@@ -10,10 +10,10 @@ st.set_page_config(
 import pandas as pd
 import numpy as np
 from data_manager import (
-    load_data, get_employees_for_manager, get_employee_assessments,
+    load_data, load_data_for_organization, get_employees_for_manager, get_employee_assessments,
     get_team_competency_means
 )
-from utils import check_permission, get_user_id, calculate_mean
+from utils import check_permission, get_user_id, calculate_mean, get_current_organization_id
 from ui_helpers import load_custom_css
 from visualizations import (
     team_skill_radar, team_competency_radar, competency_bar_chart, team_heatmap,
@@ -42,7 +42,8 @@ manager_id = None
 
 if st.session_state.user_role == "admin":
     # Allow filtering by department or manager
-    employees_df = load_data("employees")
+    organization_id = get_current_organization_id()
+    employees_df = load_data_for_organization("employees", organization_id)
     
     if not employees_df.empty:
         filter_type = st.radio("Filter by", ["Department", "Manager"], horizontal=True)
@@ -74,7 +75,8 @@ else:
         st.stop()
 
 # Get team members based on filters
-employees_df = load_data("employees")
+organization_id = get_current_organization_id()
+employees_df = load_data_for_organization("employees", organization_id)
 team_members = pd.DataFrame()
 
 if department_filter:
@@ -94,7 +96,7 @@ st.header(f"Team Overview: {department_filter or team_members.iloc[0]['departmen
 st.write(f"Team size: {len(team_members)}")
 
 # Get all assessments for team members
-assessments_df = load_data("assessments")
+assessments_df = load_data_for_organization("assessments", organization_id)
 team_assessments = pd.DataFrame()
 
 if not assessments_df.empty:
@@ -155,10 +157,10 @@ with tab2:
     st.header("Competency Analysis")
     
     # Load skill expectations
-    expectations_df = load_data("expectations")
+    expectations_df = load_data_for_organization("expectations", organization_id)
     
     # Select job level for expectations comparison
-    levels_df = load_data("levels")
+    levels_df = load_data_for_organization("levels", organization_id)
     if not levels_df.empty and not expectations_df.empty:
         level_options = sorted(expectations_df["job_level"].unique())
         selected_level = st.selectbox("Compare Against Job Level", level_options, key="team_dashboard_job_level_select")

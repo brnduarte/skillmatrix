@@ -15,10 +15,10 @@ from io import BytesIO
 import base64
 from datetime import datetime
 from data_manager import (
-    load_data, get_employee_assessments, calculate_employee_skill_means,
+    load_data, load_data_for_organization, get_employee_assessments, calculate_employee_skill_means,
     get_competency_skills, get_latest_assessment
 )
-from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
+from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id
 from ui_helpers import load_custom_css
 from visualizations import (
     employee_skill_radar, comparison_radar_chart, team_skill_radar, team_competency_radar
