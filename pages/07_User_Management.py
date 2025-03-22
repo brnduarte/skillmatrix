@@ -118,7 +118,13 @@ with tab2:
             # Get organizations for dropdown
             from data_manager import get_organizations
             orgs_df = get_organizations()
-            org_options = list(zip(orgs_df["organization_id"].astype(str), orgs_df["name"])) if not orgs_df.empty else []
+            if not orgs_df.empty:
+                # Ensure organization_id is properly formatted as a string
+                orgs_df["organization_id"] = orgs_df["organization_id"].apply(lambda x: str(int(float(x))) if pd.notnull(x) else "")
+                org_options = list(zip(orgs_df["organization_id"], orgs_df["name"]))
+            else:
+                org_options = []
+            
             organization = st.selectbox("Organization", options=org_options, format_func=lambda x: x[1], key="new_org_id")
         
         submit_button = st.form_submit_button(label="Add User")
@@ -158,7 +164,15 @@ with tab2:
                                 manager_id_value = manager_id[0] if manager_id and manager_id[0] else None
                                 
                                 # Extract organization_id (first element of the tuple)
-                                organization_id = int(organization[0]) if organization and organization[0] else None
+                                organization_id = None
+                                if organization and organization[0]:
+                                    # Handle potential float strings like '1.0'
+                                    try:
+                                        # First convert to float, then to int to handle '1.0' values
+                                        organization_id = int(float(organization[0]))
+                                    except (ValueError, TypeError):
+                                        st.error(f"Invalid organization ID format: {organization[0]}")
+                                        organization_id = None
                                 
                                 employee_success, employee_message, employee_id = add_employee(
                                     name=name,
@@ -284,7 +298,17 @@ with tab3:
                                     employee_id = employee["employee_id"]
                                     
                                     # Delete employee
-                                    employee_success = delete_employee(employee_id)
+                                    try:
+                                        # Convert employee_id to appropriate type if needed
+                                        if isinstance(employee_id, str) and '.' in employee_id:
+                                            employee_id = int(float(employee_id))
+                                        elif isinstance(employee_id, float):
+                                            employee_id = int(employee_id)
+                                            
+                                        employee_success = delete_employee(employee_id)
+                                    except (ValueError, TypeError) as e:
+                                        st.error(f"Error converting employee ID: {str(e)}")
+                                        employee_success = False
                                     
                                     if not employee_success:
                                         st.error("Failed to delete associated employee record.")
