@@ -1,4 +1,12 @@
 import streamlit as st
+
+# Page configuration must be the first Streamlit command
+st.set_page_config(
+    page_title="Framework Setup - Skill Matrix",
+    page_icon="🛠️",
+    layout="wide"
+)
+
 import pandas as pd
 from data_manager import (
     load_data, save_data, add_competency, add_skill, 
@@ -12,13 +20,6 @@ from ui_helpers import load_custom_css
 
 # Load custom CSS for consistent styling
 load_custom_css()
-
-# Page configuration
-st.set_page_config(
-    page_title="Framework Setup - Skill Matrix",
-    page_icon="🛠️",
-    layout="wide"
-)
 
 # Check if user is authenticated
 if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:

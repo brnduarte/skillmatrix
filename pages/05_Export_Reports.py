@@ -1,4 +1,12 @@
 import streamlit as st
+
+# Page configuration must be the first Streamlit command
+st.set_page_config(
+    page_title="Export Reports - Skill Matrix",
+    page_icon="📊",
+    layout="wide"
+)
+
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
@@ -14,13 +22,6 @@ from utils import check_permission, get_user_id, is_manager_of, get_employees_fo
 from ui_helpers import load_custom_css
 from visualizations import (
     employee_skill_radar, comparison_radar_chart, team_skill_radar, team_competency_radar
-)
-
-# Page configuration
-st.set_page_config(
-    page_title="Export Reports - Skill Matrix",
-    page_icon="📊",
-    layout="wide"
 )
 
 # Load custom CSS for consistent styling

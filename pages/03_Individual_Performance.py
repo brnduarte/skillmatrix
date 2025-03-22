@@ -1,4 +1,12 @@
 import streamlit as st
+
+# Page configuration must be the first Streamlit command
+st.set_page_config(
+    page_title="Individual Performance - Skill Matrix",
+    page_icon="📈",
+    layout="wide"
+)
+
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -12,13 +20,6 @@ from visualizations import (
     employee_skill_radar, employee_competency_radar, comparison_radar_chart, 
     skill_improvement_chart, combined_skill_radar, combined_competency_radar,
     combined_comparison_radar_chart
-)
-
-# Page configuration
-st.set_page_config(
-    page_title="Individual Performance - Skill Matrix",
-    page_icon="📈",
-    layout="wide"
 )
 
 # Load custom CSS for consistent styling

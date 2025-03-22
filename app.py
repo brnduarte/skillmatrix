@@ -1,17 +1,18 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-import os
-from utils import authenticate_user, get_user_role, initialize_session_state
-from data_manager import load_data, save_data
 
-# Page configuration
+# Page configuration must be the first Streamlit command
 st.set_page_config(
     page_title="Skill Matrix & Competency Framework",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+import pandas as pd
+import numpy as np
+import os
+from utils import authenticate_user, get_user_role, initialize_session_state
+from data_manager import load_data, save_data
 
 # Load custom CSS
 with open(os.path.join('.streamlit', 'style.css')) as f:

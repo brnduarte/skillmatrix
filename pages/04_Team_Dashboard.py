@@ -1,4 +1,12 @@
 import streamlit as st
+
+# Page configuration must be the first Streamlit command
+st.set_page_config(
+    page_title="Team Dashboard - Skill Matrix",
+    page_icon="👥",
+    layout="wide"
+)
+
 import pandas as pd
 import numpy as np
 from data_manager import (
@@ -10,13 +18,6 @@ from ui_helpers import load_custom_css
 from visualizations import (
     team_skill_radar, team_competency_radar, competency_bar_chart, team_heatmap,
     create_radar_chart, combined_team_skill_radar, combined_team_competency_radar
-)
-
-# Page configuration
-st.set_page_config(
-    page_title="Team Dashboard - Skill Matrix",
-    page_icon="👥",
-    layout="wide"
 )
 
 # Load custom CSS for consistent styling
