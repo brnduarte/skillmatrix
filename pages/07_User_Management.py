@@ -16,6 +16,27 @@ from email_manager import (
     create_invitation, send_invitation_email, get_pending_invitations
 )
 
+# Helper function to create a properly formatted invitation URL
+def get_invitation_url(token):
+    """
+    Create a properly formatted invitation URL with the full base URL
+    
+    Args:
+        token: Invitation token to include in the URL
+        
+    Returns:
+        Full URL string that can be used in emails or direct sharing
+    """
+    # Get the base URL from environment variable or use a default for local testing
+    base_url = os.environ.get('BASE_URL', 'https://skill-matrix.replit.app')
+    
+    # Ensure the base URL doesn't end with a slash
+    if base_url.endswith('/'):
+        base_url = base_url[:-1]
+        
+    # Create full URL with token parameter
+    return f"{base_url}/?token={token}"
+
 # Load custom CSS
 with open(os.path.join('.streamlit', 'style.css')) as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)

@@ -120,8 +120,16 @@ def send_invitation_email(email, token, name=None, organization_name=None):
     if sender_email == email:
         return False, f"Cannot use recipient email as sender. Please set a different SENDGRID_FROM_EMAIL in environment variables."
     
-    # Construct the invitation URL with relative path
-    invite_url = f"/?token={token}"
+    # Construct the invitation URL with full path
+    # Get the base URL from environment variable or use a default for local testing
+    base_url = os.environ.get('BASE_URL', 'https://skill-matrix.replit.app')
+    
+    # Ensure the base URL doesn't end with a slash
+    if base_url.endswith('/'):
+        base_url = base_url[:-1]
+        
+    # Create full URL with token parameter
+    invite_url = f"{base_url}/?token={token}"
     
     # Personalize the greeting
     greeting = f"Hello {name}," if name else "Hello,"
