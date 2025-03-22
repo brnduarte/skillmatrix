@@ -88,14 +88,15 @@ with tab1:
             employee_names = [e[1] for e in employee_options]
             employee_ids = [e[0] for e in employee_options]
             
-            selected_emp_name = st.selectbox("Select Employee", employee_names)
+            selected_emp_name = st.selectbox("Select Employee", employee_names, key="export_employee_select")
             selected_emp_idx = employee_names.index(selected_emp_name)
             selected_emp_id = employee_ids[selected_emp_idx]
             
             # Allow selecting report type
             report_type = st.selectbox(
                 "Report Type",
-                ["Full Assessment Report", "Competency Breakdown", "Skills Gap Analysis"]
+                ["Full Assessment Report", "Competency Breakdown", "Skills Gap Analysis"],
+                key="individual_report_type"
             )
             
             # Get assessment data
@@ -374,7 +375,7 @@ with tab2:
             
             if filter_type == "Department":
                 departments = sorted(employees_df["department"].unique())
-                selected_filter = st.selectbox("Select Department", departments)
+                selected_filter = st.selectbox("Select Department", departments, key="team_report_dept_select")
                 
                 # Filter employees by department
                 team_members = employees_df[employees_df["department"] == selected_filter]
@@ -388,7 +389,7 @@ with tab2:
                     manager_names = [m[1] for m in manager_options]
                     manager_ids = [m[0] for m in manager_options]
                     
-                    selected_manager = st.selectbox("Select Manager", manager_names)
+                    selected_manager = st.selectbox("Select Manager", manager_names, key="team_report_manager_select")
                     selected_manager_idx = manager_names.index(selected_manager)
                     selected_manager_id = manager_ids[selected_manager_idx]
                     
@@ -427,7 +428,8 @@ with tab2:
                 # Allow selecting report type
                 report_type = st.selectbox(
                     "Report Type",
-                    ["Team Competency Summary", "Skill Distribution", "Individual Comparison"]
+                    ["Team Competency Summary", "Skill Distribution", "Individual Comparison"],
+                    key="team_report_type"
                 )
                 
                 # Filter by assessment type
