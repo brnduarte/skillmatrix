@@ -119,15 +119,32 @@ def load_data_for_organization(data_type, organization_id):
             # Convert to numeric, but keep NaN values where conversion fails
             df["organization_id"] = pd.to_numeric(df["organization_id"], errors='coerce')
             
-            # Convert organization_id parameter to int for comparison
-            org_id_int = int(organization_id)
+            # Handle potential float strings like '1.0' for organization_id parameter
+            org_id_int = None
+            if isinstance(organization_id, str) and '.' in organization_id:
+                org_id_int = int(float(organization_id))
+            elif isinstance(organization_id, float):
+                org_id_int = int(organization_id)
+            else:
+                # Try direct conversion to int
+                try:
+                    org_id_int = int(organization_id)
+                except (ValueError, TypeError):
+                    # If conversion fails, use string comparison below
+                    pass
             
-            # Filter by organization ID, including records where organization_id is NULL/None when needed
-            return df[(df["organization_id"] == org_id_int) | 
-                    (df["organization_id"].isna() & (data_type in ["expectations", "comp_expectations"]))]
-        except (ValueError, TypeError):
-            # If conversion fails, fall back to string comparison
-            print(f"Warning: Data type conversion issue in organization filtering for {data_type}")
+            if org_id_int is not None:
+                # Filter by organization ID as integer, including records where organization_id is NULL/None when needed
+                return df[(df["organization_id"] == org_id_int) | 
+                        (df["organization_id"].isna() & (data_type in ["expectations", "comp_expectations"]))]
+            else:
+                # Fall back to string comparison
+                print(f"Warning: Data type conversion issue in organization filtering for {data_type}")
+                return df[(df["organization_id"].astype(str) == str(organization_id)) | 
+                        (df["organization_id"].isna() & (data_type in ["expectations", "comp_expectations"]))]
+        except Exception as e:
+            # If any conversion fails, fall back to string comparison
+            print(f"Warning: Data type conversion error in organization filtering for {data_type}: {str(e)}")
             return df[(df["organization_id"].astype(str) == str(organization_id)) | 
                     (df["organization_id"].isna() & (data_type in ["expectations", "comp_expectations"]))]
     return df
@@ -1318,7 +1335,16 @@ def delete_organization(organization_id, force_delete=False):
     competency_expectations_df = load_data("comp_expectations")
     
     # Convert organization_id to int for consistent comparison
-    organization_id = int(organization_id)
+    try:
+        # Handle potential float strings like '1.0'
+        if isinstance(organization_id, str) and '.' in organization_id:
+            organization_id = int(float(organization_id))
+        elif isinstance(organization_id, float):
+            organization_id = int(organization_id)
+        else:
+            organization_id = int(organization_id)
+    except (ValueError, TypeError) as e:
+        return False, f"Invalid organization ID format: {str(e)}"
     
     # Helper function to safely compare organization IDs
     def compare_org_ids(df_col, org_id):
