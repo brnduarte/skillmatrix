@@ -129,9 +129,16 @@ def handle_invitation():
                                 st.session_state.user_role = invitation.get("role", "employee")
                                 st.session_state.employee_id = employee_id
                                 
-                                # Also set the organization if it exists
+                                # Set the organization properly
                                 if organization_id:
-                                    st.session_state.selected_organization = organization_id
+                                    # Get the organization name
+                                    from data_manager import get_organization
+                                    org_data = get_organization(organization_id)
+                                    if org_data is not None:
+                                        # Set both organization ID and name
+                                        st.session_state.organization_id = int(organization_id)
+                                        st.session_state.organization_name = org_data.get("name", "")
+                                        st.session_state.organization_selected = True
                                 
                                 st.success("Invitation accepted! You've been automatically logged in.")
                                 
@@ -307,9 +314,16 @@ def display_login():
                             st.session_state.user_role = "employee"
                             st.session_state.employee_id = employee_id
                             
-                            # Also set the organization if it exists
+                            # Set the organization properly
                             if organization_id:
-                                st.session_state.selected_organization = organization_id
+                                # Get the organization name
+                                from data_manager import get_organization
+                                org_data = get_organization(organization_id)
+                                if org_data is not None:
+                                    # Set both organization ID and name
+                                    st.session_state.organization_id = int(organization_id)
+                                    st.session_state.organization_name = org_data.get("name", "")
+                                    st.session_state.organization_selected = True
                             
                             st.success("Registration successful! You've been automatically logged in.")
                             st.rerun()
