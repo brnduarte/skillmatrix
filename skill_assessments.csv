@@ -144,3 +144,12 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 143,1,Communication,Competitive Analysis,4.4,manager,2025-03-22,Manager assessment for Competitive Analysis
 144,1,Open Minded,Resource Management and Operations,3.8,manager,2025-03-22,Manager assessment for Resource Management and Operations
 145,1,Collaboration,Cross-Functional Collaboration,3.6,manager,2025-03-22,Manager assessment for Cross-Functional Collaboration
+146,3,Expertise,Visual Design,3.0,manager,2025-03-22,
+147,3,Decision Making,Interaction Design,2.5,manager,2025-03-22,
+148,3,Continuous Improvement,Design Systems and A11y,2.5,manager,2025-03-22,
+149,3,Accountability,UX Strategy,2.5,manager,2025-03-22,
+150,3,Initiative,User Testing and Validation,3.0,manager,2025-03-22,
+151,3,Personal Development,Influence,3.5,manager,2025-03-22,
+152,3,Collaboration,Cross-Functional Collaboration,2.5,manager,2025-03-22,
+153,3,Communication,Competitive Analysis,2.5,manager,2025-03-22,
+154,3,Open Minded,Resource Management and Operations,3.0,manager,2025-03-22,

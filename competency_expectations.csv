@@ -8,15 +8,6 @@ job_level,competency,expected_score
 1,Collaboration,2.5
 1,Communication,2.0
 1,Open Minded,2.5
-2,Expertise,2.0
-2,Decision Making,2.5
-2,Continuous Improvement,3.0
-2,Accountability,2.5
-2,Initiative,3.0
-2,Personal Development,2.5
-2,Collaboration,2.5
-2,Communication,2.5
-2,Open Minded,2.0
 IC4 - Staff,Expertise,4.0
 IC4 - Staff,Decision Making,4.5
 IC4 - Staff,Continuous Improvement,4.0
@@ -35,3 +26,12 @@ IC3 - Senior,Collaboration,3.5
 IC3 - Senior,Communication,3.5
 IC3 - Senior,Open Minded,3.5
 IC3 - Senior,Personal Development,3.0
+IC2 - Mid Level,Expertise,2.5
+IC2 - Mid Level,Decision Making,3.0
+IC2 - Mid Level,Continuous Improvement,2.5
+IC2 - Mid Level,Accountability,2.5
+IC2 - Mid Level,Initiative,3.0
+IC2 - Mid Level,Personal Development,3.0
+IC2 - Mid Level,Collaboration,3.0
+IC2 - Mid Level,Communication,3.0
+IC2 - Mid Level,Open Minded,2.5
