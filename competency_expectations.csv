@@ -1,37 +1,37 @@
 job_level,competency,expected_score
-Associate,Expertise,1.5
-Associate,Decision Making,1.5
-Associate,Continuous Improvement,2.0
-Associate,Accountability,2.0
-Associate,Initiative,2.0
-Associate,Personal Development,1.5
-Associate,Collaboration,2.5
-Associate,Communication,2.0
-Associate,Open Minded,2.5
-Mid Level,Expertise,2.0
-Mid Level,Decision Making,2.5
-Mid Level,Continuous Improvement,3.0
-Mid Level,Accountability,2.5
-Mid Level,Initiative,3.0
-Mid Level,Personal Development,2.5
-Mid Level,Collaboration,2.5
-Mid Level,Communication,2.5
-Mid Level,Open Minded,2.0
-Senior,Expertise,3.0
-Senior,Decision Making,3.0
-Senior,Continuous Improvement,3.0
-Senior,Accountability,3.5
-Senior,Initiative,3.0
-Senior,Personal Development,3.5
-Senior,Collaboration,3.5
-Senior,Communication,3.5
-Senior,Open Minded,3.5
-Staff,Expertise,4.0
-Staff,Decision Making,4.0
-Staff,Accountability,4.5
-Staff,Continuous Improvement,4.5
-Staff,Initiative,4.0
-Staff,Personal Development,4.5
-Staff,Collaboration,4.5
-Staff,Communication,4.5
-Staff,Open Minded,4.0
+1,Expertise,1.5
+1,Decision Making,1.5
+1,Continuous Improvement,2.0
+1,Accountability,2.0
+1,Initiative,2.0
+1,Personal Development,1.5
+1,Collaboration,2.5
+1,Communication,2.0
+1,Open Minded,2.5
+2,Expertise,2.0
+2,Decision Making,2.5
+2,Continuous Improvement,3.0
+2,Accountability,2.5
+2,Initiative,3.0
+2,Personal Development,2.5
+2,Collaboration,2.5
+2,Communication,2.5
+2,Open Minded,2.0
+3,Expertise,3.0
+3,Decision Making,3.0
+3,Continuous Improvement,3.0
+3,Accountability,3.5
+3,Initiative,3.0
+3,Personal Development,3.5
+3,Collaboration,3.5
+3,Communication,3.5
+3,Open Minded,3.5
+4,Expertise,4.0
+4,Decision Making,4.0
+4,Accountability,4.5
+4,Continuous Improvement,4.5
+4,Initiative,4.0
+4,Personal Development,4.5
+4,Collaboration,4.5
+4,Communication,4.5
+4,Open Minded,4.0

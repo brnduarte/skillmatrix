@@ -1,9 +1,9 @@
 employee_id,name,email,job_title,job_level,department,manager_id,hire_date
-1,Vesna Dobric,test@test.com,Product Designer,Senior,Design,6.0,2025-03-21
-2,Julie Daunt,test@test.com,Product Designer,Senior,Design,6.0,2025-03-21
-3,Milena Milisevic,test@test.com,Product Designer,Mid Level,Design,6.0,2025-03-21
-4,Robert Dauney Jr,test@test.com,Product Designer,Senior,Design,6.0,2025-03-21
-5,Afonso Solano,test@test.com,Product Designer,Senior,Design,6.0,2025-03-21
+1,Vesna Dobric,test@test.com,Product Designer,IC3 - Senior,Design,6.0,2025-03-21
+2,Julie Daunt,test@test.com,Product Designer,IC3 - Senior,Design,6.0,2025-03-21
+3,Milena Milisevic,test@test.com,Product Designer,IC2 - Mid Level,Design,6.0,2025-03-21
+4,Robert Dauney Jr,test@test.com,Product Designer,IC3 - Senior,Design,6.0,2025-03-21
+5,Afonso Solano,test@test.com,Product Designer,IC3 - Senior,Design,6.0,2025-03-21
 6,Cher,test@test.com,Product Designer,Manager,Design,7.0,2025-03-21
 7,Admin,admin@test.com,Product Designer,Manager,Design,6.0,2025-03-21
-8,Bruno Duarte,brnduarte@gmail.com,Product Designer,Associate,Design,6.0,2025-03-21
+8,Bruno Duarte,brnduarte@gmail.com,Product Designer,IC1 - Associate,Design,6.0,2025-03-21
