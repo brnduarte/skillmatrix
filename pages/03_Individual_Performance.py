@@ -9,7 +9,8 @@ from data_manager import (
 from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
 from visualizations import (
     employee_skill_radar, employee_competency_radar, comparison_radar_chart, 
-    skill_improvement_chart, combined_skill_radar, combined_competency_radar
+    skill_improvement_chart, combined_skill_radar, combined_competency_radar,
+    combined_comparison_radar_chart
 )
 
 # Page configuration

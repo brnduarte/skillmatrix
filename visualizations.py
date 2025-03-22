@@ -929,6 +929,7 @@ def combined_team_competency_radar(team_assessments, title="Team Competency Asse
     """
     import plotly.graph_objects as go
     from data_manager import load_data, get_latest_competency_assessment
+    
     # Load necessary data
     competencies_df = load_data("competencies")
     
@@ -1046,6 +1047,169 @@ def combined_team_competency_radar(team_assessments, title="Team Competency Asse
             )
         ),
         title=title,
+        showlegend=True
+    )
+    
+    return fig, None
+
+def combined_comparison_radar_chart(employee_id, job_level, view_type="Skills"):
+    """Create a radar chart comparing combined self and manager assessments vs expected level
+    
+    Args:
+        employee_id: ID of the employee to display
+        job_level: Job level of the employee for expectations
+        view_type: Whether to show "Skills" or "Competencies"
+    """
+    import plotly.graph_objects as go
+    from data_manager import load_data, get_latest_assessment, get_latest_competency_assessment
+    
+    # Load necessary data
+    skills_df = load_data("skills")
+    competencies_df = load_data("competencies")
+    expectations_df = load_data("expectations")
+    comp_expectations_df = load_data("comp_expectations")
+    
+    if competencies_df.empty:
+        return None, "No competencies found."
+    
+    if view_type == "Skills" and skills_df.empty:
+        return None, "No skills found."
+    
+    if view_type == "Skills" and expectations_df.empty:
+        return None, "No skill expectations defined."
+    
+    if view_type == "Competencies" and comp_expectations_df.empty:
+        return None, "No competency expectations defined."
+    
+    # Filter expectations for the employee's job level
+    if view_type == "Skills":
+        level_expectations = expectations_df[expectations_df["job_level"] == job_level]
+        if level_expectations.empty:
+            return None, f"No skill expectations defined for job level {job_level}."
+    else:
+        level_expectations = comp_expectations_df[comp_expectations_df["job_level"] == job_level]
+        if level_expectations.empty:
+            return None, f"No competency expectations defined for job level {job_level}."
+    
+    # Create lists for chart data
+    labels = []
+    self_values = []
+    manager_values = []
+    expected_values = []
+    
+    if view_type == "Skills":
+        # Loop through all competencies and skills
+        for _, comp_row in competencies_df.iterrows():
+            comp_skills = skills_df[skills_df["competency_id"] == comp_row["competency_id"]]
+            
+            for _, skill_row in comp_skills.iterrows():
+                # Get latest self assessment for this skill
+                self_latest = get_latest_assessment(
+                    employee_id, 
+                    comp_row["name"], 
+                    skill_row["name"], 
+                    "self"
+                )
+                
+                # Get latest manager assessment for this skill
+                manager_latest = get_latest_assessment(
+                    employee_id, 
+                    comp_row["name"], 
+                    skill_row["name"], 
+                    "manager"
+                )
+                
+                # Find matching expectation
+                expectation = level_expectations[
+                    (level_expectations["competency"] == comp_row["name"]) &
+                    (level_expectations["skill"] == skill_row["name"])
+                ]
+                
+                # Only include if expectation exists and at least one assessment exists
+                if not expectation.empty and (self_latest is not None or manager_latest is not None):
+                    labels.append(f"{comp_row['name']} - {skill_row['name']}")
+                    self_values.append(self_latest["score"] if self_latest is not None else None)
+                    manager_values.append(manager_latest["score"] if manager_latest is not None else None)
+                    expected_values.append(expectation.iloc[0]["expected_score"])
+    else:
+        # Loop through all competencies
+        for _, comp_row in competencies_df.iterrows():
+            # Get latest self assessment for this competency
+            self_latest = get_latest_competency_assessment(
+                employee_id, 
+                comp_row["name"], 
+                "self"
+            )
+            
+            # Get latest manager assessment for this competency
+            manager_latest = get_latest_competency_assessment(
+                employee_id, 
+                comp_row["name"], 
+                "manager"
+            )
+            
+            # Find matching expectation
+            expectation = level_expectations[
+                (level_expectations["competency"] == comp_row["name"])
+            ]
+            
+            # Only include if expectation exists and at least one assessment exists
+            if not expectation.empty and (self_latest is not None or manager_latest is not None):
+                labels.append(comp_row["name"])
+                self_values.append(self_latest["score"] if self_latest is not None else None)
+                manager_values.append(manager_latest["score"] if manager_latest is not None else None)
+                expected_values.append(expectation.iloc[0]["expected_score"])
+    
+    if not labels:
+        return None, f"No matching {'skill' if view_type == 'Skills' else 'competency'} expectations found for this employee's assessments."
+    
+    # Create radar chart
+    fig = go.Figure()
+    
+    # Add self assessment trace
+    if any(v is not None for v in self_values):
+        # Replace None with 0 for visualization purposes
+        self_values_visual = [v if v is not None else 0 for v in self_values]
+        
+        fig.add_trace(go.Scatterpolar(
+            r=self_values_visual,
+            theta=labels,
+            fill='toself',
+            name='Self Assessment',
+            line=dict(color='blue')
+        ))
+    
+    # Add manager assessment trace
+    if any(v is not None for v in manager_values):
+        # Replace None with 0 for visualization purposes
+        manager_values_visual = [v if v is not None else 0 for v in manager_values]
+        
+        fig.add_trace(go.Scatterpolar(
+            r=manager_values_visual,
+            theta=labels,
+            fill='toself',
+            name='Manager Assessment',
+            line=dict(color='green')
+        ))
+    
+    # Add expected values trace
+    fig.add_trace(go.Scatterpolar(
+        r=expected_values,
+        theta=labels,
+        fill='toself',
+        name=f'Expected (Level {job_level})',
+        line=dict(color='red', dash='dash')
+    ))
+    
+    # Set layout
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                visible=True,
+                range=[0, 5]
+            )
+        ),
+        title=f"{view_type} vs. Expectations",
         showlegend=True
     )
     
