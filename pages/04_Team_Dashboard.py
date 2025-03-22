@@ -13,7 +13,7 @@ from data_manager import (
     load_data, load_data_for_organization, get_employees_for_manager, get_employee_assessments,
     get_team_competency_means
 )
-from utils import check_permission, get_user_id, calculate_mean, get_current_organization_id
+from utils import check_permission, check_page_access, get_user_id, calculate_mean, get_current_organization_id
 from ui_helpers import load_custom_css
 from visualizations import (
     team_skill_radar, team_competency_radar, competency_bar_chart, team_heatmap,
@@ -22,6 +22,10 @@ from visualizations import (
 
 # Load custom CSS for consistent styling
 load_custom_css()
+
+# This page is accessible only to managers and admins
+if not check_page_access(["admin", "manager"]):
+    st.stop()
 
 # Check if user is authenticated
 if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
