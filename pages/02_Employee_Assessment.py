@@ -364,7 +364,7 @@ else:
                 employee_names = [e[1] for e in employee_options]
                 employee_ids = [e[0] for e in employee_options]
                 
-                selected_emp_name = st.selectbox("Select Employee to Assess", employee_names)
+                selected_emp_name = st.selectbox("Select Employee to Assess", employee_names, key="emp_assessment_select")
                 selected_emp_idx = employee_names.index(selected_emp_name)
                 selected_emp_id = employee_ids[selected_emp_idx]
                 

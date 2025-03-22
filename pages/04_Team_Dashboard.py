@@ -44,7 +44,7 @@ if st.session_state.user_role == "admin":
         
         if filter_type == "Department":
             departments = sorted(employees_df["department"].unique())
-            department_filter = st.selectbox("Select Department", departments)
+            department_filter = st.selectbox("Select Department", departments, key="team_dashboard_dept_filter")
         else:
             # Get all managers
             managers_df = employees_df[employees_df["employee_id"].isin(employees_df["manager_id"].dropna().unique())]
@@ -54,7 +54,7 @@ if st.session_state.user_role == "admin":
                 manager_names = [m[1] for m in manager_options]
                 manager_ids = [m[0] for m in manager_options]
                 
-                selected_manager = st.selectbox("Select Manager", manager_names)
+                selected_manager = st.selectbox("Select Manager", manager_names, key="team_dashboard_manager_select")
                 selected_manager_idx = manager_names.index(selected_manager)
                 manager_id = manager_ids[selected_manager_idx]
             else:
@@ -160,7 +160,7 @@ with tab2:
     levels_df = load_data("levels")
     if not levels_df.empty and not expectations_df.empty:
         level_options = sorted(expectations_df["job_level"].unique())
-        selected_level = st.selectbox("Compare Against Job Level", level_options)
+        selected_level = st.selectbox("Compare Against Job Level", level_options, key="team_dashboard_job_level_select")
         
         # Filter expectations for selected level
         level_expectations = expectations_df[expectations_df["job_level"] == selected_level]
