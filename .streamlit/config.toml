@@ -7,7 +7,7 @@ port = 5000
 # Primary colors
 primaryColor = "#d13c35"  # Red for primary buttons and interactive elements
 backgroundColor = "#f5f0d2"  # Light yellow for page background
-secondaryBackgroundColor = "#f2bc54"  # Yellow-orange for container backgrounds
+secondaryBackgroundColor = "#0e2b3d"  # Dark blue for sidebar background
 textColor = "#0e2b3d"  # Dark blue for text
 
 # Additional customizations

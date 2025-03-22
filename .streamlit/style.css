@@ -1,0 +1,63 @@
+/* Apply sans-serif to all headings */
+h1, h2, h3, h4, h5, h6 {
+    font-family: "sans-serif" !important;
+    color: #0e2b3d !important;
+}
+
+/* Improve sidebar text contrast */
+.css-1cypcdb {
+    color: #f5f0d2 !important;
+}
+
+/* Style sidebar navigation links */
+.css-1cypcdb a {
+    color: #f2bc54 !important;
+}
+
+/* Style sidebar header */
+.css-1cypcdb .sidebar-title {
+    color: #f5f0d2 !important;
+}
+
+/* Improve button styling */
+.stButton > button {
+    background-color: #d13c35 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.stButton > button:hover {
+    background-color: #e67e22 !important;
+    color: #f5f0d2 !important;
+}
+
+/* Style chart tooltips */
+.js-plotly-plot .plotly .hovertext {
+    background-color: #0e2b3d !important;
+    color: #f5f0d2 !important;
+}
+
+/* Style table headers */
+.dataframe th {
+    background-color: #0e2b3d !important;
+    color: #f5f0d2 !important;
+}
+
+/* Style select boxes */
+.stSelectbox label {
+    color: #0e2b3d !important;
+}
+
+/* Style slider */
+.stSlider label {
+    color: #0e2b3d !important;
+}
+
+.stSlider [data-baseweb="slider"] {
+    background-color: #e67e22 !important;
+}
+
+/* Style horizontal rule */
+hr {
+    border-color: #f2bc54 !important;
+}

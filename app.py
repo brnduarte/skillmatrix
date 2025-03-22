@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import os
 from utils import authenticate_user, get_user_role, initialize_session_state
 from data_manager import load_data, save_data
 
@@ -11,6 +12,17 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Load custom CSS
+def load_css(css_file):
+    with open(css_file, "r") as f:
+        css = f.read()
+        st.markdown(f'<style>{css}</style>', unsafe_allow_html=True)
+
+# Apply CSS if it exists
+css_path = os.path.join(".streamlit", "style.css")
+if os.path.exists(css_path):
+    load_css(css_path)
 
 # Initialize session state variables
 initialize_session_state()
