@@ -109,7 +109,8 @@ with tab1:
     
     # Display add skill form as a modal if active
     if st.session_state.show_add_skill_form:
-        competencies_df = load_data("competencies")
+        organization_id = get_current_organization_id()
+        competencies_df = load_data_for_organization("competencies", organization_id)
         
         if competencies_df.empty:
             st.warning("You need to add competencies first.")
@@ -152,8 +153,9 @@ with tab1:
     
     # View existing competencies with edit/delete options
     st.subheader("Existing Competencies")
-    competencies_df = load_data("competencies")
-    skills_df = load_data("skills")
+    organization_id = get_current_organization_id()
+    competencies_df = load_data_for_organization("competencies", organization_id)
+    skills_df = load_data_for_organization("skills", organization_id)
     
     # Add filter options
     filter_col1, filter_col2, filter_col3 = st.columns([1, 1, 1])
@@ -409,7 +411,8 @@ with tab2:
     # Display existing job levels section
     st.markdown("---")
     st.subheader("Existing Job Levels")
-    levels_df = load_data("levels")
+    organization_id = get_current_organization_id()
+    levels_df = load_data_for_organization("levels", organization_id)
     
     if not levels_df.empty:
         # Add filter options
@@ -418,9 +421,9 @@ with tab2:
             filter_type = st.selectbox("Filter By", ["All Levels", "Search by Name", "Filter by Skill"], key="level_filter_type")
         
         # Load skills data and expectations data for filtering
-        skills_df = load_data("skills")
-        competencies_df = load_data("competencies")
-        expectations_df = load_data("expectations")
+        skills_df = load_data_for_organization("skills", organization_id)
+        competencies_df = load_data_for_organization("competencies", organization_id)
+        expectations_df = load_data_for_organization("expectations", organization_id)
         
         # Define selected_skill with a default value
         selected_skill = "All Skills"
@@ -529,9 +532,10 @@ with tab3:
     st.header("Skill Expectations")
     st.write("Set the expected skill scores for each job level.")
     
-    levels_df = load_data("levels")
-    competencies_df = load_data("competencies")
-    skills_df = load_data("skills")
+    organization_id = get_current_organization_id()
+    levels_df = load_data_for_organization("levels", organization_id)
+    competencies_df = load_data_for_organization("competencies", organization_id)
+    skills_df = load_data_for_organization("skills", organization_id)
     
     if levels_df.empty or competencies_df.empty or skills_df.empty:
         st.warning("You need to set up job levels, competencies, and skills first.")
@@ -610,7 +614,8 @@ with tab3:
         
         # Display Current Expectations section
         st.subheader("Current Expectations")
-        expectations_df = load_data("expectations")
+        organization_id = get_current_organization_id()
+        expectations_df = load_data_for_organization("expectations", organization_id)
         
         if not expectations_df.empty:
             # Show filter options
@@ -819,8 +824,9 @@ with tab4:
     st.header("Competency Expectations")
     st.write("Set the expected competency scores for each job level (separate from skills).")
     
-    levels_df = load_data("levels")
-    competencies_df = load_data("competencies")
+    organization_id = get_current_organization_id()
+    levels_df = load_data_for_organization("levels", organization_id)
+    competencies_df = load_data_for_organization("competencies", organization_id)
     
     if levels_df.empty or competencies_df.empty:
         st.warning("You need to set up job levels and competencies first.")
@@ -886,7 +892,8 @@ with tab4:
         
         # Display Current Competency Expectations section
         st.subheader("Current Competency Expectations")
-        comp_expectations_df = load_data("comp_expectations")
+        organization_id = get_current_organization_id()
+        comp_expectations_df = load_data_for_organization("comp_expectations", organization_id)
         
         if not comp_expectations_df.empty:
             # Show filter options
@@ -1098,11 +1105,12 @@ with tab5:
             st.subheader("Add New Employee")
             
             # Get job levels for dropdown
-            levels_df = load_data("levels")
+            organization_id = get_current_organization_id()
+            levels_df = load_data_for_organization("levels", organization_id)
             level_options = [""] + levels_df["name"].tolist() if not levels_df.empty else [""]
             
             # Get managers for dropdown
-            employees_df = load_data("employees")
+            employees_df = load_data_for_organization("employees", organization_id)
             manager_options = [("", "None")] + [
                 (str(row["employee_id"]), row["name"]) 
                 for _, row in employees_df.iterrows()
@@ -1171,7 +1179,8 @@ with tab5:
     
     # Manage Existing Employees section
     st.subheader("Manage Existing Employees")
-    employees_df = load_data("employees")
+    organization_id = get_current_organization_id()
+    employees_df = load_data_for_organization("employees", organization_id)
     
     if not employees_df.empty:
         # Create a mapping of employee IDs to names for manager display
