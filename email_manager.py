@@ -12,7 +12,12 @@ import pandas as pd
 # Load SendGrid API key from environment
 SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 # Use a default sender email or allow overriding via environment variable
-DEFAULT_FROM_EMAIL = os.environ.get('SENDGRID_FROM_EMAIL', "noreply@skillmatrix.com")
+# Ensure we get the environment variable and not hardcoded values
+DEFAULT_FROM_EMAIL = os.environ.get('SENDGRID_FROM_EMAIL')
+if not DEFAULT_FROM_EMAIL or DEFAULT_FROM_EMAIL == "brnduarte@gmail.com":
+    # Only use a fallback if no valid environment variable is found
+    DEFAULT_FROM_EMAIL = "noreply@skillmatrix.com"
+    print(f"WARNING: Using fallback sender email {DEFAULT_FROM_EMAIL} - please set SENDGRID_FROM_EMAIL to a verified sender")
 
 # File to store invitation tokens
 INVITATIONS_FILE = "invitations.csv"
