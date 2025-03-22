@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import json
 from datetime import datetime
+from utils import get_user_id
 
 # Define the data files
 DATA_FILES = {
@@ -1287,13 +1288,50 @@ def get_organizations():
     return load_data("organizations")
 
 def get_user_organizations(username):
-    """Get all organizations created by a user"""
+    """Get all organizations a user has access to
+    
+    For admin users, returns organizations they created.
+    For employees/managers, returns organizations they belong to based on the employees table.
+    """
     organizations_df = load_data("organizations")
+    users_df = load_data("users")
     
     if organizations_df.empty:
         return pd.DataFrame()
     
-    return organizations_df[organizations_df["created_by"] == username]
+    # Get user's role
+    user_role = None
+    if not users_df.empty:
+        user = users_df[users_df["username"] == username]
+        if not user.empty:
+            user_role = user.iloc[0]["role"]
+    
+    # Admin users see organizations they created
+    if user_role == "admin":
+        return organizations_df[organizations_df["created_by"] == username]
+    
+    # For employees and managers, check the employees table to find their organization
+    employees_df = load_data("employees")
+    
+    if not employees_df.empty:
+        # Get the employee record for this user
+        user_id = None
+        for _, user_row in users_df.iterrows():
+            if user_row["username"] == username:
+                user_id = get_user_id(username)
+                break
+                
+        if user_id:
+            # Find the employee's organization
+            employee = employees_df[employees_df["employee_id"] == user_id]
+            if not employee.empty and "organization_id" in employee.columns:
+                org_id = employee.iloc[0]["organization_id"]
+                if pd.notna(org_id):
+                    # Return the organization this employee belongs to
+                    return organizations_df[organizations_df["organization_id"] == org_id]
+    
+    # If no organizations found, return empty DataFrame
+    return pd.DataFrame()
 
 def update_organization(organization_id, name=None):
     """Update an organization's details"""
