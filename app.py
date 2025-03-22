@@ -25,10 +25,9 @@ initialize_session_state()
 # Check for invitation token in query parameters
 def handle_invitation():
     """Handle invitation token from URL query parameters"""
-    query_params = st.experimental_get_query_params()
-    
-    if "token" in query_params:
-        token = query_params["token"][0]
+    # Use the non-experimental API
+    if "token" in st.query_params:
+        token = st.query_params["token"]
         
         # Verify the token
         is_valid, invitation = verify_invitation(token)
@@ -132,7 +131,7 @@ def handle_invitation():
                                         del st.session_state[key]
                                 
                                 # Clear query params and redirect to login
-                                st.experimental_set_query_params()
+                                st.query_params.clear()
                                 st.rerun()
                             else:
                                 st.error(f"Failed to create employee record: {employee_message}")
@@ -144,7 +143,7 @@ def handle_invitation():
         else:
             st.error("This invitation link is invalid or has expired.")
             # Clear query params
-            st.experimental_set_query_params()
+            st.query_params.clear()
 
 # User authentication
 def display_login():

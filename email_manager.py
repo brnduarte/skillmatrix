@@ -11,7 +11,7 @@ import pandas as pd
 
 # Load SendGrid API key from environment
 SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
-DEFAULT_FROM_EMAIL = "skillmatrix@noreply.com"  # Change to your verified sender
+DEFAULT_FROM_EMAIL = "admin@example.com"  # This should match a verified sender in your SendGrid account
 
 # File to store invitation tokens
 INVITATIONS_FILE = "invitations.csv"
@@ -108,8 +108,8 @@ def send_invitation_email(email, token, name=None, organization_name=None):
     if not SENDGRID_API_KEY:
         return False, "SendGrid API key not found in environment variables"
     
-    # Construct the invitation URL (adjust base URL as needed)
-    invite_url = f"https://skillmatrix.replit.app/accept-invite?token={token}"
+    # Construct the invitation URL with relative path
+    invite_url = f"/?token={token}"
     
     # Personalize the greeting
     greeting = f"Hello {name}," if name else "Hello,"
