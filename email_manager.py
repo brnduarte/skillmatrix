@@ -106,8 +106,14 @@ def send_invitation_email(email, token, name=None, organization_name=None):
     Returns:
         Tuple of (success, message)
     """
+    # First check if required secrets exist
     if not SENDGRID_API_KEY:
         return False, "SendGrid API key not found in environment variables. Please set the SENDGRID_API_KEY environment variable."
+        
+    # Never use the recipient email as the sender
+    sender_email = DEFAULT_FROM_EMAIL
+    if sender_email == email:
+        return False, f"Cannot use recipient email as sender. Please set a different SENDGRID_FROM_EMAIL in environment variables."
     
     # Construct the invitation URL with relative path
     invite_url = f"/?token={token}"
@@ -139,6 +145,9 @@ def send_invitation_email(email, token, name=None, organization_name=None):
     """
     
     try:
+        # Log the sender email for debugging
+        print(f"Using sender email: {DEFAULT_FROM_EMAIL}")
+        
         message = Mail(
             from_email=DEFAULT_FROM_EMAIL,
             to_emails=email,
