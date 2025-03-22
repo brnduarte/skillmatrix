@@ -1320,13 +1320,29 @@ def delete_organization(organization_id, force_delete=False):
     # Convert organization_id to int for consistent comparison
     organization_id = int(organization_id)
     
+    # Helper function to safely compare organization IDs
+    def compare_org_ids(df_col, org_id):
+        if df_col.empty:
+            return False
+            
+        # Handle various data types that might be in the column
+        try:
+            # First convert to float to handle potential decimal values
+            return any(df_col.astype(float).astype(int) == org_id)
+        except (ValueError, TypeError):
+            try:
+                # Try direct string comparison if numeric conversion fails
+                return any(df_col.astype(str).str.replace('.0', '') == str(org_id))
+            except:
+                return False
+    
     # Check if organization has associated records
-    has_employees = not employees_df.empty and "organization_id" in employees_df.columns and any(employees_df["organization_id"].astype(str).astype(int) == organization_id)
-    has_competencies = not competencies_df.empty and "organization_id" in competencies_df.columns and any(competencies_df["organization_id"].astype(str).astype(int) == organization_id)
-    has_skills = not skills_df.empty and "organization_id" in skills_df.columns and any(skills_df["organization_id"].astype(str).astype(int) == organization_id)
-    has_job_levels = not job_levels_df.empty and "organization_id" in job_levels_df.columns and any(job_levels_df["organization_id"].astype(str).astype(int) == organization_id)
-    has_assessments = not assessments_df.empty and "organization_id" in assessments_df.columns and any(assessments_df["organization_id"].astype(str).astype(int) == organization_id)
-    has_comp_assessments = not competency_assessments_df.empty and "organization_id" in competency_assessments_df.columns and any(competency_assessments_df["organization_id"].astype(str).astype(int) == organization_id)
+    has_employees = not employees_df.empty and "organization_id" in employees_df.columns and compare_org_ids(employees_df["organization_id"], organization_id)
+    has_competencies = not competencies_df.empty and "organization_id" in competencies_df.columns and compare_org_ids(competencies_df["organization_id"], organization_id)
+    has_skills = not skills_df.empty and "organization_id" in skills_df.columns and compare_org_ids(skills_df["organization_id"], organization_id)
+    has_job_levels = not job_levels_df.empty and "organization_id" in job_levels_df.columns and compare_org_ids(job_levels_df["organization_id"], organization_id)
+    has_assessments = not assessments_df.empty and "organization_id" in assessments_df.columns and compare_org_ids(assessments_df["organization_id"], organization_id)
+    has_comp_assessments = not competency_assessments_df.empty and "organization_id" in competency_assessments_df.columns and compare_org_ids(competency_assessments_df["organization_id"], organization_id)
     
     # If there are associated records and force_delete is False, prevent deletion
     if (has_employees or has_competencies or has_skills or has_job_levels or has_assessments or has_comp_assessments) and not force_delete:
@@ -1334,33 +1350,53 @@ def delete_organization(organization_id, force_delete=False):
     
     # If force_delete is True, delete all associated records
     if force_delete:
+        # Helper function to filter dataframes by organization ID
+        def filter_by_org_id(df, org_id, match=True):
+            if df.empty or "organization_id" not in df.columns:
+                return df
+                
+            # Create a mask for records matching or not matching the organization ID
+            try:
+                # First try as float to handle decimal values
+                mask = df["organization_id"].astype(float).astype(int) == org_id
+            except:
+                try:
+                    # Try with string replacement if numeric conversion fails
+                    mask = df["organization_id"].astype(str).str.replace('.0', '') == str(org_id)
+                except:
+                    # Fall back to empty mask if all else fails
+                    mask = pd.Series(False, index=df.index)
+            
+            # Return matching or non-matching records based on the match parameter
+            return df[mask] if match else df[~mask]
+            
         # Delete employees and their assessments
         if has_employees:
             # Get all employee IDs in this organization
-            org_employees = employees_df[employees_df["organization_id"].astype(str).astype(int) == organization_id]
+            org_employees = filter_by_org_id(employees_df, organization_id)
             for _, employee in org_employees.iterrows():
                 delete_employee(employee["employee_id"])
         
         # Delete competencies and their skills
         if has_competencies:
-            org_competencies = competencies_df[competencies_df["organization_id"].astype(str).astype(int) == organization_id]
+            org_competencies = filter_by_org_id(competencies_df, organization_id)
             for _, competency in org_competencies.iterrows():
                 delete_competency(competency["competency_id"])
         
         # Delete job levels
         if has_job_levels:
-            org_levels = job_levels_df[job_levels_df["organization_id"].astype(str).astype(int) == organization_id]
+            org_levels = filter_by_org_id(job_levels_df, organization_id)
             for _, level in org_levels.iterrows():
                 delete_job_level(level["level_id"])
         
         # Delete any remaining assessments
         if has_assessments:
-            assessments_df = assessments_df[assessments_df["organization_id"].astype(str).astype(int) != organization_id]
+            assessments_df = filter_by_org_id(assessments_df, organization_id, match=False)
             save_data("assessments", assessments_df)
         
         # Delete any remaining competency assessments
         if has_comp_assessments:
-            competency_assessments_df = competency_assessments_df[competency_assessments_df["organization_id"].astype(str).astype(int) != organization_id]
+            competency_assessments_df = filter_by_org_id(competency_assessments_df, organization_id, match=False)
             save_data("comp_assessments", competency_assessments_df)
     
     # Now delete the organization record
