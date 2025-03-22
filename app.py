@@ -332,6 +332,83 @@ def display_login():
                     else:
                         st.error(f"Failed to create user account: {user_message}")
 
+# Function to hide pages based on user role
+def hide_pages_by_role():
+    """Hide specific pages in the sidebar based on user role"""
+    import streamlit as st
+    
+    # Define page access by role
+    role_based_access = {
+        "admin": [
+            "01_Framework_Setup.py", 
+            "02_Employee_Assessment.py", 
+            "03_Individual_Performance.py",
+            "04_Team_Dashboard.py",
+            "05_Export_Reports.py",
+            "06_Organization_Management.py",
+            "07_User_Management.py"
+        ],
+        "manager": [
+            "02_Employee_Assessment.py", 
+            "03_Individual_Performance.py",
+            "04_Team_Dashboard.py",
+            "05_Export_Reports.py"
+        ],
+        "employee": [
+            "02_Employee_Assessment.py", 
+            "03_Individual_Performance.py"
+        ],
+        "email_user": [
+            "02_Employee_Assessment.py"
+        ]
+    }
+    
+    # Get current role
+    current_role = st.session_state.user_role
+    allowed_pages = role_based_access.get(current_role, [])
+    
+    # Create JavaScript to hide the pages
+    hide_pages_script = """
+    <script>
+    function wait_for_pages() {
+        const sidebar = window.parent.document.querySelector('[data-testid="stSidebar"]');
+        const navLinks = sidebar ? sidebar.querySelectorAll('a[href*="pages"]') : [];
+        
+        if (navLinks.length > 0) {
+            // We have page links, check which ones need to be hidden
+            const allowedPages = %s;
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                const pageName = href.split('/').pop();
+                
+                if (!allowedPages.includes(pageName)) {
+                    // Hide this page
+                    const listItem = link.closest('li');
+                    if (listItem) {
+                        listItem.style.display = 'none';
+                    } else {
+                        link.style.display = 'none';
+                    }
+                }
+            });
+        } else {
+            // Page links not loaded yet, try again in 100ms
+            setTimeout(wait_for_pages, 100);
+        }
+    }
+    
+    // Initial call when script loads
+    wait_for_pages();
+    
+    // Also set an interval to catch any navigation changes
+    setInterval(wait_for_pages, 1000);
+    </script>
+    """ % str(allowed_pages)
+    
+    # Use components.html to inject the JavaScript
+    from streamlit.components.v1 import html
+    html(hide_pages_script, height=0, width=0)
+
 # Main application
 def main_app():
     st.sidebar.title(f"Welcome, {st.session_state.username}")
@@ -340,6 +417,9 @@ def main_app():
     # Display current organization
     if st.session_state.organization_name:
         st.sidebar.markdown(f"**Organization**: {st.session_state.organization_name}")
+    
+    # Hide pages based on user role
+    hide_pages_by_role()
     
     if st.sidebar.button("Logout"):
         for key in list(st.session_state.keys()):
