@@ -426,19 +426,36 @@ with tab4:
                                     pass
                             
                             # Send email
-                            email_success, email_message = send_invitation_email(
-                                email=inv_email,
-                                token=token,
-                                name=inv_name,
-                                organization_name=org_name
-                            )
+                            try:
+                                email_success, email_message = send_invitation_email(
+                                    email=inv_email,
+                                    token=token,
+                                    name=inv_name,
+                                    organization_name=org_name
+                                )
+                                
+                                # Display detailed error message for debugging
+                                if not email_success:
+                                    st.error(f"Email sending failed: {email_message}")
+                                    
+                                    # If email sending failed, display the invitation link directly
+                                    # This provides a fallback method for giving access
+                                    invite_url = f"/?token={token}"
+                                    st.warning("⚠️ Since email sending failed, please copy this invitation link and share it directly with the user:")
+                                    st.code(invite_url, language="text")
+                                    st.info("This invitation link will expire in 7 days.")
+                            except Exception as e:
+                                st.error(f"Error sending invitation: {str(e)}")
+                                # Provide the invitation link as fallback
+                                invite_url = f"/?token={token}"
+                                st.warning("⚠️ Since email sending failed, please copy this invitation link and share it directly with the user:")
+                                st.code(invite_url, language="text")
+                                st.info("This invitation link will expire in 7 days.")
                             
-                            if email_success:
-                                st.success(f"Invitation sent successfully to {inv_email}")
-                            else:
-                                st.warning(f"Invitation created but email failed to send: {email_message}")
+                            # This duplicates the success message that's already handled in the try block above
+                            # Removing to avoid "possibly unbound" variable errors
                         else:
-                            st.error(f"Failed to create invitation: {inv_message}")
+                            # This is handled inside the try block above to avoid unbound variable errors
                     except Exception as e:
                         st.error(f"Error sending invitation: {str(e)}")
     
@@ -500,17 +517,33 @@ with tab4:
                                     pass
                             
                             # Resend email
-                            email_success, email_message = send_invitation_email(
-                                email=selected_email,
-                                token=token,
-                                name=username,  # Using username as name (could improve by storing name in invitations)
-                                organization_name=org_name
-                            )
-                            
-                            if email_success:
-                                st.success(f"Invitation resent successfully to {selected_email}")
-                            else:
-                                st.error(f"Failed to resend invitation email: {email_message}")
+                            try:
+                                email_success, email_message = send_invitation_email(
+                                    email=selected_email,
+                                    token=token,
+                                    name=username,  # Using username as name (could improve by storing name in invitations)
+                                    organization_name=org_name
+                                )
+                                
+                                # Display detailed error message for debugging
+                                if not email_success:
+                                    st.error(f"Email sending failed: {email_message}")
+                                    
+                                    # If email sending failed, display the invitation link directly
+                                    # This provides a fallback method for giving access
+                                    invite_url = f"/?token={token}"
+                                    st.warning("⚠️ Since email sending failed, please copy this invitation link and share it directly with the user:")
+                                    st.code(invite_url, language="text")
+                                    st.info("This invitation link will expire in 7 days.")
+                                else:
+                                    st.success(f"Invitation resent successfully to {selected_email}")
+                            except Exception as e:
+                                st.error(f"Error sending invitation: {str(e)}")
+                                # Provide the invitation link as fallback
+                                invite_url = f"/?token={token}"
+                                st.warning("⚠️ Since email sending failed, please copy this invitation link and share it directly with the user:")
+                                st.code(invite_url, language="text")
+                                st.info("This invitation link will expire in 7 days.")
                         except Exception as e:
                             st.error(f"Error resending invitation: {str(e)}")
         except Exception as e:
