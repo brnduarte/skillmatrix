@@ -1026,4 +1026,66 @@ def update_organization(organization_id, name=None):
 
 def delete_organization(organization_id):
     """Delete an organization"""
+    # Check if this organization has associated records
+    employees_df = load_data("employees")
+    competencies_df = load_data("competencies")
+    job_levels_df = load_data("levels")
+    
+    has_employees = not employees_df.empty and "organization_id" in employees_df.columns and any(employees_df["organization_id"] == organization_id)
+    has_competencies = not competencies_df.empty and "organization_id" in competencies_df.columns and any(competencies_df["organization_id"] == organization_id)
+    has_job_levels = not job_levels_df.empty and "organization_id" in job_levels_df.columns and any(job_levels_df["organization_id"] == organization_id)
+    
+    if has_employees or has_competencies or has_job_levels:
+        return False, "Cannot delete organization because it has associated records"
+    
     return delete_record("organizations", organization_id)
+
+def update_csv_structure(data_type, add_columns):
+    """Add new columns to a CSV file structure
+    
+    Args:
+        data_type: Type of data (employees, competencies, etc.)
+        add_columns: Dictionary of column names and default values to add
+    
+    Returns:
+        Success status and message
+    """
+    try:
+        df = load_data(data_type)
+        
+        # Check if columns already exist
+        existing_columns = set(df.columns)
+        new_columns = set(add_columns.keys())
+        columns_to_add = new_columns - existing_columns
+        
+        if not columns_to_add:
+            return True, f"No new columns to add to {data_type}"
+        
+        # Add the new columns with default values
+        for col in columns_to_add:
+            df[col] = add_columns[col]
+        
+        # Save the updated dataframe
+        save_data(data_type, df)
+        return True, f"Added columns {', '.join(columns_to_add)} to {data_type}"
+    
+    except Exception as e:
+        return False, f"Error updating {data_type} structure: {str(e)}"
+
+def update_schema_for_organizations():
+    """Update the schema of employees, competencies, and job levels to include organization_id"""
+    results = []
+    
+    # Update employees schema
+    success, message = update_csv_structure("employees", {"organization_id": None})
+    results.append(f"Employees: {message}")
+    
+    # Update competencies schema
+    success, message = update_csv_structure("competencies", {"organization_id": None})
+    results.append(f"Competencies: {message}")
+    
+    # Update job levels schema
+    success, message = update_csv_structure("levels", {"organization_id": None})
+    results.append(f"Job Levels: {message}")
+    
+    return results
