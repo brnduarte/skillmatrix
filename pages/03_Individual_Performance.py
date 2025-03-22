@@ -139,18 +139,16 @@ if employee_id:
             st.subheader("Performance vs. Expected Level")
             
             if not self_assessments.empty or not manager_assessments.empty:
-                assessment_type = st.radio(
-                    "Assessment Type to Compare", 
-                    ["self", "manager"], 
-                    horizontal=True,
-                    format_func=lambda x: "Self Assessment" if x == "self" else "Manager Assessment"
-                )
+                # Use the same view type (Skills/Competencies) as selected above
+                comparison_view_type = "Skills" if view_type == "Skills" else "Competencies"
                 
-                fig, error = comparison_radar_chart(employee_id, employee_level, assessment_type)
+                # Use the combined comparison chart function that shows both self and manager assessments
+                # together with expected levels
+                fig, error = combined_comparison_radar_chart(employee_id, employee_level, comparison_view_type)
                 if fig:
                     st.plotly_chart(fig, use_container_width=True)
                 else:
-                    st.info(error or f"Cannot create comparison chart. Check that skill expectations are defined for level {employee_level}.")
+                    st.info(error or f"Cannot create comparison chart. Check that expectations are defined for level {employee_level}.")
             else:
                 st.info("No assessments available to compare with expected levels.")
         
