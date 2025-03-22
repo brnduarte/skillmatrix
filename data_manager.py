@@ -1297,20 +1297,73 @@ def update_organization(organization_id, name=None):
     save_data("organizations", organizations_df)
     return True, "Organization updated successfully"
 
-def delete_organization(organization_id):
-    """Delete an organization"""
+def delete_organization(organization_id, force_delete=False):
+    """Delete an organization
+    
+    Args:
+        organization_id: ID of the organization to delete
+        force_delete: If True, also delete all associated records
+        
+    Returns:
+        Tuple of (success, message)
+    """
     # Check if this organization has associated records
     employees_df = load_data("employees")
     competencies_df = load_data("competencies")
+    skills_df = load_data("skills")
     job_levels_df = load_data("levels")
+    assessments_df = load_data("assessments")
+    competency_assessments_df = load_data("comp_assessments")
+    expectations_df = load_data("expectations")
+    competency_expectations_df = load_data("comp_expectations")
     
-    has_employees = not employees_df.empty and "organization_id" in employees_df.columns and any(employees_df["organization_id"] == organization_id)
-    has_competencies = not competencies_df.empty and "organization_id" in competencies_df.columns and any(competencies_df["organization_id"] == organization_id)
-    has_job_levels = not job_levels_df.empty and "organization_id" in job_levels_df.columns and any(job_levels_df["organization_id"] == organization_id)
+    # Convert organization_id to int for consistent comparison
+    organization_id = int(organization_id)
     
-    if has_employees or has_competencies or has_job_levels:
-        return False, "Cannot delete organization because it has associated records"
+    # Check if organization has associated records
+    has_employees = not employees_df.empty and "organization_id" in employees_df.columns and any(employees_df["organization_id"].astype(str).astype(int) == organization_id)
+    has_competencies = not competencies_df.empty and "organization_id" in competencies_df.columns and any(competencies_df["organization_id"].astype(str).astype(int) == organization_id)
+    has_skills = not skills_df.empty and "organization_id" in skills_df.columns and any(skills_df["organization_id"].astype(str).astype(int) == organization_id)
+    has_job_levels = not job_levels_df.empty and "organization_id" in job_levels_df.columns and any(job_levels_df["organization_id"].astype(str).astype(int) == organization_id)
+    has_assessments = not assessments_df.empty and "organization_id" in assessments_df.columns and any(assessments_df["organization_id"].astype(str).astype(int) == organization_id)
+    has_comp_assessments = not competency_assessments_df.empty and "organization_id" in competency_assessments_df.columns and any(competency_assessments_df["organization_id"].astype(str).astype(int) == organization_id)
     
+    # If there are associated records and force_delete is False, prevent deletion
+    if (has_employees or has_competencies or has_skills or has_job_levels or has_assessments or has_comp_assessments) and not force_delete:
+        return False, "Cannot delete organization because it has associated records. Use force_delete to remove all associated data."
+    
+    # If force_delete is True, delete all associated records
+    if force_delete:
+        # Delete employees and their assessments
+        if has_employees:
+            # Get all employee IDs in this organization
+            org_employees = employees_df[employees_df["organization_id"].astype(str).astype(int) == organization_id]
+            for _, employee in org_employees.iterrows():
+                delete_employee(employee["employee_id"])
+        
+        # Delete competencies and their skills
+        if has_competencies:
+            org_competencies = competencies_df[competencies_df["organization_id"].astype(str).astype(int) == organization_id]
+            for _, competency in org_competencies.iterrows():
+                delete_competency(competency["competency_id"])
+        
+        # Delete job levels
+        if has_job_levels:
+            org_levels = job_levels_df[job_levels_df["organization_id"].astype(str).astype(int) == organization_id]
+            for _, level in org_levels.iterrows():
+                delete_job_level(level["level_id"])
+        
+        # Delete any remaining assessments
+        if has_assessments:
+            assessments_df = assessments_df[assessments_df["organization_id"].astype(str).astype(int) != organization_id]
+            save_data("assessments", assessments_df)
+        
+        # Delete any remaining competency assessments
+        if has_comp_assessments:
+            competency_assessments_df = competency_assessments_df[competency_assessments_df["organization_id"].astype(str).astype(int) != organization_id]
+            save_data("comp_assessments", competency_assessments_df)
+    
+    # Now delete the organization record
     return delete_record("organizations", organization_id)
 
 def update_csv_structure(data_type, add_columns):
