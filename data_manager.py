@@ -69,7 +69,7 @@ def load_data_for_organization(data_type, organization_id):
     """Load data from a CSV file filtered by organization_id
     
     Args:
-        data_type: Type of data to load (employees, competencies, levels)
+        data_type: Type of data to load (employees, competencies, levels, skills, assessments, etc.)
         organization_id: ID of the organization to filter by
         
     Returns:
@@ -81,11 +81,30 @@ def load_data_for_organization(data_type, organization_id):
     if data_type in ["users", "organizations"]:
         return df
     
-    # Check if this data type has organization_id field
+    # Check if empty dataframe
     if df.empty:
         return df
     
-    # Ensure organization_id column exists
+    # Handle special case for skills - they need to be filtered by their competency's organization
+    if data_type == "skills" and "organization_id" not in df.columns:
+        # Ensure organization_id is in the competencies table
+        competencies_df = load_data("competencies")
+        if "organization_id" not in competencies_df.columns:
+            update_csv_structure("competencies", {"organization_id": None})
+            competencies_df = load_data("competencies")
+        
+        # Filter competencies by organization
+        if not competencies_df.empty and "organization_id" in competencies_df.columns:
+            org_competencies = competencies_df[
+                (competencies_df["organization_id"] == organization_id) | 
+                (competencies_df["organization_id"].isna())
+            ]
+            
+            # Then filter skills by those competencies
+            if not org_competencies.empty:
+                return df[df["competency_id"].isin(org_competencies["competency_id"])]
+    
+    # For all other data types, ensure organization_id column exists
     if "organization_id" not in df.columns:
         # Update the schema to include organization_id
         update_csv_structure(data_type, {"organization_id": None})
@@ -93,9 +112,9 @@ def load_data_for_organization(data_type, organization_id):
         if "organization_id" not in df.columns:
             return pd.DataFrame()  # Return empty dataframe if we can't add the column
     
-    # Filter by organization ID and handle None values
+    # Filter by organization ID, including records where organization_id is NULL/None when needed
     return df[(df["organization_id"] == organization_id) | 
-              (df["organization_id"].isna() & (organization_id is None))]
+              (df["organization_id"].isna() & (data_type in ["expectations", "comp_expectations"]))]
 
 def save_data(data_type, df):
     """Save data to a CSV file"""
@@ -316,20 +335,45 @@ def add_assessment(employee_id, competency, skill, score, assessment_type, notes
     save_data("assessments", assessments_df)
     return True, "Assessment added successfully", new_id
 
-def get_employee_assessments(employee_id, assessment_type=None):
-    """Get all assessments for an employee"""
+def get_employee_assessments(employee_id, assessment_type=None, organization_id=None):
+    """Get all assessments for an employee
+    
+    Args:
+        employee_id: ID of the employee
+        assessment_type: Optional filter for assessment type (self/manager)
+        organization_id: Optional organization ID to filter assessments
+        
+    Returns:
+        DataFrame of assessments
+    """
     assessments_df = load_data("assessments")
     
     if assessments_df.empty:
         return pd.DataFrame()
     
+    # If no organization_id provided, get it from the employee record
+    if organization_id is None and employee_id is not None:
+        employees_df = load_data("employees")
+        if not employees_df.empty:
+            employee = employees_df[employees_df["employee_id"] == employee_id]
+            if not employee.empty and "organization_id" in employee.columns:
+                organization_id = employee.iloc[0].get("organization_id")
+    
+    # Base filter is always by employee ID
+    filtered = assessments_df[assessments_df["employee_id"] == employee_id]
+    
+    # Add assessment type filter if provided
     if assessment_type:
-        return assessments_df[
-            (assessments_df["employee_id"] == employee_id) &
-            (assessments_df["assessment_type"] == assessment_type)
+        filtered = filtered[filtered["assessment_type"] == assessment_type]
+    
+    # Add organization filter if organization_id column exists
+    if organization_id is not None and "organization_id" in filtered.columns:
+        filtered = filtered[
+            (filtered["organization_id"] == organization_id) | 
+            (filtered["organization_id"].isna())
         ]
-    else:
-        return assessments_df[assessments_df["employee_id"] == employee_id]
+    
+    return filtered
 
 def get_skill_assessments(employee_id, competency, skill):
     """Get all assessments for a specific skill"""
@@ -877,9 +921,17 @@ def update_employee(employee_id, name=None, email=None, job_title=None, job_leve
     return True, "Employee updated successfully"
 
 # Competency Assessment functions
-def add_competency_assessment(employee_id, competency, score, assessment_type, notes=""):
+def add_competency_assessment(employee_id, competency, score, assessment_type, notes="", organization_id=None):
     """Add a new competency assessment"""
     comp_assessments_df = load_data("comp_assessments")
+    
+    # Get employee's organization if not provided
+    if organization_id is None and employee_id is not None:
+        employees_df = load_data("employees")
+        if not employees_df.empty:
+            employee = employees_df[employees_df["employee_id"] == employee_id]
+            if not employee.empty and "organization_id" in employee.columns:
+                organization_id = employee.iloc[0].get("organization_id")
     
     # Generate new assessment ID
     if comp_assessments_df.empty:
@@ -895,40 +947,97 @@ def add_competency_assessment(employee_id, competency, score, assessment_type, n
         "score": [score],
         "assessment_type": [assessment_type],
         "assessment_date": [datetime.now().strftime("%Y-%m-%d")],
-        "notes": [notes]
+        "notes": [notes],
+        "organization_id": [organization_id]
     })
     
     comp_assessments_df = pd.concat([comp_assessments_df, new_assessment], ignore_index=True)
     save_data("comp_assessments", comp_assessments_df)
     return True, "Competency assessment added successfully", new_id
 
-def get_employee_competency_assessments(employee_id, assessment_type=None):
-    """Get all competency assessments for an employee"""
+def get_employee_competency_assessments(employee_id, assessment_type=None, organization_id=None):
+    """Get all competency assessments for an employee
+    
+    Args:
+        employee_id: ID of the employee
+        assessment_type: Optional filter for assessment type (self/manager)
+        organization_id: Optional organization ID to filter assessments
+        
+    Returns:
+        DataFrame of competency assessments
+    """
     comp_assessments_df = load_data("comp_assessments")
     
     if comp_assessments_df.empty:
         return pd.DataFrame()
     
+    # If no organization_id provided, get it from the employee record
+    if organization_id is None and employee_id is not None:
+        employees_df = load_data("employees")
+        if not employees_df.empty:
+            employee = employees_df[employees_df["employee_id"] == employee_id]
+            if not employee.empty and "organization_id" in employee.columns:
+                organization_id = employee.iloc[0].get("organization_id")
+    
+    # Base filter is always by employee ID
+    filtered = comp_assessments_df[comp_assessments_df["employee_id"] == employee_id]
+    
+    # Add assessment type filter if provided
     if assessment_type:
-        return comp_assessments_df[
-            (comp_assessments_df["employee_id"] == employee_id) &
-            (comp_assessments_df["assessment_type"] == assessment_type)
+        filtered = filtered[filtered["assessment_type"] == assessment_type]
+    
+    # Add organization filter if organization_id column exists
+    if organization_id is not None and "organization_id" in filtered.columns:
+        filtered = filtered[
+            (filtered["organization_id"] == organization_id) | 
+            (filtered["organization_id"].isna())
         ]
-    else:
-        return comp_assessments_df[comp_assessments_df["employee_id"] == employee_id]
+    
+    return filtered
 
-def get_latest_competency_assessment(employee_id, competency, assessment_type):
-    """Get the latest assessment for a specific competency"""
+def get_latest_competency_assessment(employee_id, competency, assessment_type, organization_id=None):
+    """Get the latest assessment for a specific competency
+    
+    Args:
+        employee_id: ID of the employee
+        competency: Name of the competency
+        assessment_type: Type of assessment (self/manager)
+        organization_id: Optional organization ID to filter assessments
+        
+    Returns:
+        Latest assessment record or None if not found
+    """
     comp_assessments_df = load_data("comp_assessments")
     
     if comp_assessments_df.empty:
         return None
     
-    relevant = comp_assessments_df[
-        (comp_assessments_df["employee_id"] == employee_id) &
-        (comp_assessments_df["competency"] == competency) &
+    # If no organization_id provided, get it from the employee record
+    if organization_id is None and employee_id is not None:
+        employees_df = load_data("employees")
+        if not employees_df.empty:
+            employee = employees_df[employees_df["employee_id"] == employee_id]
+            if not employee.empty and "organization_id" in employee.columns:
+                organization_id = employee.iloc[0].get("organization_id")
+    
+    # Base filter conditions
+    conditions = [
+        (comp_assessments_df["employee_id"] == employee_id),
+        (comp_assessments_df["competency"] == competency),
         (comp_assessments_df["assessment_type"] == assessment_type)
     ]
+    
+    # Add organization filter if needed
+    if organization_id is not None and "organization_id" in comp_assessments_df.columns:
+        conditions.append(
+            (comp_assessments_df["organization_id"] == organization_id) | 
+            (comp_assessments_df["organization_id"].isna())
+        )
+    
+    # Apply all filters
+    relevant = comp_assessments_df[pd.Series(True, index=comp_assessments_df.index)]
+    for condition in conditions:
+        relevant = relevant[condition]
     
     if relevant.empty:
         return None
