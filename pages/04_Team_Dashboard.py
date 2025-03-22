@@ -19,6 +19,9 @@ st.set_page_config(
     layout="wide"
 )
 
+# Load custom CSS for consistent styling
+load_custom_css()
+
 # Check if user is authenticated
 if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
     st.warning("Please login from the Home page.")

@@ -11,6 +11,7 @@ from data_manager import (
     get_competency_skills, get_latest_assessment
 )
 from utils import check_permission, get_user_id, is_manager_of, get_employees_for_manager
+from ui_helpers import load_custom_css
 from visualizations import (
     employee_skill_radar, comparison_radar_chart, team_skill_radar, team_competency_radar
 )
@@ -21,6 +22,9 @@ st.set_page_config(
     page_icon="📊",
     layout="wide"
 )
+
+# Load custom CSS for consistent styling
+load_custom_css()
 
 # Check if user is authenticated
 if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
