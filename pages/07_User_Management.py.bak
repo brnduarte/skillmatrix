@@ -463,14 +463,14 @@ with tab4:
                                     
                                     # If email sending failed, display the invitation link directly
                                     # This provides a fallback method for giving access
-                                    invite_url = get_invitation_url(token)
+                                    invite_url = f"/?token={token}"
                                     st.warning("⚠️ Since email sending failed, please copy this invitation link and share it directly with the user:")
                                     st.code(invite_url, language="text")
                                     st.info("This invitation link will expire in 7 days.")
                             except Exception as e:
                                 st.error(f"Error sending invitation: {str(e)}")
                                 # Provide the invitation link as fallback
-                                invite_url = get_invitation_url(token)
+                                invite_url = f"/?token={token}"
                                 st.warning("⚠️ Since email sending failed, please copy this invitation link and share it directly with the user:")
                                 st.code(invite_url, language="text")
                                 st.info("This invitation link will expire in 7 days.")
@@ -551,7 +551,7 @@ with tab4:
                                     
                                     # If email sending failed, display the invitation link directly
                                     # This provides a fallback method for giving access
-                                    invite_url = get_invitation_url(token)
+                                    invite_url = f"/?token={token}"
                                     st.warning("⚠️ Since email sending failed, please copy this invitation link and share it directly with the user:")
                                     st.code(invite_url, language="text")
                                     st.info("This invitation link will expire in 7 days.")
@@ -560,7 +560,7 @@ with tab4:
                             except Exception as e:
                                 st.error(f"Error sending invitation: {str(e)}")
                                 # Provide the invitation link as fallback
-                                invite_url = get_invitation_url(token)
+                                invite_url = f"/?token={token}"
                                 st.warning("⚠️ Since email sending failed, please copy this invitation link and share it directly with the user:")
                                 st.code(invite_url, language="text")
                                 st.info("This invitation link will expire in 7 days.")
