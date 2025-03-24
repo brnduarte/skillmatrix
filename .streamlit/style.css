@@ -36,7 +36,7 @@ a:hover {
 }
 
 .stTabs [data-baseweb="tab"] {
-  background-color: #f2bc54;
+  background-color: #fbf9ee;
   color: #0e2b3d;
   border-radius: 4px 4px 0 0;
   padding: 8px 16px;
@@ -82,4 +82,8 @@ a:hover {
 /* Style for main containers */
 div.stContainer, [data-testid="stAppViewContainer"] {
   background-color: #fbf9ee;
+}
+
+stSidebarContent {
+  background-color: #0f2b3d;
 }
