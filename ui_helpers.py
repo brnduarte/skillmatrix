@@ -223,7 +223,7 @@ def create_card_container(content, key=None):
     )
     
 def create_top_navigation():
-    """Creates a navigation header with links to main application pages based on user role"""
+    """Creates a fixed navigation header with links to main application pages based on user role"""
     # Only show if user is authenticated
     if not st.session_state.get("authenticated", False):
         return
@@ -237,23 +237,45 @@ def create_top_navigation():
         .top-nav {
             background-color: #0f2b3d;
             padding: 10px 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
             color: white;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .nav-groups {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .nav-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .nav-group-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #f5f0d2;
+            font-size: 0.9em;
+            text-transform: uppercase;
         }
         
         .nav-links {
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            gap: 10px;
         }
         
         .nav-links a {
-            color: #f5f0d2;
+            color: white;
             text-decoration: none;
             padding: 5px 10px;
             border-radius: 4px;
@@ -280,39 +302,81 @@ def create_top_navigation():
             cursor: pointer;
             font-size: 14px;
         }
+        
+        /* Add padding to main content to prevent it from being hidden behind the fixed navbar */
+        .main .block-container {
+            padding-top: 80px !important;
+        }
         </style>
         """,
         unsafe_allow_html=True
     )
     
-    # Define available links based on user role
-    links = []
+    # Define groups and their links based on user role
+    assessment_links = []
+    manager_links = []
+    settings_links = []
     
-    # Home link for everyone
-    links.append('<a href="./">Home</a>')
+    # Home link for everyone (in Assessment group)
+    assessment_links.append('<a href="./">Home</a>')
     
     # Assessment links for everyone
-    links.append('<a href="./02_Employee_Assessment">Self-Assessment</a>')
-    links.append('<a href="./03_Individual_Performance">My Performance</a>')
+    assessment_links.append('<a href="./02_Employee_Assessment">Self-Assessment</a>')
+    assessment_links.append('<a href="./03_Individual_Performance">My Performance</a>')
     
-    # Additional links for managers and admins
+    # Manager links for managers and admins
     if user_role in ["manager", "admin"]:
-        links.append('<a href="./04_Team_Dashboard">Team Dashboard</a>')
-        links.append('<a href="./05_Export_Reports">Export Reports</a>')
+        manager_links.append('<a href="./04_Team_Dashboard">Team Dashboard</a>')
+        manager_links.append('<a href="./05_Export_Reports">Export Reports</a>')
     
-    # Admin links
+    # Settings links for admins
     if user_role == "admin":
-        links.append('<a href="./01_Framework_Setup">Framework Setup</a>')
-        links.append('<a href="./06_Organization_Management">Organizations</a>')
-        links.append('<a href="./07_User_Management">User Management</a>')
+        settings_links.append('<a href="./01_Framework_Setup">Framework Setup</a>')
+        settings_links.append('<a href="./06_Organization_Management">Organizations</a>')
+        settings_links.append('<a href="./07_User_Management">User Management</a>')
+    
+    # Build navigation groups HTML
+    groups_html = '<div class="nav-groups">'
+    
+    # Assessment group
+    groups_html += '''
+        <div class="nav-group">
+            <div class="nav-group-title">Assessment</div>
+            <div class="nav-links">
+                ''' + ' '.join(assessment_links) + '''
+            </div>
+        </div>
+    '''
+    
+    # Manager group (if user has access)
+    if manager_links:
+        groups_html += '''
+            <div class="nav-group">
+                <div class="nav-group-title">Manager</div>
+                <div class="nav-links">
+                    ''' + ' '.join(manager_links) + '''
+                </div>
+            </div>
+        '''
+    
+    # Settings group (if user has access)
+    if settings_links:
+        groups_html += '''
+            <div class="nav-group">
+                <div class="nav-group-title">Settings</div>
+                <div class="nav-links">
+                    ''' + ' '.join(settings_links) + '''
+                </div>
+            </div>
+        '''
+    
+    groups_html += '</div>'
     
     # Render the navigation bar
     st.markdown(
         f"""
         <div class="top-nav">
-            <div class="nav-links">
-                {' '.join(links)}
-            </div>
+            {groups_html}
             <div class="user-info">
                 <span>{st.session_state.username} ({st.session_state.user_role})</span>
                 <button class="logout-button" onclick="window.location.href='./?logout=true'">Logout</button>
