@@ -238,10 +238,6 @@ def create_top_navigation():
             background-color: #0f2b3d;
             padding: 15px 20px;
             color: white;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: flex-start;
             position: fixed;
             top: 0;
             left: 0;
@@ -250,16 +246,19 @@ def create_top_navigation():
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
         .nav-groups {
             display: flex;
-            flex-wrap: wrap;
             gap: 40px;
         }
         
         .nav-group {
-            display: flex;
-            flex-direction: column;
-            min-width: 160px;
+            min-width: 140px;
         }
         
         .nav-group-title {
@@ -268,33 +267,21 @@ def create_top_navigation():
             color: #f5f0d2;
             font-size: 0.9em;
             text-transform: uppercase;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.2);
             padding-bottom: 4px;
-        }
-        
-        .nav-links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .nav-links div {
-            margin-bottom: 2px;
         }
         
         .nav-links a {
             color: white;
             text-decoration: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            transition: background-color 0.2s;
             display: block;
-            width: 100%;
+            padding: 5px 0;
+            margin: 2px 0;
         }
         
         .nav-links a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            text-decoration: none;
+            color: #f5f0d2;
+            text-decoration: underline;
         }
         
         .user-info {
@@ -322,88 +309,59 @@ def create_top_navigation():
         unsafe_allow_html=True
     )
     
-    # Define groups and their links based on user role
-    assessment_links = []
-    manager_links = []
-    settings_links = []
+    # Build simple HTML for the navigation
+    html = """
+    <div class="top-nav">
+        <div class="nav-container">
+            <div class="nav-groups">
+                <!-- Assessment Group -->
+                <div class="nav-group">
+                    <div class="nav-group-title">Assessment</div>
+                    <div class="nav-links">
+                        <a href="./">Home</a>
+                        <a href="./02_Employee_Assessment">Self-Assessment</a>
+                        <a href="./03_Individual_Performance">My Performance</a>
+                    </div>
+                </div>
+    """
     
-    # Home link for everyone (in Assessment group)
-    assessment_links.append('<a href="./">Home</a>')
-    
-    # Assessment links for everyone
-    assessment_links.append('<a href="./02_Employee_Assessment">Self-Assessment</a>')
-    assessment_links.append('<a href="./03_Individual_Performance">My Performance</a>')
-    
-    # Manager links for managers and admins
+    # Manager Group (conditional)
     if user_role in ["manager", "admin"]:
-        manager_links.append('<a href="./04_Team_Dashboard">Team Dashboard</a>')
-        manager_links.append('<a href="./05_Export_Reports">Export Reports</a>')
+        html += """
+                <!-- Manager Group -->
+                <div class="nav-group">
+                    <div class="nav-group-title">Manager</div>
+                    <div class="nav-links">
+                        <a href="./04_Team_Dashboard">Team Dashboard</a>
+                        <a href="./05_Export_Reports">Export Reports</a>
+                    </div>
+                </div>
+        """
     
-    # Settings links for admins
+    # Settings Group (conditional)
     if user_role == "admin":
-        settings_links.append('<a href="./01_Framework_Setup">Framework Setup</a>')
-        settings_links.append('<a href="./06_Organization_Management">Organizations</a>')
-        settings_links.append('<a href="./07_User_Management">User Management</a>')
-    
-    # Build navigation groups HTML
-    groups_html = '<div class="nav-groups">'
-    
-    # Assessment group
-    assessment_links_html = ""
-    for link in assessment_links:
-        assessment_links_html += f"<div>{link}</div>"
-        
-    groups_html += f'''
-        <div class="nav-group">
-            <div class="nav-group-title">Assessment</div>
-            <div class="nav-links">
-                {assessment_links_html}
-            </div>
-        </div>
-    '''
-    
-    # Manager group (if user has access)
-    if manager_links:
-        manager_links_html = ""
-        for link in manager_links:
-            manager_links_html += f"<div>{link}</div>"
-            
-        groups_html += f'''
-            <div class="nav-group">
-                <div class="nav-group-title">Manager</div>
-                <div class="nav-links">
-                    {manager_links_html}
+        html += """
+                <!-- Settings Group -->
+                <div class="nav-group">
+                    <div class="nav-group-title">Settings</div>
+                    <div class="nav-links">
+                        <a href="./01_Framework_Setup">Framework Setup</a>
+                        <a href="./06_Organization_Management">Organizations</a>
+                        <a href="./07_User_Management">User Management</a>
+                    </div>
                 </div>
+        """
+    
+    # Close nav-groups and add user info
+    html += f"""
             </div>
-        '''
-    
-    # Settings group (if user has access)
-    if settings_links:
-        settings_links_html = ""
-        for link in settings_links:
-            settings_links_html += f"<div>{link}</div>"
-            
-        groups_html += f'''
-            <div class="nav-group">
-                <div class="nav-group-title">Settings</div>
-                <div class="nav-links">
-                    {settings_links_html}
-                </div>
-            </div>
-        '''
-    
-    groups_html += '</div>'
-    
-    # Render the navigation bar
-    st.markdown(
-        f"""
-        <div class="top-nav">
-            {groups_html}
             <div class="user-info">
                 <span>{st.session_state.username} ({st.session_state.user_role})</span>
                 <button class="logout-button" onclick="window.location.href='./?logout=true'">Logout</button>
             </div>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    </div>
+    """
+    
+    # Render the navigation bar
+    st.markdown(html, unsafe_allow_html=True)
