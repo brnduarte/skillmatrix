@@ -62,139 +62,152 @@ def create_top_navigation():
     # Hide the default sidebar
     hide_sidebar()
     
-    # Create a custom CSS for the navigation
+    # Add fixed navigation style with better spacing and layout
     st.markdown("""
     <style>
-    /* Navigation container */
-    .navigation-container {
-        background-color: #0f2b3d;
-        color: white;
-        padding: 15px;
-        margin-bottom: 20px;
-        border-radius: 0;
-        display: flex;
-        justify-content: space-between;
+    /* Add padding to main content to make space for fixed top navigation */
+    .main .block-container {
+        padding-top: 110px !important;
     }
     
-    /* Navigation menu section */
-    .nav-menu {
+    /* Fixed navigation container */
+    .navbar-fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: #0f2b3d;
+        z-index: 9999;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        padding: 15px 20px;
+    }
+    
+    /* Flexbox container for navigation */
+    .navbar-container {
+        display: flex;
+        justify-content: space-between;
+        color: white;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    /* Menu groups container */
+    .navbar-menu {
         display: flex;
         gap: 40px;
     }
     
-    /* Group container */
-    .nav-group {
-        display: flex;
-        flex-direction: column;
+    /* Individual menu group */
+    .navbar-group {
+        min-width: 140px;
     }
     
-    /* Group titles */
-    .group-title {
+    /* Group headings */
+    .navbar-heading {
         color: #f5f0d2;
-        font-size: 16px;
-        font-weight: bold;
         text-transform: uppercase;
-        margin-bottom: 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        padding-bottom: 5px;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
     }
     
-    /* Links */
-    .nav-link {
+    /* Navigation links */
+    .navbar-link {
+        display: block;
         color: white;
         text-decoration: none;
         margin-bottom: 5px;
-        display: block;
+        font-size: 14px;
     }
     
-    .nav-link:hover {
+    .navbar-link:hover {
         color: #f5f0d2;
         text-decoration: underline;
     }
     
-    /* User info */
-    .user-info {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        justify-content: center;
+    /* User information section */
+    .navbar-user {
+        text-align: right;
         min-width: 200px;
     }
     
-    .user-text {
-        color: white;
-        margin-bottom: 5px;
+    /* User detail text */
+    .user-detail {
+        margin-bottom: 8px;
+        font-size: 14px;
     }
     
+    /* Logout button */
     .logout-button {
         background-color: #d13c35;
         color: white;
-        border: none;
         padding: 5px 15px;
         border-radius: 4px;
-        cursor: pointer;
-        font-size: 14px;
-        text-align: center;
         text-decoration: none;
+        font-size: 14px;
         display: inline-block;
+        border: none;
     }
     
     .logout-button:hover {
         background-color: #b73229;
+        text-decoration: none;
+        color: white;
     }
     </style>
     """, unsafe_allow_html=True)
     
-    # Create HTML for the navigation
+    # Build the navigation HTML
     html = """
-    <div class="navigation-container">
-        <div class="nav-menu">
+    <div class="navbar-fixed">
+        <div class="navbar-container">
+            <div class="navbar-menu">
     """
     
-    # Assessment group (available to all)
+    # Assessment section (available to all)
     html += """
-            <div class="nav-group">
-                <div class="group-title">Assessment</div>
-                <a href="./" class="nav-link">Home</a>
-                <a href="./02_Employee_Assessment" class="nav-link">Self-Assessment</a>
-                <a href="./03_Individual_Performance" class="nav-link">My Performance</a>
-            </div>
+                <div class="navbar-group">
+                    <div class="navbar-heading">Assessment</div>
+                    <a href="./" class="navbar-link">Home</a>
+                    <a href="./02_Employee_Assessment" class="navbar-link">Self-Assessment</a>
+                    <a href="./03_Individual_Performance" class="navbar-link">My Performance</a>
+                </div>
     """
     
-    # Manager group (conditional)
+    # Manager section (conditional)
     if user_role in ["manager", "admin"]:
         html += """
-            <div class="nav-group">
-                <div class="group-title">Manager</div>
-                <a href="./04_Team_Dashboard" class="nav-link">Team Dashboard</a>
-                <a href="./05_Export_Reports" class="nav-link">Export Reports</a>
-            </div>
+                <div class="navbar-group">
+                    <div class="navbar-heading">Manager</div>
+                    <a href="./04_Team_Dashboard" class="navbar-link">Team Dashboard</a>
+                    <a href="./05_Export_Reports" class="navbar-link">Export Reports</a>
+                </div>
         """
     
-    # Settings group (conditional)
+    # Settings section (conditional)
     if user_role == "admin":
         html += """
-            <div class="nav-group">
-                <div class="group-title">Settings</div>
-                <a href="./01_Framework_Setup" class="nav-link">Framework Setup</a>
-                <a href="./06_Organization_Management" class="nav-link">Organizations</a>
-                <a href="./07_User_Management" class="nav-link">User Management</a>
-            </div>
+                <div class="navbar-group">
+                    <div class="navbar-heading">Settings</div>
+                    <a href="./01_Framework_Setup" class="navbar-link">Framework Setup</a>
+                    <a href="./06_Organization_Management" class="navbar-link">Organizations</a>
+                    <a href="./07_User_Management" class="navbar-link">User Management</a>
+                </div>
         """
     
-    # Close nav-menu div and add user info
+    # Close the menu div and add user info
     html += """
-        </div>
-        <div class="user-info">
-            <div class="user-text"><strong>User:</strong> """ + st.session_state.username + """</div>
-            <div class="user-text"><strong>Role:</strong> """ + st.session_state.user_role + """</div>
-            <a href="./?logout=true" class="logout-button">Logout</a>
+            </div>
+            <div class="navbar-user">
+                <div class="user-detail"><strong>User:</strong> """ + st.session_state.username + """</div>
+                <div class="user-detail"><strong>Role:</strong> """ + st.session_state.user_role + """</div>
+                <a href="./?logout=true" class="logout-button">Logout</a>
+            </div>
         </div>
     </div>
     """
     
     # Render the navigation
     st.markdown(html, unsafe_allow_html=True)
-    
-    # Add margin below navigation
-    st.markdown("<div style='margin-bottom: 20px;'></div>", unsafe_allow_html=True)
