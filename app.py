@@ -217,103 +217,151 @@ def handle_invitation():
 
 # User authentication
 def display_login():
-    st.title("Skill Matrix & Competency Framework")
-    st.subheader("Login")
+    # Application logo/header
+    st.markdown(
+        """
+        <div class="login-header">
+            <h1>Skill Matrix & Competency Framework</h1>
+            <p>Manage and develop your team's skills effectively</p>
+        </div>
+        """, 
+        unsafe_allow_html=True
+    )
+    
+    # Create a two-column layout for login
+    col1, col2 = st.columns([3, 2])
+    
+    with col1:
+        st.markdown(
+            """
+            <div class="card-container">
+                <h2>Welcome to the Skill Management Platform</h2>
+                <p>This platform helps organizations track, visualize, and optimize employee capabilities through interactive assessment and visualization tools.</p>
+                <br>
+                <h3>Key Features:</h3>
+                <ul>
+                    <li>Comprehensive skill assessment framework</li>
+                    <li>Self and manager evaluations</li>
+                    <li>Individual performance tracking</li>
+                    <li>Team dashboards with visualization</li>
+                    <li>Export reports for review sessions</li>
+                </ul>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    
+    with col2:
+        # Login card with tabs
+        st.markdown(
+            """
+            <div class="card-container">
+                <h2>Access Your Account</h2>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        
+        login_tab1, login_tab2, login_tab3 = st.tabs(
+            ["Account Login", "Email Self-Assessment", "Register"])
 
-    login_tab1, login_tab2, login_tab3 = st.tabs(
-        ["Account Login", "Email Self-Assessment", "Register"])
+        with login_tab1:
+            username = st.text_input("Username", key="username_login", placeholder="Enter your username")
+            password = st.text_input("Password",
+                                    type="password",
+                                    key="password_login",
+                                    placeholder="Enter your password")
 
-    with login_tab1:
-        username = st.text_input("Username", key="username_login")
-        password = st.text_input("Password",
-                                 type="password",
-                                 key="password_login")
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                if st.button("Login", key="login_button", use_container_width=True):
+                    if authenticate_user(username, password):
+                        st.session_state.authenticated = True
+                        st.session_state.username = username
+                        st.session_state.user_role = get_user_role(username)
+                        st.rerun()
+                    else:
+                        st.error("Invalid username or password")
+                        
+            with col2:
+                st.markdown("""<div style="text-align: right; padding-top: 8px;"><a href="#forgot-password">Forgot password?</a></div>""", unsafe_allow_html=True)
 
-        if st.button("Login", key="login_button"):
-            if authenticate_user(username, password):
-                st.session_state.authenticated = True
-                st.session_state.username = username
-                st.session_state.user_role = get_user_role(username)
-                st.rerun()
-            else:
-                st.error("Invalid username or password")
+        with login_tab2:
+            st.markdown("<p>Access your self-assessment using your email address</p>", unsafe_allow_html=True)
+            email = st.text_input("Your Email",
+                                key="email_login",
+                                placeholder="name@company.com")
 
-    with login_tab2:
-        st.write("Access your self-assessment using your email address")
-        email = st.text_input("Your Email",
-                              key="email_login",
-                              placeholder="name@company.com")
+            if st.button("Access Self-Assessment", key="email_login_button", use_container_width=True):
+                # Check if email exists in the employees database
+                employees_df = load_data("employees")
+                employee = employees_df[employees_df["email"] == email]
 
-        if st.button("Access Self-Assessment", key="email_login_button"):
-            # Check if email exists in the employees database
-            employees_df = load_data("employees")
-            employee = employees_df[employees_df["email"] == email]
+                if not employee.empty:
+                    # Create a temporary user session for self-assessment only
+                    st.session_state.authenticated = True
+                    st.session_state.username = f"email_{email}"  # Special format to identify email login
+                    st.session_state.user_role = "email_user"  # Special role with limited access
+                    st.session_state.employee_email = email
+                    st.rerun()
+                else:
+                    st.error(
+                        "Email not found. Please contact your manager or administrator."
+                    )
 
-            if not employee.empty:
-                # Create a temporary user session for self-assessment only
-                st.session_state.authenticated = True
-                st.session_state.username = f"email_{email}"  # Special format to identify email login
-                st.session_state.user_role = "email_user"  # Special role with limited access
-                st.session_state.employee_email = email
-                st.rerun()
-            else:
-                st.error(
-                    "Email not found. Please contact your manager or administrator."
-                )
+        with login_tab3:
+            st.markdown("<p>Create a new account to access the Skill Matrix</p>", unsafe_allow_html=True)
 
-    with login_tab3:
-        st.write("Create a new account to access the Skill Matrix")
+            # Registration form
+            with st.form(key="registration_form"):
+                st.subheader("Personal Information")
+                reg_name = st.text_input("Full Name",
+                                        key="reg_name",
+                                        placeholder="John Doe")
+                reg_email = st.text_input("Email",
+                                        key="reg_email",
+                                        placeholder="john.doe@company.com")
 
-        # Registration form
-        with st.form(key="registration_form"):
-            st.subheader("Personal Information")
-            reg_name = st.text_input("Full Name",
-                                     key="reg_name",
-                                     placeholder="John Doe")
-            reg_email = st.text_input("Email",
-                                      key="reg_email",
-                                      placeholder="john.doe@company.com")
+                st.subheader("Account Information")
+                reg_username = st.text_input("Username",
+                                            key="reg_username",
+                                            placeholder="johndoe")
+                reg_password = st.text_input("Password",
+                                            type="password",
+                                            key="reg_password")
+                reg_confirm_password = st.text_input("Confirm Password",
+                                                    type="password",
+                                                    key="reg_confirm_password")
 
-            st.subheader("Account Information")
-            reg_username = st.text_input("Username",
-                                         key="reg_username",
-                                         placeholder="johndoe")
-            reg_password = st.text_input("Password",
-                                         type="password",
-                                         key="reg_password")
-            reg_confirm_password = st.text_input("Confirm Password",
-                                                 type="password",
-                                                 key="reg_confirm_password")
+                st.subheader("Job Information")
+                reg_job_title = st.text_input("Job Title",
+                                            key="reg_job_title",
+                                            placeholder="Software Engineer")
 
-            st.subheader("Job Information")
-            reg_job_title = st.text_input("Job Title",
-                                          key="reg_job_title",
-                                          placeholder="Software Engineer")
+                # Get job levels for dropdown
+                job_levels_df = load_data("levels")
+                job_level_options = [""] + job_levels_df["name"].tolist(
+                ) if not job_levels_df.empty else [""]
+                reg_job_level = st.selectbox("Job Level",
+                                            options=job_level_options,
+                                            key="reg_job_level")
 
-            # Get job levels for dropdown
-            job_levels_df = load_data("levels")
-            job_level_options = [""] + job_levels_df["name"].tolist(
-            ) if not job_levels_df.empty else [""]
-            reg_job_level = st.selectbox("Job Level",
-                                         options=job_level_options,
-                                         key="reg_job_level")
+                reg_department = st.text_input("Department",
+                                            key="reg_department",
+                                            placeholder="Engineering")
 
-            reg_department = st.text_input("Department",
-                                           key="reg_department",
-                                           placeholder="Engineering")
-
-            # Get managers for dropdown
-            employees_df = load_data("employees")
-            managers = employees_df[["employee_id", "name"]].copy()
-            manager_options = [("", "None")] + list(
-                zip(managers["employee_id"].astype(str),
-                    managers["name"])) if not employees_df.empty else [
-                        ("", "None")
-                    ]
-            reg_manager_id = st.selectbox("Manager",
-                                          options=manager_options,
-                                          format_func=lambda x: x[1],
-                                          key="reg_manager_id")
+                # Get managers for dropdown
+                employees_df = load_data("employees")
+                managers = employees_df[["employee_id", "name"]].copy()
+                manager_options = [("", "None")] + list(
+                    zip(managers["employee_id"].astype(str),
+                        managers["name"])) if not employees_df.empty else [
+                            ("", "None")
+                        ]
+                reg_manager_id = st.selectbox("Manager",
+                                            options=manager_options,
+                                            format_func=lambda x: x[1],
+                                            key="reg_manager_id")
 
             # Submit button
             submit_button = st.form_submit_button(label="Register")

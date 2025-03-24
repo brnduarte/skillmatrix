@@ -16,7 +16,7 @@ html, body, [class*="css"] {
 }
 
 .stButton>button:hover {
-  background-color: #0f2b3d;
+  background-color: #1a4764;
 }
 
 /* Style for links */
@@ -84,6 +84,87 @@ div.stContainer, [data-testid="stAppViewContainer"] {
   background-color: #fbf9ee;
 }
 
-stSidebarContent {
+/* Login page styling */
+.login-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo {
+  max-width: 150px;
+  margin: 0 auto;
+  display: block;
+}
+
+.card-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border-left: 5px solid #0f2b3d;
+}
+
+/* Sidebar styling */
+[data-testid="stSidebar"] {
   background-color: #0f2b3d;
+  padding-top: 2rem;
+}
+
+[data-testid="stSidebar"] [data-testid="stMarkdown"] {
+  color: #f5f0d2;
+}
+
+[data-testid="stSidebarNav"] {
+  background-color: #0f2b3d;
+}
+
+[data-testid="stSidebarNav"] span {
+  color: #f5f0d2;
+}
+
+/* Collapsible menu styling */
+.sidebar-menu {
+  margin-top: 1rem;
+}
+
+.menu-header {
+  cursor: pointer;
+  padding: 10px;
+  background-color: #0a1f2d;
+  color: #f5f0d2;
+  margin-bottom: 5px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.menu-items {
+  padding-left: 20px;
+}
+
+/* Custom button for login page */
+.primary-button {
+  background-color: #0f2b3d;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  border: none;
+  width: 100%;
+}
+
+.primary-button:hover {
+  background-color: #1a4764;
 }
