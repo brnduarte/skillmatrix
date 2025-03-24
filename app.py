@@ -15,8 +15,19 @@ from utils import authenticate_user, get_user_role, initialize_session_state
 from data_manager import load_data, save_data
 from email_manager import verify_invitation, mark_invitation_accepted
 
+# Ensure .streamlit directory exists and create default CSS if needed
+streamlit_dir = '.streamlit'
+css_path = os.path.join(streamlit_dir, 'style.css')
+
+if not os.path.exists(streamlit_dir):
+    os.makedirs(streamlit_dir)
+
+if not os.path.exists(css_path):
+    with open(css_path, 'w') as f:
+        f.write('/* Default Streamlit styles */\n')
+
 # Load custom CSS
-with open(os.path.join('.streamlit', 'style.css')) as f:
+with open(css_path) as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 # Initialize session state variables
