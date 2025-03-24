@@ -236,12 +236,12 @@ def create_top_navigation():
         <style>
         .top-nav {
             background-color: #0f2b3d;
-            padding: 10px 20px;
+            padding: 15px 20px;
             color: white;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             position: fixed;
             top: 0;
             left: 0;
@@ -253,25 +253,29 @@ def create_top_navigation():
         .nav-groups {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: 40px;
         }
         
         .nav-group {
             display: flex;
             flex-direction: column;
+            min-width: 160px;
         }
         
         .nav-group-title {
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             color: #f5f0d2;
             font-size: 0.9em;
             text-transform: uppercase;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 4px;
         }
         
         .nav-links {
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            gap: 5px;
         }
         
         .nav-links a {
@@ -280,6 +284,7 @@ def create_top_navigation():
             padding: 5px 10px;
             border-radius: 4px;
             transition: background-color 0.2s;
+            display: block;
         }
         
         .nav-links a:hover {
@@ -305,7 +310,7 @@ def create_top_navigation():
         
         /* Add padding to main content to prevent it from being hidden behind the fixed navbar */
         .main .block-container {
-            padding-top: 80px !important;
+            padding-top: 150px !important;
         }
         </style>
         """,
@@ -343,7 +348,7 @@ def create_top_navigation():
         <div class="nav-group">
             <div class="nav-group-title">Assessment</div>
             <div class="nav-links">
-                ''' + ' '.join(assessment_links) + '''
+                ''' + '\n                '.join(assessment_links) + '''
             </div>
         </div>
     '''
@@ -354,7 +359,7 @@ def create_top_navigation():
             <div class="nav-group">
                 <div class="nav-group-title">Manager</div>
                 <div class="nav-links">
-                    ''' + ' '.join(manager_links) + '''
+                    ''' + '\n                    '.join(manager_links) + '''
                 </div>
             </div>
         '''
@@ -365,7 +370,7 @@ def create_top_navigation():
             <div class="nav-group">
                 <div class="nav-group-title">Settings</div>
                 <div class="nav-links">
-                    ''' + ' '.join(settings_links) + '''
+                    ''' + '\n                    '.join(settings_links) + '''
                 </div>
             </div>
         '''
