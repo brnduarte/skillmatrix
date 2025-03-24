@@ -10,5 +10,6 @@ dependencies = [
     "sendgrid>=6.11.0",
     "streamlit>=1.43.2",
     "trafilatura>=2.0.0",
+    "twilio>=9.5.1",
     "xlsxwriter>=3.2.2",
 ]
