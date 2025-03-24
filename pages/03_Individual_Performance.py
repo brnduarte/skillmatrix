@@ -34,6 +34,9 @@ if not hasattr(st.session_state, "authenticated") or not st.session_state.authen
     st.warning("Please login from the Home page.")
     st.stop()
 
+# Create organized sidebar
+create_organized_sidebar()
+
 st.title("Individual Performance")
 
 # Select employee to view

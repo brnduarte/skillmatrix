@@ -10,7 +10,7 @@ st.set_page_config(
 
 import pandas as pd
 import os
-from utils import initialize_session_state, check_permission, check_page_access, get_current_organization_id
+from utils import initialize_session_state, check_permission, check_page_access, get_current_organization_id, create_organized_sidebar
 from data_manager import get_organizations, add_organization, update_organization, delete_organization, get_user_organizations
 
 # Load custom CSS
