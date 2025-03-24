@@ -31,8 +31,8 @@ initialize_session_state()
 with open(css_path) as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     
-# Import our hide sidebar function
-from ui_helpers import hide_sidebar
+# Import UI helper functions
+from ui_helpers import hide_sidebar, create_top_navigation
 
 # Hide the sidebar completely on all pages
 hide_sidebar()
