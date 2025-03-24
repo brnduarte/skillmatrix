@@ -34,6 +34,9 @@ if not check_permission("admin"):
     st.error("You don't have permission to access this page. Admin access required.")
     st.stop()
 
+# Create organized sidebar
+create_organized_sidebar()
+
 st.title("Organization Management")
 st.write("Add, update, or delete organizations in the system.")
 

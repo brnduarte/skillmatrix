@@ -10,7 +10,7 @@ st.set_page_config(
 
 import pandas as pd
 import os
-from utils import initialize_session_state, check_permission, check_page_access, get_current_organization_id
+from utils import initialize_session_state, check_permission, check_page_access, get_current_organization_id, create_organized_sidebar
 from data_manager import load_data, save_data, get_organization
 from email_manager import (
     create_invitation, send_invitation_email, get_pending_invitations
@@ -53,6 +53,9 @@ if not st.session_state.authenticated:
 if not check_permission("admin"):
     st.error("You don't have permission to access this page. Admin access required.")
     st.stop()
+
+# Create organized sidebar
+create_organized_sidebar()
 
 st.title("User Management")
 st.write("Manage users in the system. Add, update, or delete user accounts, and send invitations to new users.")
