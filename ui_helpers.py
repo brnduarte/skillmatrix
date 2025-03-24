@@ -52,7 +52,7 @@ def create_card_container(content, key=None):
     )
     
 def create_top_navigation():
-    """Creates a pure Streamlit-based navigation menu"""
+    """Creates a top navigation bar with expandable/collapsible sections"""
     # Only show if user is authenticated
     if not st.session_state.get("authenticated", False):
         return
@@ -62,82 +62,168 @@ def create_top_navigation():
     # Hide the default sidebar
     hide_sidebar()
     
-    # Add some CSS for basic styling
+    # Initialize session state for menu expansion if not exists
+    if "nav_assessment_expanded" not in st.session_state:
+        st.session_state.nav_assessment_expanded = False
+    if "nav_manager_expanded" not in st.session_state:
+        st.session_state.nav_manager_expanded = False
+    if "nav_settings_expanded" not in st.session_state:
+        st.session_state.nav_settings_expanded = False
+    
+    # Add CSS for navigation styling
     st.markdown("""
     <style>
-    /* Navigation bar styling */
-    div[data-testid="stHorizontalBlock"] > div:first-child div.stMarkdown h3 {
-        color: #0f2b3d;
-        border-bottom: 2px solid #0f2b3d;
-        padding-bottom: 5px;
-        margin-bottom: 10px;
+    /* Fixed top navigation */
+    div.fixed-topbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        background-color: #0f2b3d;
+        color: white;
+        padding: 10px 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
     
-    /* Main content padding */
+    /* Main content padding to accommodate fixed navbar */
     .main .block-container {
-        padding-top: 10px;
+        padding-top: 110px !important;
     }
     
-    /* Style for the navigation container */
-    .nav-container {
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 5px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    /* Navigation menu item */
+    .nav-item {
+        display: inline-block;
+        margin-right: 25px;
+        position: relative;
+    }
+    
+    /* Navigation menu header */
+    .nav-header {
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 4px;
+        display: inline-block;
+    }
+    
+    .nav-header:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+    
+    /* Dropdown content */
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 180px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        z-index: 1000;
+        border-radius: 4px;
+        padding: 8px 0;
+        margin-top: 5px;
+    }
+    
+    /* Show dropdown when parent is hovered */
+    .nav-item:hover .dropdown-content {
+        display: block;
+    }
+    
+    /* Dropdown links */
+    .dropdown-link {
+        color: #333;
+        padding: 8px 16px;
+        text-decoration: none;
+        display: block;
+    }
+    
+    .dropdown-link:hover {
+        background-color: #f5f5f5;
+    }
+    
+    /* User info section */
+    .user-section {
+        float: right;
+        text-align: right;
+    }
+    
+    .user-info {
+        display: inline-block;
+        margin-right: 15px;
+        color: white;
+    }
+    
+    /* Logout button */
+    .logout-btn {
+        background-color: #d13c35;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    
+    .logout-btn:hover {
+        background-color: #b73229;
     }
     </style>
     """, unsafe_allow_html=True)
     
-    # Create a container for the navigation
-    with st.container():
-        st.markdown('<div class="nav-container">', unsafe_allow_html=True)
-        
-        # Create columns for navigation sections
-        cols = st.columns([3, 1]) 
-        
-        with cols[0]:
-            # Create sub-columns for navigation groups
-            if user_role == "admin":
-                nav_cols = st.columns(3)
-            elif user_role == "manager":
-                nav_cols = st.columns(2)
-            else:
-                nav_cols = st.columns(1)
-            
-            # Assessment section (for everyone)
-            with nav_cols[0]:
-                st.markdown("### Assessment")
-                st.markdown("• [Home](./) ")
-                st.markdown("• [Self-Assessment](./02_Employee_Assessment)")
-                st.markdown("• [My Performance](./03_Individual_Performance)")
-            
-            # Manager section (for managers and admins)
-            if user_role in ["manager", "admin"]:
-                with nav_cols[1]:
-                    st.markdown("### Manager")
-                    st.markdown("• [Team Dashboard](./04_Team_Dashboard)")
-                    st.markdown("• [Export Reports](./05_Export_Reports)")
-            
-            # Settings section (admin only)
-            if user_role == "admin":
-                with nav_cols[2]:
-                    st.markdown("### Settings")
-                    st.markdown("• [Framework Setup](./01_Framework_Setup)")
-                    st.markdown("• [Organizations](./06_Organization_Management)")
-                    st.markdown("• [User Management](./07_User_Management)")
-        
-        # User info and logout
-        with cols[1]:
-            st.write(f"**User:** {st.session_state.username}")
-            st.write(f"**Role:** {st.session_state.user_role}")
-            
-            if st.button("Logout", type="primary"):
-                # Clear session state and reinitialize
-                for key in list(st.session_state.keys()):
-                    del st.session_state[key]
-                from utils import initialize_session_state
-                initialize_session_state()
-                st.rerun()
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+    # Create top navigation bar with dropdowns using HTML
+    html = """
+    <div class="fixed-topbar">
+        <div style="max-width: 1200px; margin: 0 auto;">
+    """
+    
+    # Assessment dropdown (available to all users)
+    html += """
+            <div class="nav-item">
+                <div class="nav-header">Assessment ▾</div>
+                <div class="dropdown-content">
+                    <a href="./" class="dropdown-link">Home</a>
+                    <a href="./02_Employee_Assessment" class="dropdown-link">Self-Assessment</a>
+                    <a href="./03_Individual_Performance" class="dropdown-link">My Performance</a>
+                </div>
+            </div>
+    """
+    
+    # Manager dropdown (for managers and admins)
+    if user_role in ["manager", "admin"]:
+        html += """
+            <div class="nav-item">
+                <div class="nav-header">Manager ▾</div>
+                <div class="dropdown-content">
+                    <a href="./04_Team_Dashboard" class="dropdown-link">Team Dashboard</a>
+                    <a href="./05_Export_Reports" class="dropdown-link">Export Reports</a>
+                </div>
+            </div>
+        """
+    
+    # Settings dropdown (admin only)
+    if user_role == "admin":
+        html += """
+            <div class="nav-item">
+                <div class="nav-header">Settings ▾</div>
+                <div class="dropdown-content">
+                    <a href="./01_Framework_Setup" class="dropdown-link">Framework Setup</a>
+                    <a href="./06_Organization_Management" class="dropdown-link">Organizations</a>
+                    <a href="./07_User_Management" class="dropdown-link">User Management</a>
+                </div>
+            </div>
+        """
+    
+    # User information and logout button
+    html += f"""
+            <div class="user-section">
+                <span class="user-info"><strong>{st.session_state.username}</strong> ({st.session_state.user_role})</span>
+                <a href="./?logout=true" class="logout-btn">Logout</a>
+            </div>
+        </div>
+    </div>
+    """
+    
+    # Render the navigation bar
+    st.markdown(html, unsafe_allow_html=True)
