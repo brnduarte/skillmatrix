@@ -439,6 +439,48 @@ def display_login():
 
 
 # Function to hide pages based on user role
+def create_organized_sidebar():
+    """Create an organized sidebar with nested sections based on user role"""
+    import streamlit as st
+    
+    # Define menu structure with sections and pages
+    menu_structure = {
+        "Assessments": {
+            "pages": ["02_Employee_Assessment.py", "03_Individual_Performance.py"],
+            "roles": ["admin", "manager", "employee", "email_user"],
+            "icons": ["📝", "📊"]
+        },
+        "Manager": {
+            "pages": ["04_Team_Dashboard.py", "05_Export_Reports.py"],
+            "roles": ["admin", "manager"],
+            "icons": ["👥", "📈"]
+        },
+        "Settings": {
+            "pages": ["01_Framework_Setup.py", "06_Organization_Management.py", "07_User_Management.py"],
+            "roles": ["admin"],
+            "icons": ["⚙️", "🏢", "👤"]
+        }
+    }
+    
+    # Get current role
+    current_role = st.session_state.user_role
+    
+    # Create sections based on user role
+    for section_name, section_data in menu_structure.items():
+        # Check if user has access to any page in this section
+        if current_role in section_data["roles"]:
+            # Create an expander for the section
+            with st.sidebar.expander(f"**{section_name}**", expanded=True):
+                # Add links to each page in this section
+                for i, page in enumerate(section_data["pages"]):
+                    # Get the page name without extension and numbering
+                    page_name = page.split("_", 1)[1].replace(".py", "").replace("_", " ")
+                    icon = section_data["icons"][i] if i < len(section_data["icons"]) else "📄"
+                    
+                    # Create a link to the page using markdown
+                    st.markdown(f"[{icon} {page_name}](/{page})", unsafe_allow_html=True)
+
+
 def hide_pages_by_role():
     """Hide specific pages in the sidebar based on user role"""
     import streamlit as st
@@ -516,8 +558,11 @@ def main_app():
     if st.session_state.organization_name:
         st.sidebar.markdown(
             f"**Organization**: {st.session_state.organization_name}")
-
-    # Hide pages based on user role
+    
+    # Create organized sidebar with nested sections
+    create_organized_sidebar()
+    
+    # Hide pages based on user role (fallback method)
     hide_pages_by_role()
 
     if st.sidebar.button("Logout"):
