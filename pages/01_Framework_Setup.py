@@ -15,7 +15,7 @@ from data_manager import (
     delete_expectation, delete_competency_expectation, update_competency, update_skill, update_job_level,
     update_employee
 )
-from utils import get_current_organization_id, check_page_access
+from utils import get_current_organization_id, check_page_access, create_organized_sidebar
 from utils import check_permission
 from ui_helpers import load_custom_css
 
@@ -35,6 +35,9 @@ if not hasattr(st.session_state, "authenticated") or not st.session_state.authen
 if not check_permission("admin"):
     st.error("You don't have permission to access this page.")
     st.stop()
+
+# Create organized sidebar
+create_organized_sidebar()
 
 st.title("Competency Framework Setup")
 st.write("Configure competencies, skills, job levels, and expected scores for your organization.")
