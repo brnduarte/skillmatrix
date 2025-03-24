@@ -362,9 +362,9 @@ def display_login():
                                             options=manager_options,
                                             format_func=lambda x: x[1],
                                             key="reg_manager_id")
-
-            # Submit button
-            submit_button = st.form_submit_button(label="Register")
+                                            
+                # Submit button inside the form
+                submit_button = st.form_submit_button(label="Register")
 
             if submit_button:
                 # Validate form
@@ -557,18 +557,30 @@ def hide_pages_by_role():
 
 # Main application
 def main_app():
-    st.sidebar.title(f"Welcome, {st.session_state.username}")
-    st.sidebar.markdown(f"**Role**: {st.session_state.user_role}")
-
-    # Display current organization
-    if st.session_state.organization_name:
-        st.sidebar.markdown(
-            f"**Organization**: {st.session_state.organization_name}")
-
-    # Hide pages based on user role
+    # Import our custom UI helpers
+    from ui_helpers import create_collapsible_menu
+    
+    # Set up user info section at the top of sidebar
+    st.sidebar.markdown(
+        f"""
+        <div style="background-color: #0a1f2d; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
+            <h3 style="color: #f5f0d2; margin: 0;">Welcome, {st.session_state.username}</h3>
+            <p style="color: #f5f0d2; margin: 5px 0 0 0;"><b>Role:</b> {st.session_state.user_role}</p>
+            {f'<p style="color: #f5f0d2; margin: 5px 0 0 0;"><b>Organization:</b> {st.session_state.organization_name}</p>' if st.session_state.organization_name else ''}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Create the collapsible menu in sidebar
+    create_collapsible_menu()
+    
+    # Hide standard pages based on user role (this is a fallback)
     hide_pages_by_role()
-
-    if st.sidebar.button("Logout"):
+    
+    # Add logout button at the bottom
+    st.sidebar.markdown("<hr>", unsafe_allow_html=True)
+    if st.sidebar.button("Logout", use_container_width=True):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         initialize_session_state()
