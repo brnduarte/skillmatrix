@@ -225,6 +225,13 @@ def create_organized_sidebar():
     
     This function creates a consistent sidebar structure across all pages.
     """
+    # Only show sidebar content for authenticated users
+    if not st.session_state.get("authenticated", False):
+        # For unauthenticated users, just show a minimal sidebar
+        st.sidebar.title("Skill Matrix")
+        st.sidebar.info("Please log in to access the application.")
+        return
+        
     if "user_role" not in st.session_state:
         return
     
