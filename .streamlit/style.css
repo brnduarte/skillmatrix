@@ -8,7 +8,7 @@ html, body, [class*="css"] {
 
 /* Custom styles for buttons using the color scheme */
 .stButton>button {
-  background-color: #0e2b3d;
+  background-color: #0f2b3d;
   color: #f5f0d2;
   border: none;
   border-radius: 4px;
@@ -16,17 +16,17 @@ html, body, [class*="css"] {
 }
 
 .stButton>button:hover {
-  background-color: #d13c35;
+  background-color: #0f2b3d;
 }
 
 /* Style for links */
 a {
-  color: #d13c35;
+  color: #f2bc54;
   text-decoration: none;
 }
 
 a:hover {
-  color: #e67e22;
+  color: #fbf9ee;
   text-decoration: underline;
 }
 
@@ -39,10 +39,11 @@ a:hover {
   background-color: #f2bc54;
   color: #0e2b3d;
   border-radius: 4px 4px 0 0;
+  padding: 8px 16px;
 }
 
 .stTabs [aria-selected="true"] {
-  background-color: #d13c35 !important;
+  background-color: #0f2b3d !important;
   color: #f5f0d2 !important;
 }
 
@@ -52,8 +53,8 @@ a:hover {
 }
 
 .stTextInput>div>div>input:focus {
-  border: 2px solid #d13c35;
-  box-shadow: 0 0 0 1px #d13c35;
+  border: 1px solid #0f2b3d;
+  box-shadow: 0 0 0 1px #0f2b3d;
 }
 
 /* Style for select boxes */
@@ -63,8 +64,8 @@ a:hover {
 }
 
 .stSelectbox > div > div:focus {
-  border: 2px solid #d13c35;
-  box-shadow: 0 0 0 1px #d13c35;
+  border: 2px solid #0f2b3d;
+  box-shadow: 0 0 0 1px #0f2b3d;
 }
 
 /* Style for multiselect */
@@ -74,11 +75,11 @@ a:hover {
 }
 
 .stMultiSelect > div > div:focus {
-  border: 2px solid #d13c35;
-  box-shadow: 0 0 0 1px #d13c35;
+  border: 2px solid #0f2b3d;
+  box-shadow: 0 0 0 1px #1b2333;
 }
 
 /* Style for main containers */
 div.stContainer, [data-testid="stAppViewContainer"] {
-  background-color: #f5f0d2;
+  background-color: #fbf9ee;
 }
