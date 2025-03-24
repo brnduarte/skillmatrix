@@ -237,10 +237,6 @@ def create_organized_sidebar():
     # Display current organization
     if st.session_state.organization_name:
         st.sidebar.markdown(f"**Organization**: {st.session_state.organization_name}")
-        
-    # Add Home link
-    st.sidebar.markdown('<a href="/" target="_self">🏠 Home</a>', unsafe_allow_html=True)
-    st.sidebar.markdown("---")
     
     # Define sections with their pages
     sidebar_sections = {
@@ -273,8 +269,8 @@ def create_organized_sidebar():
                     page_name = page.split("_", 1)[1].replace(".py", "").replace("_", " ")
                     icon = section_data["icons"][i] if i < len(section_data["icons"]) else "📄"
                     
-                    # Create a link to the page using HTML to ensure it opens in the same tab
-                    st.markdown(f'<a href="/{page}" target="_self">{icon} {page_name}</a>', unsafe_allow_html=True)
+                    # Create a link to the page using markdown
+                    st.markdown(f"[{icon} {page_name}](/{page})", unsafe_allow_html=True)
     
     # Add logout button
     if st.sidebar.button("Logout"):
