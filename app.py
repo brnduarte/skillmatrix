@@ -771,8 +771,7 @@ def display_organization_selector():
                 st.rerun()
 
 
-# Import top navigation
-from ui_helpers import create_top_navigation
+# Top navigation is already imported at the top of the file
 
 # Check for logout in query parameters
 if "logout" in st.query_params and st.query_params["logout"] == "true":
