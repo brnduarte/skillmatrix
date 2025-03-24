@@ -15,6 +15,30 @@ def load_custom_css():
             
     with open(css_path) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+        
+def hide_sidebar():
+    """Hide the sidebar completely using CSS"""
+    st.markdown("""
+    <style>
+    /* Hide sidebar completely */
+    section[data-testid="stSidebar"] {
+        display: none !important;
+        width: 0px !important;
+        height: 0px !important;
+        margin: 0px !important;
+        padding: 0px !important;
+        visibility: hidden !important;
+    }
+    
+    /* Expand main content area */
+    .main .block-container {
+        max-width: 100% !important;
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+        width: 100% !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 def create_collapsible_menu():
     """Creates a collapsible menu in the sidebar that organizes pages into categories
@@ -193,6 +217,106 @@ def create_card_container(content, key=None):
         f"""
         <div class="card-container" id="card-{key}">
             {content}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+    
+def create_top_navigation():
+    """Creates a navigation header with links to main application pages based on user role"""
+    # Only show if user is authenticated
+    if not st.session_state.get("authenticated", False):
+        return
+        
+    user_role = st.session_state.get("user_role", "")
+    
+    # Create a container with background styling
+    st.markdown(
+        """
+        <style>
+        .top-nav {
+            background-color: #0f2b3d;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: white;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: #f5f0d2;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logout-button {
+            background-color: #d13c35;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    # Define available links based on user role
+    links = []
+    
+    # Home link for everyone
+    links.append('<a href="./">Home</a>')
+    
+    # Assessment links for everyone
+    links.append('<a href="./02_Employee_Assessment">Self-Assessment</a>')
+    links.append('<a href="./03_Individual_Performance">My Performance</a>')
+    
+    # Additional links for managers and admins
+    if user_role in ["manager", "admin"]:
+        links.append('<a href="./04_Team_Dashboard">Team Dashboard</a>')
+        links.append('<a href="./05_Export_Reports">Export Reports</a>')
+    
+    # Admin links
+    if user_role == "admin":
+        links.append('<a href="./01_Framework_Setup">Framework Setup</a>')
+        links.append('<a href="./06_Organization_Management">Organizations</a>')
+        links.append('<a href="./07_User_Management">User Management</a>')
+    
+    # Render the navigation bar
+    st.markdown(
+        f"""
+        <div class="top-nav">
+            <div class="nav-links">
+                {' '.join(links)}
+            </div>
+            <div class="user-info">
+                <span>{st.session_state.username} ({st.session_state.user_role})</span>
+                <button class="logout-button" onclick="window.location.href='./?logout=true'">Logout</button>
+            </div>
         </div>
         """,
         unsafe_allow_html=True

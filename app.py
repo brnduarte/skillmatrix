@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(page_title="Skill Matrix & Competency Framework",
                    page_icon="📊",
                    layout="wide",
-                   initial_sidebar_state="expanded")
+                   initial_sidebar_state="collapsed")
 
 import pandas as pd
 import numpy as np
@@ -31,32 +31,11 @@ initialize_session_state()
 with open(css_path) as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     
-# Add CSS to hide sidebar contents until authenticated
-if not st.session_state.get("authenticated", False):
-    # CSS to hide the default sidebar navigation
-    st.markdown("""
-    <style>
-    /* Hide the sidebar collapse control */
-    [data-testid="collapsedControl"] {
-        display: none;
-    }
-    
-    /* Hide all pages in the sidebar navigation */
-    section[data-testid="stSidebar"] .element-container:has(div.stPages) {
-        display: none !important;
-    }
-    
-    /* Hide the sidebar navigation links */
-    section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] div:has(ul) {
-        display: none !important;
-    }
-    
-    /* But keep the main sidebar container visible for login form */
-    [data-testid="stSidebar"] {
-        display: flex;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+# Import our hide sidebar function
+from ui_helpers import hide_sidebar
+
+# Hide the sidebar completely on all pages
+hide_sidebar()
 
 
 # Check for invitation token in query parameters
@@ -584,35 +563,7 @@ def hide_pages_by_role():
 
 # Main application
 def main_app():
-    # Import our custom UI helpers
-    from ui_helpers import create_collapsible_menu
-    
-    # Set up user info section at the top of sidebar
-    st.sidebar.markdown(
-        f"""
-        <div style="background-color: #0a1f2d; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-            <h3 style="color: #f5f0d2; margin: 0;">Welcome, {st.session_state.username}</h3>
-            <p style="color: #f5f0d2; margin: 5px 0 0 0;"><b>Role:</b> {st.session_state.user_role}</p>
-            {f'<p style="color: #f5f0d2; margin: 5px 0 0 0;"><b>Organization:</b> {st.session_state.organization_name}</p>' if st.session_state.organization_name else ''}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    # Create the collapsible menu in sidebar
-    create_collapsible_menu()
-    
-    # Hide standard pages based on user role (this is a fallback)
-    hide_pages_by_role()
-    
-    # Add logout button at the bottom
-    st.sidebar.markdown("<hr>", unsafe_allow_html=True)
-    if st.sidebar.button("Logout", use_container_width=True):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        initialize_session_state()
-        st.rerun()
-
+    """Displays the main dashboard page"""
     # Home Page Content
     st.title("Skill Matrix & Competency Framework")
 
@@ -628,7 +579,7 @@ def main_app():
         - Add and manage users
         - View team and individual performance
         
-        Navigate using the pages in the sidebar.
+        Use the navigation links at the top of the page to access different sections.
         """)
 
     elif st.session_state.user_role == "manager":
@@ -641,7 +592,7 @@ def main_app():
         - Compare performance against expected levels
         - Generate and export reports
         
-        Navigate using the pages in the sidebar.
+        Use the navigation links at the top of the page to access different sections.
         """)
 
     elif st.session_state.user_role == "employee":
@@ -654,7 +605,7 @@ def main_app():
         - Compare your current skills with expected levels
         - Track your progress over time
         
-        Navigate using the pages in the sidebar.
+        Use the navigation links at the top of the page to access different sections.
         """)
 
     elif st.session_state.user_role == "email_user":
@@ -672,7 +623,7 @@ def main_app():
             - Complete skill self-assessments
             - View your current skills and ratings
             
-            Please go to the Employee Assessment page in the sidebar to complete your assessment.
+            Please click on the Self-Assessment link in the navigation bar to complete your assessment.
             """)
 
     # Key metrics overview
@@ -820,6 +771,19 @@ def display_organization_selector():
                 st.rerun()
 
 
+# Import top navigation
+from ui_helpers import create_top_navigation
+
+# Check for logout in query parameters
+if "logout" in st.query_params and st.query_params["logout"] == "true":
+    # Clear session state
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
+    initialize_session_state()
+    # Clear query parameters
+    st.query_params.clear()
+    st.rerun()
+
 # Application flow
 # First, check for invitation tokens
 handle_invitation()
@@ -828,6 +792,10 @@ handle_invitation()
 if not st.session_state.authenticated:
     display_login()
 elif not st.session_state.get("organization_selected", False):
+    # Add top navigation
+    create_top_navigation()
     display_organization_selector()
 else:
+    # Add top navigation
+    create_top_navigation()
     main_app()
