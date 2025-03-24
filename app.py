@@ -438,10 +438,7 @@ def display_login():
                             f"Failed to create user account: {user_message}")
 
 
-# Import the sidebar creation function from utils
-from utils import create_organized_sidebar
-
-
+# Function to hide pages based on user role
 def hide_pages_by_role():
     """Hide specific pages in the sidebar based on user role"""
     import streamlit as st
@@ -512,11 +509,22 @@ def hide_pages_by_role():
 
 # Main application
 def main_app():
-    # Create organized sidebar with nested sections (includes user info, logout button, etc.)
-    create_organized_sidebar()
-    
-    # Hide pages based on user role (fallback method using JavaScript)
+    st.sidebar.title(f"Welcome, {st.session_state.username}")
+    st.sidebar.markdown(f"**Role**: {st.session_state.user_role}")
+
+    # Display current organization
+    if st.session_state.organization_name:
+        st.sidebar.markdown(
+            f"**Organization**: {st.session_state.organization_name}")
+
+    # Hide pages based on user role
     hide_pages_by_role()
+
+    if st.sidebar.button("Logout"):
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        initialize_session_state()
+        st.rerun()
 
     # Home Page Content
     st.title("Skill Matrix & Competency Framework")

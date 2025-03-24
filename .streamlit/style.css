@@ -84,6 +84,6 @@ div.stContainer, [data-testid="stAppViewContainer"] {
   background-color: #fbf9ee;
 }
 
-.stSidebarContent {
+stSidebarContent {
   background-color: #0f2b3d;
 }

@@ -14,7 +14,7 @@ from data_manager import (
     load_data, load_data_for_organization, get_employee_assessments, calculate_employee_skill_means,
     calculate_employee_competency_means, get_competency_skills, get_latest_assessment
 )
-from utils import check_permission, check_page_access, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id, create_organized_sidebar
+from utils import check_permission, check_page_access, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id
 from ui_helpers import load_custom_css
 from visualizations import (
     employee_skill_radar, employee_competency_radar, comparison_radar_chart, 
@@ -33,9 +33,6 @@ if not check_page_access(["admin", "manager", "employee"]):
 if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
     st.warning("Please login from the Home page.")
     st.stop()
-
-# Create organized sidebar
-create_organized_sidebar()
 
 st.title("Individual Performance")
 

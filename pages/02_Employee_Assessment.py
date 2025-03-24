@@ -15,7 +15,7 @@ from data_manager import (
     add_competency_assessment, get_employee_competency_assessments,
     get_latest_competency_assessment
 )
-from utils import check_permission, check_page_access, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id, create_organized_sidebar
+from utils import check_permission, check_page_access, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id
 from ui_helpers import load_custom_css
 
 # This page is accessible to all roles: admin, manager, employee, email_user
@@ -29,9 +29,6 @@ load_custom_css()
 if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
     st.warning("Please login from the Home page.")
     st.stop()
-
-# Create organized sidebar
-create_organized_sidebar()
 
 st.title("Employee Skill & Competency Assessment")
 

@@ -10,7 +10,7 @@ st.set_page_config(
 
 import pandas as pd
 import os
-from utils import initialize_session_state, check_permission, check_page_access, get_current_organization_id, create_organized_sidebar
+from utils import initialize_session_state, check_permission, check_page_access, get_current_organization_id
 from data_manager import get_organizations, add_organization, update_organization, delete_organization, get_user_organizations
 
 # Load custom CSS
@@ -33,9 +33,6 @@ if not st.session_state.authenticated:
 if not check_permission("admin"):
     st.error("You don't have permission to access this page. Admin access required.")
     st.stop()
-
-# Create organized sidebar
-create_organized_sidebar()
 
 st.title("Organization Management")
 st.write("Add, update, or delete organizations in the system.")

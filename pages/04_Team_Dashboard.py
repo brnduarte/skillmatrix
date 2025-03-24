@@ -13,7 +13,7 @@ from data_manager import (
     load_data, load_data_for_organization, get_employees_for_manager, get_employee_assessments,
     get_team_competency_means
 )
-from utils import check_permission, check_page_access, get_user_id, calculate_mean, get_current_organization_id, create_organized_sidebar
+from utils import check_permission, check_page_access, get_user_id, calculate_mean, get_current_organization_id
 from ui_helpers import load_custom_css
 from visualizations import (
     team_skill_radar, team_competency_radar, competency_bar_chart, team_heatmap,
@@ -36,9 +36,6 @@ if not hasattr(st.session_state, "authenticated") or not st.session_state.authen
 if not check_permission("manager"):
     st.error("You don't have permission to access this page.")
     st.stop()
-
-# Create organized sidebar
-create_organized_sidebar()
 
 st.title("Team Skills Dashboard")
 
