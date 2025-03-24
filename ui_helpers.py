@@ -52,7 +52,7 @@ def create_card_container(content, key=None):
     )
     
 def create_top_navigation():
-    """Creates a simple navigation menu directly in the main container"""
+    """Creates a pure Streamlit-based navigation menu"""
     # Only show if user is authenticated
     if not st.session_state.get("authenticated", False):
         return
@@ -62,152 +62,82 @@ def create_top_navigation():
     # Hide the default sidebar
     hide_sidebar()
     
-    # Add fixed navigation style with better spacing and layout
+    # Add some CSS for basic styling
     st.markdown("""
     <style>
-    /* Add padding to main content to make space for fixed top navigation */
+    /* Navigation bar styling */
+    div[data-testid="stHorizontalBlock"] > div:first-child div.stMarkdown h3 {
+        color: #0f2b3d;
+        border-bottom: 2px solid #0f2b3d;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+    }
+    
+    /* Main content padding */
     .main .block-container {
-        padding-top: 110px !important;
+        padding-top: 10px;
     }
     
-    /* Fixed navigation container */
-    .navbar-fixed {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        background-color: #0f2b3d;
-        z-index: 9999;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        padding: 15px 20px;
-    }
-    
-    /* Flexbox container for navigation */
-    .navbar-container {
-        display: flex;
-        justify-content: space-between;
-        color: white;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    
-    /* Menu groups container */
-    .navbar-menu {
-        display: flex;
-        gap: 40px;
-    }
-    
-    /* Individual menu group */
-    .navbar-group {
-        min-width: 140px;
-    }
-    
-    /* Group headings */
-    .navbar-heading {
-        color: #f5f0d2;
-        text-transform: uppercase;
-        font-weight: bold;
-        font-size: 14px;
-        margin-bottom: 8px;
-        padding-bottom: 4px;
-        border-bottom: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    /* Navigation links */
-    .navbar-link {
-        display: block;
-        color: white;
-        text-decoration: none;
-        margin-bottom: 5px;
-        font-size: 14px;
-    }
-    
-    .navbar-link:hover {
-        color: #f5f0d2;
-        text-decoration: underline;
-    }
-    
-    /* User information section */
-    .navbar-user {
-        text-align: right;
-        min-width: 200px;
-    }
-    
-    /* User detail text */
-    .user-detail {
-        margin-bottom: 8px;
-        font-size: 14px;
-    }
-    
-    /* Logout button */
-    .logout-button {
-        background-color: #d13c35;
-        color: white;
-        padding: 5px 15px;
-        border-radius: 4px;
-        text-decoration: none;
-        font-size: 14px;
-        display: inline-block;
-        border: none;
-    }
-    
-    .logout-button:hover {
-        background-color: #b73229;
-        text-decoration: none;
-        color: white;
+    /* Style for the navigation container */
+    .nav-container {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     </style>
     """, unsafe_allow_html=True)
     
-    # Build the navigation HTML
-    html = """
-    <div class="navbar-fixed">
-        <div class="navbar-container">
-            <div class="navbar-menu">
-    """
-    
-    # Assessment section (available to all)
-    html += """
-                <div class="navbar-group">
-                    <div class="navbar-heading">Assessment</div>
-                    <a href="./" class="navbar-link">Home</a>
-                    <a href="./02_Employee_Assessment" class="navbar-link">Self-Assessment</a>
-                    <a href="./03_Individual_Performance" class="navbar-link">My Performance</a>
-                </div>
-    """
-    
-    # Manager section (conditional)
-    if user_role in ["manager", "admin"]:
-        html += """
-                <div class="navbar-group">
-                    <div class="navbar-heading">Manager</div>
-                    <a href="./04_Team_Dashboard" class="navbar-link">Team Dashboard</a>
-                    <a href="./05_Export_Reports" class="navbar-link">Export Reports</a>
-                </div>
-        """
-    
-    # Settings section (conditional)
-    if user_role == "admin":
-        html += """
-                <div class="navbar-group">
-                    <div class="navbar-heading">Settings</div>
-                    <a href="./01_Framework_Setup" class="navbar-link">Framework Setup</a>
-                    <a href="./06_Organization_Management" class="navbar-link">Organizations</a>
-                    <a href="./07_User_Management" class="navbar-link">User Management</a>
-                </div>
-        """
-    
-    # Close the menu div and add user info
-    html += """
-            </div>
-            <div class="navbar-user">
-                <div class="user-detail"><strong>User:</strong> """ + st.session_state.username + """</div>
-                <div class="user-detail"><strong>Role:</strong> """ + st.session_state.user_role + """</div>
-                <a href="./?logout=true" class="logout-button">Logout</a>
-            </div>
-        </div>
-    </div>
-    """
-    
-    # Render the navigation
-    st.markdown(html, unsafe_allow_html=True)
+    # Create a container for the navigation
+    with st.container():
+        st.markdown('<div class="nav-container">', unsafe_allow_html=True)
+        
+        # Create columns for navigation sections
+        cols = st.columns([3, 1]) 
+        
+        with cols[0]:
+            # Create sub-columns for navigation groups
+            if user_role == "admin":
+                nav_cols = st.columns(3)
+            elif user_role == "manager":
+                nav_cols = st.columns(2)
+            else:
+                nav_cols = st.columns(1)
+            
+            # Assessment section (for everyone)
+            with nav_cols[0]:
+                st.markdown("### Assessment")
+                st.markdown("• [Home](./) ")
+                st.markdown("• [Self-Assessment](./02_Employee_Assessment)")
+                st.markdown("• [My Performance](./03_Individual_Performance)")
+            
+            # Manager section (for managers and admins)
+            if user_role in ["manager", "admin"]:
+                with nav_cols[1]:
+                    st.markdown("### Manager")
+                    st.markdown("• [Team Dashboard](./04_Team_Dashboard)")
+                    st.markdown("• [Export Reports](./05_Export_Reports)")
+            
+            # Settings section (admin only)
+            if user_role == "admin":
+                with nav_cols[2]:
+                    st.markdown("### Settings")
+                    st.markdown("• [Framework Setup](./01_Framework_Setup)")
+                    st.markdown("• [Organizations](./06_Organization_Management)")
+                    st.markdown("• [User Management](./07_User_Management)")
+        
+        # User info and logout
+        with cols[1]:
+            st.write(f"**User:** {st.session_state.username}")
+            st.write(f"**Role:** {st.session_state.user_role}")
+            
+            if st.button("Logout", type="primary"):
+                # Clear session state and reinitialize
+                for key in list(st.session_state.keys()):
+                    del st.session_state[key]
+                from utils import initialize_session_state
+                initialize_session_state()
+                st.rerun()
+        
+        st.markdown('</div>', unsafe_allow_html=True)
