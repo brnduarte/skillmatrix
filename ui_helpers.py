@@ -275,7 +275,11 @@ def create_top_navigation():
         .nav-links {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
+        }
+        
+        .nav-links div {
+            margin-bottom: 2px;
         }
         
         .nav-links a {
@@ -285,6 +289,7 @@ def create_top_navigation():
             border-radius: 4px;
             transition: background-color 0.2s;
             display: block;
+            width: 100%;
         }
         
         .nav-links a:hover {
@@ -344,33 +349,45 @@ def create_top_navigation():
     groups_html = '<div class="nav-groups">'
     
     # Assessment group
-    groups_html += '''
+    assessment_links_html = ""
+    for link in assessment_links:
+        assessment_links_html += f"<div>{link}</div>"
+        
+    groups_html += f'''
         <div class="nav-group">
             <div class="nav-group-title">Assessment</div>
             <div class="nav-links">
-                ''' + '\n                '.join(assessment_links) + '''
+                {assessment_links_html}
             </div>
         </div>
     '''
     
     # Manager group (if user has access)
     if manager_links:
-        groups_html += '''
+        manager_links_html = ""
+        for link in manager_links:
+            manager_links_html += f"<div>{link}</div>"
+            
+        groups_html += f'''
             <div class="nav-group">
                 <div class="nav-group-title">Manager</div>
                 <div class="nav-links">
-                    ''' + '\n                    '.join(manager_links) + '''
+                    {manager_links_html}
                 </div>
             </div>
         '''
     
     # Settings group (if user has access)
     if settings_links:
-        groups_html += '''
+        settings_links_html = ""
+        for link in settings_links:
+            settings_links_html += f"<div>{link}</div>"
+            
+        groups_html += f'''
             <div class="nav-group">
                 <div class="nav-group-title">Settings</div>
                 <div class="nav-links">
-                    ''' + '\n                    '.join(settings_links) + '''
+                    {settings_links_html}
                 </div>
             </div>
         '''
