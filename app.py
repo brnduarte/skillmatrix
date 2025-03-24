@@ -24,12 +24,39 @@ if not os.path.exists(css_path):
     with open(css_path, 'w') as f:
         f.write('/* Default Streamlit styles */\n')
 
+# Initialize session state variables
+initialize_session_state()
+
 # Load custom CSS
 with open(css_path) as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
-# Initialize session state variables
-initialize_session_state()
+    
+# Add CSS to hide sidebar contents until authenticated
+if not st.session_state.get("authenticated", False):
+    # CSS to hide the default sidebar navigation
+    st.markdown("""
+    <style>
+    /* Hide the sidebar collapse control */
+    [data-testid="collapsedControl"] {
+        display: none;
+    }
+    
+    /* Hide all pages in the sidebar navigation */
+    section[data-testid="stSidebar"] .element-container:has(div.stPages) {
+        display: none !important;
+    }
+    
+    /* Hide the sidebar navigation links */
+    section[data-testid="stSidebar"] [data-testid="stVerticalBlock"] div:has(ul) {
+        display: none !important;
+    }
+    
+    /* But keep the main sidebar container visible for login form */
+    [data-testid="stSidebar"] {
+        display: flex;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 
 # Check for invitation token in query parameters
