@@ -219,7 +219,7 @@ with tab1:
             
             with comp_cols[3]:
                 # Delete competency button
-                if st.button("🗑️", key=f"del_comp_{comp_id}"):
+                if st.button("🗑️", key=f"del_comp_{comp_id}", type="secondary"):
                     success, message = delete_competency(comp_id)
                     if success:
                         st.success(message)
@@ -270,7 +270,7 @@ with tab1:
                     st.subheader("Add New Skill")
 
                     comp_options = competencies_df["name"].tolist()
-                    selected_comp = st.selectbox("Select Competency", comp_options, key="add_skill_comp_select")
+                    selected_comp = st.selectbox("Select Competency", comp_options, key="add_skill_comp_select_expander")
 
         
         # Filter options
@@ -351,7 +351,7 @@ with tab1:
                 
                 with skill_cols[4]:
                     # Delete skill button
-                    if st.button("🗑️", key=f"del_skill_{skill_id}"):
+                    if st.button("🗑️", key=f"del_skill_{skill_id}", type="secondary"):
                         success, message = delete_skill(skill_id)
                         if success:
                             st.success(message)
@@ -517,7 +517,7 @@ with tab2:
             
             with level_cols[3]:
                 # Delete level button
-                if st.button("🗑️", key=f"del_level_{level_id}"):
+                if st.button("🗑️", key=f"del_level_{level_id}", type="secondary"):
                     success, message = delete_job_level(level_id)
                     if success:
                         st.success(message)
@@ -704,7 +704,7 @@ with tab3:
                             if st.button("✏️", key=f"edit_btn_exp_{i}"):
                                 st.session_state[f"edit_exp_{i}"] = True
                         with exp_cols[4]:
-                            if st.button("🗑️", key=f"del_exp_{i}"):
+                            if st.button("🗑️", key=f"del_exp_{i}", type="secondary"):
                                 success, message = delete_expectation(
                                     row["job_level"], 
                                     row["competency"], 
