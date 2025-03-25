@@ -7,6 +7,9 @@ from datetime import datetime
 
 def initialize_session_state():
     """Initialize session state variables if they don't exist"""
+    if "initialized" not in st.session_state:
+        st.session_state.initialized = True
+        
     if "authenticated" not in st.session_state:
         st.session_state.authenticated = False
     if "username" not in st.session_state:
@@ -23,6 +26,12 @@ def initialize_session_state():
         st.session_state.organization_id = None
     if "organization_name" not in st.session_state:
         st.session_state.organization_name = None
+    
+    # Return whether authenticated and organization are selected
+    return {
+        "authenticated": st.session_state.authenticated,
+        "organization_selected": st.session_state.organization_selected
+    }
 
 def authenticate_user(username, password):
     """

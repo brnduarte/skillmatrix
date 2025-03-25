@@ -19,21 +19,24 @@ from utils import get_current_organization_id, check_page_access
 from utils import check_permission
 from ui_helpers import load_custom_css
 
-# Check if user has access to this page (admin only)
-if not check_page_access(["admin"]):
-    st.stop()
-
 # Load custom CSS for consistent styling
 load_custom_css()
 
-# Check if user is authenticated
-if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
+# Initialize session state and check if user is authenticated
+state = initialize_session_state()
+if not state["authenticated"]:
     st.warning("Please login from the Home page.")
+    st.switch_page("app.py")
     st.stop()
 
-# Check permissions - only admin can access this page
-if not check_permission("admin"):
-    st.error("You don't have permission to access this page.")
+# Check if user has selected an organization
+if not state["organization_selected"]:
+    st.warning("Please select an organization to continue.")
+    st.switch_page("app.py")
+    st.stop()
+
+# Check if user has access to this page (admin only)
+if not check_page_access(["admin"]):
     st.stop()
 
 st.title("Competency Framework Setup")
