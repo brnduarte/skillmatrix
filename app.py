@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Page configuration must be the first Streamlit command
-st.set_page_config(page_title="Skill Matrix & Competency Framework",
+st.set_page_config(page_title="Dashboard - Skill Matrix & Competency Framework",
                    page_icon="📊",
                    layout="wide",
                    initial_sidebar_state="collapsed")
@@ -575,7 +575,7 @@ def main_app():
     create_custom_sidebar()
     
     # Home Page Content
-    st.title("Skill Matrix & Competency Framework")
+    st.title("Dashboard")
 
     # Display overview based on role with direct page links
     if st.session_state.user_role == "admin":
