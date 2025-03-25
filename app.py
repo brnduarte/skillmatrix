@@ -791,10 +791,8 @@ handle_invitation()
 if not st.session_state.authenticated:
     display_login()
 elif not st.session_state.get("organization_selected", False):
-    # Add top navigation
-    create_top_navigation()
+    # No navigation - removed as requested
     display_organization_selector()
 else:
-    # Add top navigation
-    create_top_navigation()
+    # No navigation - removed as requested
     main_app()

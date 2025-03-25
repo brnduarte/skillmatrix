@@ -250,6 +250,23 @@ with tab1:
         
         # Skills section
         st.subheader("Skills")
+
+        # Display add skill form as a modal if active
+        if st.session_state.show_add_skill_form:
+            organization_id = get_current_organization_id()
+            competencies_df = load_data_for_organization("competencies", organization_id)
+
+            if competencies_df.empty:
+                st.warning("You need to add competencies first.")
+                st.session_state.show_add_skill_form = False
+            else:
+                # Create a modal using Streamlit's container with border
+                with st.container(border=True):
+                    st.subheader("Add New Skill")
+
+                    comp_options = competencies_df["name"].tolist()
+                    selected_comp = st.selectbox("Select Competency", comp_options, key="add_skill_comp_select")
+
         
         # Filter options
         filter_col1, filter_col2 = st.columns(2)
