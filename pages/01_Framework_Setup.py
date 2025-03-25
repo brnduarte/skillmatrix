@@ -35,9 +35,12 @@ if not state["organization_selected"]:
     st.switch_page("app.py")
     st.stop()
 
-# Check if user has access to this page (admin only)
+# Check page access
 if not check_page_access(["admin"]):
     st.stop()
+
+# Check if user has access to this page (admin only)
+
 
 st.title("Competency Framework Setup")
 st.write("Configure competencies, skills, job levels, and expected scores for your organization.")

@@ -15,20 +15,31 @@ from data_manager import (
     add_competency_assessment, get_employee_competency_assessments,
     get_latest_competency_assessment
 )
-from utils import check_permission, check_page_access, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id
+from utils import check_permission, check_page_access, get_user_id, is_manager_of, get_employees_for_manager, get_current_organization_id, initialize_session_state
 from ui_helpers import load_custom_css
-
-# This page is accessible to all roles: admin, manager, employee, email_user
-if not check_page_access(["admin", "manager", "employee", "email_user"]):
-    st.stop()
 
 # Load custom CSS for consistent styling
 load_custom_css()
 
-# Check if user is authenticated
-if not hasattr(st.session_state, "authenticated") or not st.session_state.authenticated:
+# Initialize session state and check if user is authenticated
+state = initialize_session_state()
+if not state["authenticated"]:
     st.warning("Please login from the Home page.")
+    st.switch_page("app.py")
     st.stop()
+
+# Check if user has selected an organization
+if not state["organization_selected"]:
+    st.warning("Please select an organization to continue.")
+    st.switch_page("app.py")
+    st.stop()
+
+# Check page access
+if not check_page_access(["admin", "manager", "employee", "email_user"]):
+    st.stop()
+
+# This page is accessible to all roles: admin, manager, employee, email_user
+
 
 st.title("Employee Skill & Competency Assessment")
 

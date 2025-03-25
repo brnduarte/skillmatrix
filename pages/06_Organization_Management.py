@@ -21,8 +21,7 @@ with open(os.path.join('.streamlit', 'style.css')) as f:
 initialize_session_state()
 
 # This page is accessible only to admins
-if not check_page_access(["admin"]):
-    st.stop()
+
 
 # Check if user is logged in
 if not st.session_state.authenticated:
