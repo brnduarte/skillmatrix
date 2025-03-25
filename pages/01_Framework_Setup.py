@@ -801,7 +801,7 @@ with tab3:
                     with exp_cols[5]:
                         # Create a unique key by combining job level, competency, skill and index
                         del_btn_key = f"del_exp_all_{row['job_level']}_{row['competency']}_{row['skill']}_{i}"
-                        if st.button("🗑️", key=del_btn_key):
+                        if st.button("🗑️", key=del_btn_key, type="secondary"):
                             success, message = delete_expectation(
                                 row["job_level"], 
                                 row["competency"], 
@@ -985,7 +985,7 @@ with tab4:
                         with exp_cols[3]:
                             # Create a unique key by combining job level, competency and index
                             del_btn_key = f"del_comp_exp_{row['job_level']}_{row['competency']}_{i}"
-                            if st.button("🗑️", key=del_btn_key):
+                            if st.button("🗑️", key=del_btn_key, type="secondary"):
                                 success, message = delete_competency_expectation(
                                     row["job_level"],
                                     row["competency"]
@@ -1076,7 +1076,7 @@ with tab4:
                     with exp_cols[4]:
                         # Create a unique key by combining job level, competency and index
                         del_btn_key = f"del_comp_exp_all_{row['job_level']}_{row['competency']}_{i}"
-                        if st.button("🗑️", key=del_btn_key):
+                        if st.button("🗑️", key=del_btn_key, type="secondary"):
                             success, message = delete_competency_expectation(
                                 row["job_level"],
                                 row["competency"]
@@ -1290,7 +1290,7 @@ with tab5:
                 if st.button("✏️", key=f"edit_btn_emp_{emp_id}"):
                     st.session_state[f"edit_emp_{emp_id}"] = True
             with emp_cols[5]:
-                if st.button("🗑️", key=f"del_emp_btn_{emp_id}"):
+                if st.button("🗑️", key=f"del_emp_btn_{emp_id}", type="secondary"):
                     success, message = delete_employee(emp_id)
                     if success:
                         st.success(message)
