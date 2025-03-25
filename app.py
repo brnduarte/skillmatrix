@@ -581,32 +581,6 @@ def main_app():
     if st.session_state.user_role == "admin":
         st.subheader("Admin Dashboard")
         
-        # New navigation using clickable buttons in 3 columns
-        st.write("#### Quick Navigation")
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            if st.button("📋 Framework Setup", use_container_width=True):
-                st.switch_page("pages/01_Framework_Setup.py")
-            if st.button("📊 Employee Assessment", use_container_width=True):
-                st.switch_page("pages/02_Employee_Assessment.py")
-            if st.button("👤 Individual Performance", use_container_width=True):
-                st.switch_page("pages/03_Individual_Performance.py")
-                
-        with col2:
-            if st.button("👥 Team Dashboard", use_container_width=True):
-                st.switch_page("pages/04_Team_Dashboard.py")
-            if st.button("📄 Export Reports", use_container_width=True):
-                st.switch_page("pages/05_Export_Reports.py")
-            if st.button("🏢 Organization Management", use_container_width=True):
-                st.switch_page("pages/06_Organization_Management.py")
-                
-        with col3:
-            if st.button("👥 User Management", use_container_width=True):
-                st.switch_page("pages/07_User_Management.py")
-            if st.button("🧭 Navigation Helper", use_container_width=True):
-                st.switch_page("pages/00_Navigation_Helper.py")
-                
         st.info("""
         As an administrator, you can:
         - Set up and manage the competency framework
@@ -619,22 +593,6 @@ def main_app():
     elif st.session_state.user_role == "manager":
         st.subheader("Manager Dashboard")
         
-        # Navigation for managers
-        st.write("#### Quick Navigation")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            if st.button("📊 Employee Assessment", use_container_width=True):
-                st.switch_page("pages/02_Employee_Assessment.py")
-            if st.button("👤 Individual Performance", use_container_width=True):
-                st.switch_page("pages/03_Individual_Performance.py")
-                
-        with col2:
-            if st.button("👥 Team Dashboard", use_container_width=True):
-                st.switch_page("pages/04_Team_Dashboard.py")
-            if st.button("📄 Export Reports", use_container_width=True):
-                st.switch_page("pages/05_Export_Reports.py")
-        
         st.info("""
         As a manager, you can:
         - Evaluate team members' skills
@@ -645,18 +603,6 @@ def main_app():
 
     elif st.session_state.user_role == "employee":
         st.subheader("Employee Dashboard")
-        
-        # Navigation for employees
-        st.write("#### Quick Navigation")
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            if st.button("📊 Employee Assessment", use_container_width=True):
-                st.switch_page("pages/02_Employee_Assessment.py")
-                
-        with col2:
-            if st.button("👤 Individual Performance", use_container_width=True):
-                st.switch_page("pages/03_Individual_Performance.py")
         
         st.info("""
         As an employee, you can:
@@ -675,11 +621,6 @@ def main_app():
         if not employee.empty:
             employee_name = employee.iloc[0]["name"]
             st.subheader(f"Self-Assessment Portal for {employee_name}")
-            
-            # Navigation for email users
-            st.write("#### Quick Navigation")
-            if st.button("📊 Employee Assessment", use_container_width=True):
-                st.switch_page("pages/02_Employee_Assessment.py")
             
             st.info(f"""
             Welcome to your self-assessment portal. Here you can:
