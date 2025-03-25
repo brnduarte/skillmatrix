@@ -35,16 +35,16 @@ button[kind="header"] {
 }
 
 /* Custom styles for buttons using the color scheme */
-.stButton>button {
-  background-color: #0f2b3d;
+.stButton > button[type="primary"] {
+  background-color: #0f2b3d !important;
   color: #f5f0d2;
   border: none;
   border-radius: 4px;
   transition: background-color 0.3s;
 }
 
-.stButton>button:hover {
-  background-color: #1a4764;
+.stButton > button[type="primary"]:hover {
+  background-color: #1a4764!important;
   color: #f5f0d2;
 }
 
@@ -224,15 +224,19 @@ div.stContainer, [data-testid="stAppViewContainer"] {
 }
 
 /* Apply secondary styling to buttons with type=secondary */
-.stButton > button[data-baseweb="button"][kind="secondary"],
 .stButton > button[type="secondary"] {
   background-color: #f5f0d2 !important;
   color: #0f2b3d;
   border: 1px solid #0f2b3d;
 }
 
-.stButton > button[data-baseweb="button"][kind="secondary"]:hover,
 .stButton > button[type="secondary"]:hover {
   background-color: #f2bc54 !important;
   color: #0f2b3d;
+}
+
+/* Style for navigation pills in sidebar */
+.st-emotion-cache-pi3sxg {
+  background-color: rgb(15, 43, 61) !important;
+  border-color: rgb(15, 43, 61) !important;
 }
