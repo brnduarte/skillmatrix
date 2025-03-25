@@ -28,14 +28,6 @@ current_page = track_page_load()
 # Initialize session state and check if user is authenticated
 state = initialize_session_state()
 
-# Add the custom sidebar navigation if user is authenticated
-if st.session_state.get("authenticated", False):
-    create_custom_sidebar()
-if not state["authenticated"]:
-    st.warning("Please login from the Home page.")
-    st.switch_page("app.py")
-    st.stop()
-
 # Check if user has selected an organization
 if not state["organization_selected"]:
     st.warning("Please select an organization to continue.")

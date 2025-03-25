@@ -4,7 +4,7 @@ import streamlit as st
 st.set_page_config(page_title="Skill Matrix & Competency Framework",
                    page_icon="📊",
                    layout="wide",
-                   initial_sidebar_state="expanded")
+                   initial_sidebar_state="collapsed")
 
 import pandas as pd
 import numpy as np
@@ -30,7 +30,7 @@ initialize_session_state()
 # Load custom CSS
 with open(css_path) as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-
+    
 # Import UI helper functions
 from ui_helpers import create_custom_sidebar
 
@@ -226,21 +226,24 @@ def display_login():
     # Hide the sidebar on login page
     from ui_helpers import hide_sidebar
     hide_sidebar()
-
+    
     # Application logo/header
-    st.markdown("""
+    st.markdown(
+        """
         <div class="login-header">
             <h1>Skill Matrix & Competency Framework</h1>
             <p>Manage and develop your team's skills effectively</p>
         </div>
-        """,
-                unsafe_allow_html=True)
-
+        """, 
+        unsafe_allow_html=True
+    )
+    
     # Create a two-column layout for login
     col1, col2 = st.columns([3, 2])
-
+    
     with col1:
-        st.markdown("""
+        st.markdown(
+            """
             <div class="card-container">
                 <h2>Welcome to the Skill Management Platform</h2>
                 <p>This platform helps organizations track, visualize, and optimize employee capabilities through interactive assessment and visualization tools.</p>
@@ -255,34 +258,33 @@ def display_login():
                 </ul>
             </div>
             """,
-                    unsafe_allow_html=True)
-
+            unsafe_allow_html=True
+        )
+    
     with col2:
         # Login card with tabs
-        st.markdown("""
+        st.markdown(
+            """
             <div class="card-container">
                 <h2>Access Your Account</h2>
             </div>
             """,
-                    unsafe_allow_html=True)
-
+            unsafe_allow_html=True
+        )
+        
         login_tab1, login_tab2, login_tab3 = st.tabs(
             ["Account Login", "Email Self-Assessment", "Register"])
 
         with login_tab1:
-            username = st.text_input("Username",
-                                     key="username_login",
-                                     placeholder="Enter your username")
+            username = st.text_input("Username", key="username_login", placeholder="Enter your username")
             password = st.text_input("Password",
-                                     type="password",
-                                     key="password_login",
-                                     placeholder="Enter your password")
+                                    type="password",
+                                    key="password_login",
+                                    placeholder="Enter your password")
 
             col1, col2 = st.columns([1, 1])
             with col1:
-                if st.button("Login",
-                             key="login_button",
-                             use_container_width=True):
+                if st.button("Login", key="login_button", use_container_width=True):
                     if authenticate_user(username, password):
                         st.session_state.authenticated = True
                         st.session_state.username = username
@@ -290,23 +292,17 @@ def display_login():
                         st.rerun()
                     else:
                         st.error("Invalid username or password")
-
+                        
             with col2:
-                st.markdown(
-                    """<div style="text-align: right; padding-top: 8px;"><a href="#forgot-password">Forgot password?</a></div>""",
-                    unsafe_allow_html=True)
+                st.markdown("""<div style="text-align: right; padding-top: 8px;"><a href="#forgot-password">Forgot password?</a></div>""", unsafe_allow_html=True)
 
         with login_tab2:
-            st.markdown(
-                "<p>Access your self-assessment using your email address</p>",
-                unsafe_allow_html=True)
+            st.markdown("<p>Access your self-assessment using your email address</p>", unsafe_allow_html=True)
             email = st.text_input("Your Email",
-                                  key="email_login",
-                                  placeholder="name@company.com")
+                                key="email_login",
+                                placeholder="name@company.com")
 
-            if st.button("Access Self-Assessment",
-                         key="email_login_button",
-                         use_container_width=True):
+            if st.button("Access Self-Assessment", key="email_login_button", use_container_width=True):
                 # Check if email exists in the employees database
                 employees_df = load_data("employees")
                 employee = employees_df[employees_df["email"] == email]
@@ -324,48 +320,45 @@ def display_login():
                     )
 
         with login_tab3:
-            st.markdown(
-                "<p>Create a new account to access the Skill Matrix</p>",
-                unsafe_allow_html=True)
+            st.markdown("<p>Create a new account to access the Skill Matrix</p>", unsafe_allow_html=True)
 
             # Registration form
             with st.form(key="registration_form"):
                 st.subheader("Personal Information")
                 reg_name = st.text_input("Full Name",
-                                         key="reg_name",
-                                         placeholder="John Doe")
+                                        key="reg_name",
+                                        placeholder="John Doe")
                 reg_email = st.text_input("Email",
-                                          key="reg_email",
-                                          placeholder="john.doe@company.com")
+                                        key="reg_email",
+                                        placeholder="john.doe@company.com")
 
                 st.subheader("Account Information")
                 reg_username = st.text_input("Username",
-                                             key="reg_username",
-                                             placeholder="johndoe")
+                                            key="reg_username",
+                                            placeholder="johndoe")
                 reg_password = st.text_input("Password",
-                                             type="password",
-                                             key="reg_password")
-                reg_confirm_password = st.text_input(
-                    "Confirm Password",
-                    type="password",
-                    key="reg_confirm_password")
+                                            type="password",
+                                            key="reg_password")
+                reg_confirm_password = st.text_input("Confirm Password",
+                                                    type="password",
+                                                    key="reg_confirm_password")
 
                 st.subheader("Job Information")
                 reg_job_title = st.text_input("Job Title",
-                                              key="reg_job_title",
-                                              placeholder="Software Engineer")
+                                            key="reg_job_title",
+                                            placeholder="Software Engineer")
 
                 # Get job levels for dropdown
                 job_levels_df = load_data("levels")
                 job_level_options = [""] + job_levels_df["name"].tolist(
                 ) if not job_levels_df.empty else [""]
                 reg_job_level = st.selectbox("Job Level",
-                                             options=job_level_options,
-                                             key="reg_job_level")
+                                            options=job_level_options,
+                                            key="reg_job_level")
 
                 reg_department = st.text_input("Department",
-                                               key="reg_department",
-                                               placeholder="Engineering")
+                                            key="reg_department",
+                                            placeholder="Engineering")
 
                 # Get managers for dropdown
                 employees_df = load_data("employees")
@@ -376,10 +369,10 @@ def display_login():
                             ("", "None")
                         ]
                 reg_manager_id = st.selectbox("Manager",
-                                              options=manager_options,
-                                              format_func=lambda x: x[1],
-                                              key="reg_manager_id")
-
+                                            options=manager_options,
+                                            format_func=lambda x: x[1],
+                                            key="reg_manager_id")
+                                            
                 # Submit button inside the form
                 submit_button = st.form_submit_button(label="Register")
 
@@ -577,17 +570,17 @@ def main_app():
     """Displays the main dashboard page"""
     # Initialize session state for page tracking
     current_page = track_page_load()
-
+    
     # Add the custom sidebar navigation
     create_custom_sidebar()
-
+    
     # Home Page Content
     st.title("Skill Matrix & Competency Framework")
 
     # Display overview based on role with direct page links
     if st.session_state.user_role == "admin":
         st.subheader("Admin Dashboard")
-
+        
         st.info("""
         As an administrator, you can:
         - Set up and manage the competency framework
@@ -599,7 +592,7 @@ def main_app():
 
     elif st.session_state.user_role == "manager":
         st.subheader("Manager Dashboard")
-
+        
         st.info("""
         As a manager, you can:
         - Evaluate team members' skills
@@ -610,7 +603,7 @@ def main_app():
 
     elif st.session_state.user_role == "employee":
         st.subheader("Employee Dashboard")
-
+        
         st.info("""
         As an employee, you can:
         - Complete self-assessments of your skills
@@ -628,7 +621,7 @@ def main_app():
         if not employee.empty:
             employee_name = employee.iloc[0]["name"]
             st.subheader(f"Self-Assessment Portal for {employee_name}")
-
+            
             st.info(f"""
             Welcome to your self-assessment portal. Here you can:
             - Complete skill self-assessments
@@ -693,11 +686,11 @@ def main_app():
 def display_organization_selector():
     # Initialize session state for page tracking
     current_page = track_page_load()
-
+    
     # Add the custom sidebar navigation if the user is authenticated
     if st.session_state.authenticated:
         create_custom_sidebar()
-
+        
     st.title("Select or Create Organization")
 
     # Import data manager functions

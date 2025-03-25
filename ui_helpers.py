@@ -54,8 +54,7 @@ def create_card_container(content, key=None):
     
 def create_custom_sidebar():
     """
-    Creates a navigation sidebar using Streamlit native components.
-    Manages page navigation while preserving session state.
+    Creates a sidebar with user information but without navigation buttons.
     """
     # Only show if user is authenticated
     if not st.session_state.get("authenticated", False):
@@ -64,69 +63,25 @@ def create_custom_sidebar():
     # Get user role from session state for access control
     user_role = st.session_state.get("user_role", "")
     
-    # Get current page path from session state
-    current_path = st.session_state.get("current_page", "")
-    
     # Use Streamlit's sidebar
     with st.sidebar:
         # Add logo/title
         st.title("Skill Matrix")
         st.markdown("---")
         
-        # Main navigation section
-        st.markdown("### Main")
-        if st.button("Home", key="nav_home", use_container_width=True, 
-                    type="primary" if current_path == "./" else "secondary"):
-            # Navigate to home page
-            st.switch_page("app.py")
+        # User information section
+        st.markdown("### User Information")
         
-        # Assessment section
-        st.markdown("---")
-        st.markdown("### Assessment")
+        # Get organization name if available
+        org_name = st.session_state.get("organization_name", "Not selected")
         
-        if st.button("Self Assessment", key="nav_self_assess", use_container_width=True,
-                    type="primary" if current_path == "./pages/02_Employee_Assessment" else "secondary"):
-            st.switch_page("pages/02_Employee_Assessment.py")
-            
-        if st.button("My Performance", key="nav_my_perf", use_container_width=True,
-                    type="primary" if current_path == "./pages/03_Individual_Performance" else "secondary"):
-            st.switch_page("pages/03_Individual_Performance.py")
-        
-        # Management section (for managers and admins)
-        if user_role in ["manager", "admin"]:
-            st.markdown("---")
-            st.markdown("### Management")
-            
-            if st.button("Team Dashboard", key="nav_team", use_container_width=True,
-                        type="primary" if current_path == "./pages/04_Team_Dashboard" else "secondary"):
-                st.switch_page("pages/04_Team_Dashboard.py")
-                
-            if st.button("Export Reports", key="nav_export", use_container_width=True,
-                        type="primary" if current_path == "./pages/05_Export_Reports" else "secondary"):
-                st.switch_page("pages/05_Export_Reports.py")
-        
-        # Admin section (for admins only)
-        if user_role == "admin":
-            st.markdown("---")
-            st.markdown("### Administration")
-            
-            if st.button("Framework Setup", key="nav_framework", use_container_width=True,
-                        type="primary" if current_path == "./pages/01_Framework_Setup" else "secondary"):
-                st.switch_page("pages/01_Framework_Setup.py")
-                
-            if st.button("Organizations", key="nav_orgs", use_container_width=True,
-                        type="primary" if current_path == "./pages/06_Organization_Management" else "secondary"):
-                st.switch_page("pages/06_Organization_Management.py")
-                
-            if st.button("User Management", key="nav_users", use_container_width=True,
-                        type="primary" if current_path == "./pages/07_User_Management" else "secondary"):
-                st.switch_page("pages/07_User_Management.py")
-        
-        # User info and logout section
-        st.markdown("---")
-        st.markdown(f"**User:** {st.session_state.username}")
+        # Display user information
+        st.markdown(f"**Username:** {st.session_state.username}")
         st.markdown(f"**Role:** {st.session_state.user_role}")
+        st.markdown(f"**Organization:** {org_name}")
         
+        # Logout button
+        st.markdown("---")
         if st.button("Logout", key="nav_logout", use_container_width=True, type="primary"):
             # Set logout in query params and navigate to home
             st.query_params["logout"] = "true"
@@ -135,7 +90,7 @@ def create_custom_sidebar():
 def create_top_navigation():
     """
     Legacy top navigation function, kept for compatibility.
-    Using the custom sidebar navigation instead.
+    This function is now empty as we've removed navigation from the UI.
     """
-    # Delegate to the custom sidebar navigation
-    create_custom_sidebar()
+    # No longer doing anything
+    pass
