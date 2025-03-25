@@ -1,0 +1,27 @@
+streamlit.errors.StreamlitAPIException: Using st.query_params together with either st.experimental_get_query_params or st.experimental_set_query_params is not supported. Please convert your app to only use st.query_params
+
+Traceback:
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/exec_code.py", line 121, in exec_func_with_error_handling
+    result = func()
+             ^^^^^^
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner/script_runner.py", line 593, in code_to_exec
+    exec(code, module.__dict__)
+File "/home/runner/workspace/app.py", line 859, in <module>
+    display_organization_selector()
+File "/home/runner/workspace/app.py", line 747, in display_organization_selector
+    create_custom_sidebar()
+File "/home/runner/workspace/ui_helpers.py", line 172, in create_custom_sidebar
+    query_params = st.experimental_get_query_params()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/deprecation_util.py", line 97, in wrapped_func
+    result = func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/metrics_util.py", line 410, in wrapped_func
+    result = non_optional_func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/commands/experimental_query_params.py", line 61, in get_query_params
+    ctx.mark_experimental_query_params_used()
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner_utils/script_run_context.py", line 208, in mark_experimental_query_params_used
+    self.ensure_single_query_api_used()
+File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/streamlit/runtime/scriptrunner_utils/script_run_context.py", line 200, in ensure_single_query_api_used
+    raise StreamlitAPIException(

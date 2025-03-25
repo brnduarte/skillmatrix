@@ -168,8 +168,7 @@ def create_custom_sidebar():
     </style>
     """, unsafe_allow_html=True)
     
-    # Get current page path from query params if available
-    query_params = st.experimental_get_query_params()
+    # Get current page path - using only the session state to track it
     current_path = st.session_state.get("current_page", "")
     
     # Functions to navigate to pages
