@@ -223,6 +223,10 @@ def handle_invitation():
 
 # User authentication
 def display_login():
+    # Hide the sidebar on login page
+    from ui_helpers import hide_sidebar
+    hide_sidebar()
+    
     # Application logo/header
     st.markdown(
         """
