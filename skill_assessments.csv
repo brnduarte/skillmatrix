@@ -1,5 +1,4 @@
 assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date,notes,organization_id
-19,2,Expertise,Visual Design,4.6,self,2025-03-21,Self assessment for Visual Design,1
 20,2,Decision Making,Interaction Design,4.1,self,2025-03-21,Self assessment for Interaction Design,1
 21,2,Continuous Improvement,Design Systems and A11y,3.6,self,2025-03-21,Self assessment for Design Systems and A11y,1
 22,2,Accountability,UX Strategy,2.6,self,2025-03-21,Self assessment for UX Strategy,1
@@ -8,7 +7,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 25,2,Collaboration,Cross-Functional Collaboration,4.2,self,2025-03-21,Self assessment for Cross-Functional Collaboration,1
 26,2,Communication,Competitive Analysis,5.0,self,2025-03-21,Self assessment for Competitive Analysis,1
 27,2,Open Minded,Resource Management and Operations,5.0,self,2025-03-21,Self assessment for Resource Management and Operations,1
-28,3,Expertise,Visual Design,2.9,self,2025-03-21,Self assessment for Visual Design,1
 29,3,Decision Making,Interaction Design,2.4,self,2025-03-21,Self assessment for Interaction Design,1
 30,3,Continuous Improvement,Design Systems and A11y,2.1,self,2025-03-21,Self assessment for Design Systems and A11y,1
 31,3,Accountability,UX Strategy,2.5,self,2025-03-21,Self assessment for UX Strategy,1
@@ -17,7 +15,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 34,3,Collaboration,Cross-Functional Collaboration,3.2,self,2025-03-21,Self assessment for Cross-Functional Collaboration,1
 35,3,Communication,Competitive Analysis,2.5,self,2025-03-21,Self assessment for Competitive Analysis,1
 36,3,Open Minded,Resource Management and Operations,2.2,self,2025-03-21,Self assessment for Resource Management and Operations,1
-37,4,Expertise,Visual Design,4.2,self,2025-03-21,Self assessment for Visual Design,1
 38,4,Decision Making,Interaction Design,3.7,self,2025-03-21,Self assessment for Interaction Design,1
 39,4,Continuous Improvement,Design Systems and A11y,3.7,self,2025-03-21,Self assessment for Design Systems and A11y,1
 40,4,Accountability,UX Strategy,3.7,self,2025-03-21,Self assessment for UX Strategy,1
@@ -26,7 +23,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 43,4,Collaboration,Cross-Functional Collaboration,3.6,self,2025-03-21,Self assessment for Cross-Functional Collaboration,1
 44,4,Communication,Competitive Analysis,2.9,self,2025-03-21,Self assessment for Competitive Analysis,1
 45,4,Open Minded,Resource Management and Operations,3.5,self,2025-03-21,Self assessment for Resource Management and Operations,1
-46,4,Expertise,Visual Design,2.7,manager,2025-03-21,Manager assessment for Visual Design,1
 47,4,Decision Making,Interaction Design,3.3,manager,2025-03-21,Manager assessment for Interaction Design,1
 48,4,Continuous Improvement,Design Systems and A11y,4.3,manager,2025-03-21,Manager assessment for Design Systems and A11y,1
 49,4,Accountability,UX Strategy,3.4,manager,2025-03-21,Manager assessment for UX Strategy,1
@@ -35,7 +31,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 52,4,Collaboration,Cross-Functional Collaboration,3.1,manager,2025-03-21,Manager assessment for Cross-Functional Collaboration,1
 53,4,Communication,Competitive Analysis,5.0,manager,2025-03-21,Manager assessment for Competitive Analysis,1
 54,4,Open Minded,Resource Management and Operations,4.0,manager,2025-03-21,Manager assessment for Resource Management and Operations,1
-55,5,Expertise,Visual Design,3.8,self,2025-03-21,Self assessment for Visual Design,1
 56,5,Decision Making,Interaction Design,3.3,self,2025-03-21,Self assessment for Interaction Design,1
 57,5,Continuous Improvement,Design Systems and A11y,4.2,self,2025-03-21,Self assessment for Design Systems and A11y,1
 58,5,Accountability,UX Strategy,2.9,self,2025-03-21,Self assessment for UX Strategy,1
@@ -44,7 +39,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 61,5,Collaboration,Cross-Functional Collaboration,5.0,self,2025-03-21,Self assessment for Cross-Functional Collaboration,1
 62,5,Communication,Competitive Analysis,4.4,self,2025-03-21,Self assessment for Competitive Analysis,1
 63,5,Open Minded,Resource Management and Operations,3.4,self,2025-03-21,Self assessment for Resource Management and Operations,1
-64,6,Expertise,Visual Design,5.0,self,2025-03-21,Self assessment for Visual Design,1
 65,6,Decision Making,Interaction Design,4.1,self,2025-03-21,Self assessment for Interaction Design,1
 66,6,Continuous Improvement,Design Systems and A11y,2.9,self,2025-03-21,Self assessment for Design Systems and A11y,1
 67,6,Accountability,UX Strategy,3.1,self,2025-03-21,Self assessment for UX Strategy,1
@@ -53,7 +47,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 70,6,Collaboration,Cross-Functional Collaboration,3.0,self,2025-03-21,Self assessment for Cross-Functional Collaboration,1
 71,6,Communication,Competitive Analysis,4.6,self,2025-03-21,Self assessment for Competitive Analysis,1
 72,6,Open Minded,Resource Management and Operations,3.4,self,2025-03-21,Self assessment for Resource Management and Operations,1
-73,6,Expertise,Visual Design,3.6,manager,2025-03-21,Manager assessment for Visual Design,1
 74,6,Decision Making,Interaction Design,3.4,manager,2025-03-21,Manager assessment for Interaction Design,1
 75,6,Continuous Improvement,Design Systems and A11y,2.7,manager,2025-03-21,Manager assessment for Design Systems and A11y,1
 76,6,Accountability,UX Strategy,2.9,manager,2025-03-21,Manager assessment for UX Strategy,1
@@ -62,7 +55,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 79,6,Collaboration,Cross-Functional Collaboration,3.6,manager,2025-03-21,Manager assessment for Cross-Functional Collaboration,1
 80,6,Communication,Competitive Analysis,4.0,manager,2025-03-21,Manager assessment for Competitive Analysis,1
 81,6,Open Minded,Resource Management and Operations,3.1,manager,2025-03-21,Manager assessment for Resource Management and Operations,1
-82,7,Expertise,Visual Design,2.5,self,2025-03-21,Self assessment for Visual Design,1
 83,7,Decision Making,Interaction Design,3.5,self,2025-03-21,Self assessment for Interaction Design,1
 84,7,Continuous Improvement,Design Systems and A11y,5.0,self,2025-03-21,Self assessment for Design Systems and A11y,1
 85,7,Accountability,UX Strategy,3.1,self,2025-03-21,Self assessment for UX Strategy,1
@@ -71,7 +63,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 88,7,Collaboration,Cross-Functional Collaboration,3.6,self,2025-03-21,Self assessment for Cross-Functional Collaboration,1
 89,7,Communication,Competitive Analysis,4.2,self,2025-03-21,Self assessment for Competitive Analysis,1
 90,7,Open Minded,Resource Management and Operations,3.2,self,2025-03-21,Self assessment for Resource Management and Operations,1
-91,7,Expertise,Visual Design,4.6,manager,2025-03-21,Manager assessment for Visual Design,1
 92,7,Decision Making,Interaction Design,4.2,manager,2025-03-21,Manager assessment for Interaction Design,1
 93,7,Continuous Improvement,Design Systems and A11y,3.9,manager,2025-03-21,Manager assessment for Design Systems and A11y,1
 94,7,Accountability,UX Strategy,4.4,manager,2025-03-21,Manager assessment for UX Strategy,1
@@ -80,7 +71,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 97,7,Collaboration,Cross-Functional Collaboration,2.7,manager,2025-03-21,Manager assessment for Cross-Functional Collaboration,1
 98,7,Communication,Competitive Analysis,3.8,manager,2025-03-21,Manager assessment for Competitive Analysis,1
 99,7,Open Minded,Resource Management and Operations,3.4,manager,2025-03-21,Manager assessment for Resource Management and Operations,1
-118,5,Expertise,Visual Design,3.0,manager,2025-03-21,,1
 119,5,Decision Making,Interaction Design,3.0,manager,2025-03-21,,1
 120,5,Continuous Improvement,Design Systems and A11y,3.0,manager,2025-03-21,,1
 121,5,Accountability,UX Strategy,3.5,manager,2025-03-21,,1
@@ -89,7 +79,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 124,5,Collaboration,Cross-Functional Collaboration,3.5,manager,2025-03-21,,1
 125,5,Communication,Competitive Analysis,3.5,manager,2025-03-21,,1
 126,5,Open Minded,Resource Management and Operations,3.5,manager,2025-03-21,,1
-127,2,Expertise,Visual Design,4.0,manager,2025-03-22,,1
 128,2,Decision Making,Interaction Design,3.5,manager,2025-03-22,,1
 129,2,Continuous Improvement,Design Systems and A11y,4.0,manager,2025-03-22,,1
 130,2,Accountability,UX Strategy,3.0,manager,2025-03-22,,1
@@ -98,7 +87,6 @@ assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date
 133,2,Collaboration,Cross-Functional Collaboration,4.5,manager,2025-03-22,,1
 134,2,Open Minded,Resource Management and Operations,4.5,manager,2025-03-22,,1
 135,2,Communication,Competitive Analysis,4.5,manager,2025-03-22,,1
-146,3,Expertise,Visual Design,3.0,manager,2025-03-22,,1
 147,3,Decision Making,Interaction Design,2.5,manager,2025-03-22,,1
 148,3,Continuous Improvement,Design Systems and A11y,2.5,manager,2025-03-22,,1
 149,3,Accountability,UX Strategy,2.5,manager,2025-03-22,,1

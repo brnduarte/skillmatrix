@@ -1,38 +1,37 @@
 job_level,competency,skill,expected_score,organization_id
-IC1 - Associate,Expertise,Expertise,Visual Design,2.0,1
-IC1 - Associate,Expertise,Decision Making,Interaction Design,2.0,1
-IC1 - Associate,Expertise,Continuous Improvement,Design Systems and A11y,1.5,1
-IC1 - Associate,Expertise,Accountability,UX Strategy,2.0,1
-IC1 - Associate,Expertise,Initiative,User Testing and Validation,1.5,1
-IC1 - Associate,Expertise,Personal Development,Influence,2.0,1
-IC1 - Associate,Expertise,Collaboration,Cross-Functional Collaboration,2.0,1
-IC1 - Associate,Expertise,Communication,Competitive Analysis,1.5,1
-IC1 - Associate,Expertise,Open Minded,Resource Management and Operations,2.5,1
-IC1 - Associate,Expertise,Visual Design,1.5,1
-IC2 - Mid Level,Expertise,Visual Design,2.5,1
-IC2 - Mid Level,Decision Making,Interaction Design,3.0,1
-IC2 - Mid Level,Continuous Improvement,Design Systems and A11y,2.5,1
-IC2 - Mid Level,Accountability,UX Strategy,3.0,1
-IC2 - Mid Level,Initiative,User Testing and Validation,2.5,1
-IC2 - Mid Level,Personal Development,Influence,3.0,1
-IC2 - Mid Level,Collaboration,Cross-Functional Collaboration,3.0,1
-IC2 - Mid Level,Communication,Competitive Analysis,3.0,1
-IC2 - Mid Level,Open Minded,Resource Management and Operations,3.5,1
-IC3 - Senior,Expertise,Visual Design,3.0,1
-IC3 - Senior,Decision Making,Interaction Design,3.5,1
-IC3 - Senior,Continuous Improvement,Design Systems and A11y,3.0,1
-IC3 - Senior,Accountability,UX Strategy,3.5,1
-IC3 - Senior,Initiative,User Testing and Validation,3.0,1
-IC3 - Senior,Personal Development,Influence,3.0,1
-IC3 - Senior,Collaboration,Cross-Functional Collaboration,3.5,1
-IC3 - Senior,Open Minded,Resource Management and Operations,3.5,1
-IC3 - Senior,Communication,Competitive Analysis,3.5,1
-IC4 - Staff,Expertise,Visual Design,4.5,1
-IC4 - Staff,Decision Making,Interaction Design,4.0,1
-IC4 - Staff,Continuous Improvement,Design Systems and A11y,4.5,1
-IC4 - Staff,Accountability,UX Strategy,4.0,1
-IC4 - Staff,Initiative,User Testing and Validation,4.0,1
-IC4 - Staff,Personal Development,Influence,4.5,1
-IC4 - Staff,Collaboration,Cross-Functional Collaboration,4.5,1
-IC4 - Staff,Communication,Competitive Analysis,4.0,1
-IC4 - Staff,Open Minded,Resource Management and Operations,4.5,1
+Expertise,Decision Making,Interaction Design,2.0,1.0
+Expertise,Continuous Improvement,Design Systems and A11y,1.5,1.0
+Expertise,Accountability,UX Strategy,2.0,1.0
+Expertise,Initiative,User Testing and Validation,1.5,1.0
+Expertise,Personal Development,Influence,2.0,1.0
+Expertise,Collaboration,Cross-Functional Collaboration,2.0,1.0
+Expertise,Communication,Competitive Analysis,1.5,1.0
+Expertise,Open Minded,Resource Management and Operations,2.5,1.0
+Expertise,Visual Design,1.5,1.0,
+Expertise,Visual Design,2.5,1.0,
+Decision Making,Interaction Design,3.0,1.0,
+Continuous Improvement,Design Systems and A11y,2.5,1.0,
+Accountability,UX Strategy,3.0,1.0,
+Initiative,User Testing and Validation,2.5,1.0,
+Personal Development,Influence,3.0,1.0,
+Collaboration,Cross-Functional Collaboration,3.0,1.0,
+Communication,Competitive Analysis,3.0,1.0,
+Open Minded,Resource Management and Operations,3.5,1.0,
+Expertise,Visual Design,3.0,1.0,
+Decision Making,Interaction Design,3.5,1.0,
+Continuous Improvement,Design Systems and A11y,3.0,1.0,
+Accountability,UX Strategy,3.5,1.0,
+Initiative,User Testing and Validation,3.0,1.0,
+Personal Development,Influence,3.0,1.0,
+Collaboration,Cross-Functional Collaboration,3.5,1.0,
+Open Minded,Resource Management and Operations,3.5,1.0,
+Communication,Competitive Analysis,3.5,1.0,
+Expertise,Visual Design,4.5,1.0,
+Decision Making,Interaction Design,4.0,1.0,
+Continuous Improvement,Design Systems and A11y,4.5,1.0,
+Accountability,UX Strategy,4.0,1.0,
+Initiative,User Testing and Validation,4.0,1.0,
+Personal Development,Influence,4.5,1.0,
+Collaboration,Cross-Functional Collaboration,4.5,1.0,
+Communication,Competitive Analysis,4.0,1.0,
+Open Minded,Resource Management and Operations,4.5,1.0,

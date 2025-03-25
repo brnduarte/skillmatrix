@@ -205,8 +205,8 @@ div.stContainer, [data-testid="stAppViewContainer"] {
 
 /* Secondary button styles for cancel, edit, delete actions */
 .secondary-button {
-  background-color: #f5f0d2;
-  color: #0f2b3d;
+  background-color: #f5f0d2 !important;
+  color: #f5f0d2;
   padding: 10px 20px;
   border-radius: 4px;
   text-align: center;
@@ -218,19 +218,21 @@ div.stContainer, [data-testid="stAppViewContainer"] {
 }
 
 .secondary-button:hover {
-  background-color: #f2bc54;
+  background-color: #f2bc54 !important;
   color: #0f2b3d;
   border: 1px solid #0f2b3d;
 }
 
 /* Apply secondary styling to buttons with type=secondary */
-.stButton > button[data-baseweb="button"][kind="secondary"] {
-  background-color: #f5f0d2;
+.stButton > button[data-baseweb="button"][kind="secondary"],
+.stButton > button[type="secondary"] {
+  background-color: #f5f0d2 !important;
   color: #0f2b3d;
   border: 1px solid #0f2b3d;
 }
 
-.stButton > button[data-baseweb="button"][kind="secondary"]:hover {
-  background-color: #f2bc54;
+.stButton > button[data-baseweb="button"][kind="secondary"]:hover,
+.stButton > button[type="secondary"]:hover {
+  background-color: #f2bc54 !important;
   color: #0f2b3d;
 }

@@ -1,9 +1,4 @@
 skill_id,competency_id,name,description,organization_id
-1,1,Visual Design,"- Illustration and Drawing: Enhances visual appeal and storytelling.
-- Iconography and Visual Elements: Crafting clear and intuitive icons and assets.
-- Typography and Color Theory: Ensures aesthetic and functional design.
-- Composition and Layout: Guides user attention through effective layouts.
-- Motion and Video: Adds dynamic, engaging elements to improve UX.",1
 3,2,Interaction Design,"- Information Architecture and Wireframing: Organizing information for usability and clarity.
 - Interaction Patterns and Micro-Interactions: Defining user-friendly and engaging behaviors.
 - User Interface and Prototyping: Translating concepts into interactive prototypes.
