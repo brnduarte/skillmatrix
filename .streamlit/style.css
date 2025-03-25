@@ -24,6 +24,17 @@ section[data-testid="stSidebar"] {
   width: 100% !important;
 }
 
+/* Hide Streamlit top menu bar */
+header[data-testid="stHeader"] {
+  display: none !important;
+}
+
+/* Move content to top since header is hidden */
+section.main {
+  margin-top: 0px !important;
+  padding-top: 1rem !important;
+}
+
 /* Custom styles for buttons using the color scheme */
 .stButton>button {
   background-color: #0f2b3d;
