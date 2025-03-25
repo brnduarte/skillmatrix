@@ -15,14 +15,21 @@ from data_manager import (
     delete_expectation, delete_competency_expectation, update_competency, update_skill, update_job_level,
     update_employee
 )
-from utils import get_current_organization_id, check_page_access, initialize_session_state, check_permission
-from ui_helpers import load_custom_css
+from utils import get_current_organization_id, check_page_access, initialize_session_state, check_permission, track_page_load
+from ui_helpers import load_custom_css, create_custom_sidebar
 
 # Load custom CSS for consistent styling
 load_custom_css()
 
+# Track current page for navigation highlighting
+current_page = track_page_load()
+
 # Initialize session state and check if user is authenticated
 state = initialize_session_state()
+
+# Add the custom sidebar navigation if user is authenticated
+if st.session_state.get("authenticated", False):
+    create_custom_sidebar()
 if not state["authenticated"]:
     st.warning("Please login from the Home page.")
     st.switch_page("app.py")

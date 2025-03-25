@@ -564,18 +564,14 @@ def hide_pages_by_role():
 # Main application
 def main_app():
     """Displays the main dashboard page"""
+    # Initialize session state for page tracking
+    current_page = track_page_load()
+    
+    # Add the custom sidebar navigation
+    create_custom_sidebar()
+    
     # Home Page Content
     st.title("Skill Matrix & Competency Framework")
-    
-    # New direct URL navigation guidance with visual emphasis
-    st.warning("""
-    ### Navigation Update
-    The navigation bar has been removed.
-    
-    **To navigate, use the direct page links below or use these URL formats:**
-    - `/pages/01_Framework_Setup` for Framework Setup
-    - `/pages/02_Employee_Assessment` for Employee Assessment
-    """)
 
     # Display overview based on role with direct page links
     if st.session_state.user_role == "admin":
@@ -743,6 +739,13 @@ def main_app():
 
 # Organization selection or creation
 def display_organization_selector():
+    # Initialize session state for page tracking
+    current_page = track_page_load()
+    
+    # Add the custom sidebar navigation if the user is authenticated
+    if st.session_state.authenticated:
+        create_custom_sidebar()
+        
     st.title("Select or Create Organization")
 
     # Import data manager functions
