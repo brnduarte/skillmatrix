@@ -794,10 +794,14 @@ with tab3:
                     with exp_cols[3]:
                         st.write(f"{row['expected_score']}")
                     with exp_cols[4]:
-                        if st.button("✏️", key=f"edit_btn_exp_all_{i}"):
+                        # Create a unique key by combining job level, competency, skill and index
+                        edit_btn_key = f"edit_btn_exp_all_{row['job_level']}_{row['competency']}_{row['skill']}_{i}"
+                        if st.button("✏️", key=edit_btn_key):
                             st.session_state[f"edit_exp_all_{i}"] = True
                     with exp_cols[5]:
-                        if st.button("🗑️", key=f"del_exp_all_{i}"):
+                        # Create a unique key by combining job level, competency, skill and index
+                        del_btn_key = f"del_exp_all_{row['job_level']}_{row['competency']}_{row['skill']}_{i}"
+                        if st.button("🗑️", key=del_btn_key):
                             success, message = delete_expectation(
                                 row["job_level"], 
                                 row["competency"], 
@@ -974,10 +978,14 @@ with tab4:
                         with exp_cols[1]:
                             st.write(f"{row['expected_score']}")
                         with exp_cols[2]:
-                            if st.button("✏️", key=f"edit_btn_comp_exp_{i}"):
+                            # Create a unique key by combining job level, competency and index
+                            edit_btn_key = f"edit_btn_comp_exp_{row['job_level']}_{row['competency']}_{i}"
+                            if st.button("✏️", key=edit_btn_key):
                                 st.session_state[f"edit_comp_exp_{i}"] = True
                         with exp_cols[3]:
-                            if st.button("🗑️", key=f"del_comp_exp_{i}"):
+                            # Create a unique key by combining job level, competency and index
+                            del_btn_key = f"del_comp_exp_{row['job_level']}_{row['competency']}_{i}"
+                            if st.button("🗑️", key=del_btn_key):
                                 success, message = delete_competency_expectation(
                                     row["job_level"],
                                     row["competency"]
@@ -1061,10 +1069,14 @@ with tab4:
                     with exp_cols[2]:
                         st.write(f"{row['expected_score']}")
                     with exp_cols[3]:
-                        if st.button("✏️", key=f"edit_btn_comp_exp_all_{i}"):
+                        # Create a unique key by combining job level, competency and index
+                        edit_btn_key = f"edit_btn_comp_exp_all_{row['job_level']}_{row['competency']}_{i}"
+                        if st.button("✏️", key=edit_btn_key):
                             st.session_state[f"edit_comp_exp_all_{i}"] = True
                     with exp_cols[4]:
-                        if st.button("🗑️", key=f"del_comp_exp_all_{i}"):
+                        # Create a unique key by combining job level, competency and index
+                        del_btn_key = f"del_comp_exp_all_{row['job_level']}_{row['competency']}_{i}"
+                        if st.button("🗑️", key=del_btn_key):
                             success, message = delete_competency_expectation(
                                 row["job_level"],
                                 row["competency"]
