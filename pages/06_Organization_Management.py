@@ -162,7 +162,7 @@ with tab3:
                     help="Warning: This will delete all data associated with this organization. This action cannot be undone."
                 )
                 
-                if st.button("Delete Organization", key="delete_org_button"):
+                if st.button("Delete Organization", key="delete_org_button", type="secondary"):
                     if confirm_delete != org_name:
                         st.error("Organization name does not match. Deletion canceled.")
                     else:

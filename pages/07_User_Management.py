@@ -307,7 +307,7 @@ with tab3:
                     
                     delete_employee_too = st.checkbox("Also delete associated employee record", value=True) if has_employee else False
                     
-                    if st.button("Delete User", key="delete_user_button"):
+                    if st.button("Delete User", key="delete_user_button", type="secondary"):
                         if confirm_delete != selected_username:
                             st.error("Username does not match. Deletion canceled.")
                         else:
@@ -517,7 +517,7 @@ with tab4:
                     email_options = pending_invitations["email"].tolist()
                     selected_email = st.selectbox("Select Email", options=email_options, key="resend_email")
                     
-                    if st.button("Resend Invitation Email", key="resend_button"):
+                    if st.button("Resend Invitation Email", key="resend_button", type="secondary"):
                         try:
                             # Get the invitation details
                             invitation = pending_invitations[pending_invitations["email"] == selected_email].iloc[0]
