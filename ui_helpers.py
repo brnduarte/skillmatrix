@@ -1,5 +1,6 @@
 import streamlit as st
 import os
+import base64
 
 def load_custom_css():
     """Load custom CSS to apply Lato font and color scheme across all pages"""
@@ -51,179 +52,265 @@ def create_card_container(content, key=None):
         unsafe_allow_html=True
     )
     
-def create_top_navigation():
-    """Creates a top navigation bar with expandable/collapsible sections"""
+def create_custom_sidebar():
+    """
+    Creates a custom sidebar navigation that works with Streamlit but doesn't use
+    the built-in sidebar. Manages page navigation while preserving session state.
+    """
     # Only show if user is authenticated
     if not st.session_state.get("authenticated", False):
         return
         
     user_role = st.session_state.get("user_role", "")
     
-    # Hide the default sidebar
-    hide_sidebar()
-    
-    # Initialize session state for menu expansion if not exists
-    if "nav_assessment_expanded" not in st.session_state:
-        st.session_state.nav_assessment_expanded = False
-    if "nav_manager_expanded" not in st.session_state:
-        st.session_state.nav_manager_expanded = False
-    if "nav_settings_expanded" not in st.session_state:
-        st.session_state.nav_settings_expanded = False
-    
-    # Add CSS for navigation styling
+    # CSS for the custom sidebar
     st.markdown("""
     <style>
-    /* Fixed top navigation */
-    div.fixed-topbar {
+    /* Custom sidebar styles */
+    .custom-sidebar {
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        z-index: 999;
+        bottom: 0;
+        width: 230px;
         background-color: #0f2b3d;
         color: white;
-        padding: 10px 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000;
+        padding: 20px 10px;
+        overflow-y: auto;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     }
     
-    /* Main content padding to accommodate fixed navbar */
+    /* Adjust main content area to make room for the sidebar */
     .main .block-container {
-        padding-top: 110px !important;
+        margin-left: 230px !important;
+        max-width: calc(100% - 230px) !important;
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+        width: calc(100% - 230px) !important;
     }
     
-    /* Navigation menu item */
-    .nav-item {
-        display: inline-block;
-        margin-right: 25px;
-        position: relative;
+    /* Logo area */
+    .sidebar-logo {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
     }
     
-    /* Navigation menu header */
-    .nav-header {
-        color: white;
+    /* Navigation section */
+    .nav-section {
+        margin-bottom: 20px;
+    }
+    
+    .nav-section-header {
         font-weight: bold;
-        cursor: pointer;
-        padding: 8px 12px;
-        border-radius: 4px;
-        display: inline-block;
+        color: rgba(255,255,255,0.7);
+        text-transform: uppercase;
+        font-size: 12px;
+        margin-bottom: 10px;
+        padding-left: 10px;
     }
     
-    .nav-header:hover {
+    /* Navigation items */
+    .nav-item {
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 5px;
+        cursor: pointer;
+        text-decoration: none;
+        color: white;
+        display: block;
+        transition: background-color 0.2s;
+    }
+    
+    .nav-item:hover {
         background-color: rgba(255,255,255,0.1);
     }
     
-    /* Dropdown content */
-    .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: white;
-        min-width: 180px;
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-        z-index: 1000;
-        border-radius: 4px;
-        padding: 8px 0;
-        margin-top: 5px;
-    }
-    
-    /* Show dropdown when parent is hovered */
-    .nav-item:hover .dropdown-content {
-        display: block;
-    }
-    
-    /* Dropdown links */
-    .dropdown-link {
-        color: #333;
-        padding: 8px 16px;
-        text-decoration: none;
-        display: block;
-    }
-    
-    .dropdown-link:hover {
-        background-color: #f5f5f5;
+    .nav-item.active {
+        background-color: rgba(255,255,255,0.2);
+        font-weight: bold;
     }
     
     /* User info section */
     .user-section {
-        float: right;
-        text-align: right;
-    }
-    
-    .user-info {
-        display: inline-block;
-        margin-right: 15px;
-        color: white;
-    }
-    
-    /* Logout button */
-    .logout-btn {
-        background-color: #d13c35;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        text-decoration: none;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 15px;
+        background-color: rgba(0,0,0,0.2);
         font-size: 14px;
     }
     
-    .logout-btn:hover {
+    .user-info {
+        margin-bottom: 10px;
+    }
+    
+    /* Logout button */
+    .sidebar-logout-btn {
+        background-color: #d13c35;
+        color: white;
+        border: none;
+        padding: 8px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        text-align: center;
+        display: inline-block;
+        text-decoration: none;
+    }
+    
+    .sidebar-logout-btn:hover {
         background-color: #b73229;
     }
     </style>
     """, unsafe_allow_html=True)
     
-    # Create top navigation bar with dropdowns using HTML
-    html = """
-    <div class="fixed-topbar">
-        <div style="max-width: 1200px; margin: 0 auto;">
-    """
+    # Get current page path from query params if available
+    query_params = st.experimental_get_query_params()
+    current_path = st.session_state.get("current_page", "")
     
-    # Assessment dropdown (available to all users)
-    html += """
-            <div class="nav-item">
-                <div class="nav-header">Assessment ▾</div>
-                <div class="dropdown-content">
-                    <a href="./" class="dropdown-link">Home</a>
-                    <a href="./02_Employee_Assessment" class="dropdown-link">Self-Assessment</a>
-                    <a href="./03_Individual_Performance" class="dropdown-link">My Performance</a>
-                </div>
-            </div>
-    """
-    
-    # Manager dropdown (for managers and admins)
-    if user_role in ["manager", "admin"]:
-        html += """
-            <div class="nav-item">
-                <div class="nav-header">Manager ▾</div>
-                <div class="dropdown-content">
-                    <a href="./04_Team_Dashboard" class="dropdown-link">Team Dashboard</a>
-                    <a href="./05_Export_Reports" class="dropdown-link">Export Reports</a>
-                </div>
-            </div>
+    # Functions to navigate to pages
+    def nav_to(page_path):
+        """Set the page to navigate to"""
+        # Save navigation in session state
+        st.session_state["nav_target"] = page_path
+        
+        # Use JavaScript to navigate without losing session state
+        nav_script = f"""
+        <script>
+            window.location.href = "{page_path}";
+        </script>
         """
-    
-    # Settings dropdown (admin only)
-    if user_role == "admin":
-        html += """
-            <div class="nav-item">
-                <div class="nav-header">Settings ▾</div>
-                <div class="dropdown-content">
-                    <a href="./01_Framework_Setup" class="dropdown-link">Framework Setup</a>
-                    <a href="./06_Organization_Management" class="dropdown-link">Organizations</a>
-                    <a href="./07_User_Management" class="dropdown-link">User Management</a>
-                </div>
-            </div>
-        """
-    
-    # User information and logout button
-    html += f"""
-            <div class="user-section">
-                <span class="user-info"><strong>{st.session_state.username}</strong> ({st.session_state.user_role})</span>
-                <a href="./?logout=true" class="logout-btn">Logout</a>
-            </div>
+        st.markdown(nav_script, unsafe_allow_html=True)
+        
+    # Create the HTML for the sidebar
+    sidebar_html = """
+    <div class="custom-sidebar">
+        <div class="sidebar-logo">
+            <h2>Skill Matrix</h2>
         </div>
+    """
+    
+    # Create dictionary of navigation items with proper paths
+    nav_items = {
+        "Home": "./",
+        "Dashboard": "./"
+    }
+    
+    # Employee/self assessment pages (for all users)
+    emp_items = {
+        "Self Assessment": "./pages/02_Employee_Assessment",
+        "My Performance": "./pages/03_Individual_Performance"
+    }
+    
+    # Manager pages
+    manager_items = {}
+    if user_role in ["manager", "admin"]:
+        manager_items = {
+            "Team Dashboard": "./pages/04_Team_Dashboard",
+            "Export Reports": "./pages/05_Export_Reports"
+        }
+    
+    # Admin pages
+    admin_items = {}
+    if user_role == "admin":
+        admin_items = {
+            "Framework Setup": "./pages/01_Framework_Setup",
+            "Organizations": "./pages/06_Organization_Management",
+            "User Management": "./pages/07_User_Management"
+        }
+    
+    # Add main navigation items
+    sidebar_html += """
+        <div class="nav-section">
+            <div class="nav-section-header">Main</div>
+    """
+    
+    for label, path in nav_items.items():
+        active_class = "active" if current_path == path else ""
+        sidebar_html += f"""
+            <a href="{path}" class="nav-item {active_class}">{label}</a>
+        """
+    
+    sidebar_html += """
+        </div>
+    """
+    
+    # Add employee assessment section
+    sidebar_html += """
+        <div class="nav-section">
+            <div class="nav-section-header">Assessment</div>
+    """
+    
+    for label, path in emp_items.items():
+        active_class = "active" if current_path == path else ""
+        sidebar_html += f"""
+            <a href="{path}" class="nav-item {active_class}">{label}</a>
+        """
+    
+    sidebar_html += """
+        </div>
+    """
+    
+    # Add manager section if applicable
+    if manager_items:
+        sidebar_html += """
+            <div class="nav-section">
+                <div class="nav-section-header">Management</div>
+        """
+        
+        for label, path in manager_items.items():
+            active_class = "active" if current_path == path else ""
+            sidebar_html += f"""
+                <a href="{path}" class="nav-item {active_class}">{label}</a>
+            """
+        
+        sidebar_html += """
+            </div>
+        """
+    
+    # Add admin section if applicable
+    if admin_items:
+        sidebar_html += """
+            <div class="nav-section">
+                <div class="nav-section-header">Administration</div>
+        """
+        
+        for label, path in admin_items.items():
+            active_class = "active" if current_path == path else ""
+            sidebar_html += f"""
+                <a href="{path}" class="nav-item {active_class}">{label}</a>
+            """
+        
+        sidebar_html += """
+            </div>
+        """
+    
+    # Add user info and logout
+    sidebar_html += f"""
+        <div class="user-section">
+            <div class="user-info">
+                <strong>{st.session_state.username}</strong><br>
+                {st.session_state.user_role}
+            </div>
+            <a href="./?logout=true" class="sidebar-logout-btn">Logout</a>
+        </div>
+    """
+    
+    sidebar_html += """
     </div>
     """
     
-    # Render the navigation bar
-    st.markdown(html, unsafe_allow_html=True)
+    # Render the sidebar
+    st.markdown(sidebar_html, unsafe_allow_html=True)
+
+def create_top_navigation():
+    """
+    Legacy top navigation function, kept for compatibility.
+    Using the custom sidebar navigation instead.
+    """
+    # Delegate to the custom sidebar navigation
+    create_custom_sidebar()

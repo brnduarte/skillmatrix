@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import json
 import os
+import sys
 from datetime import datetime
 
 def initialize_session_state():
@@ -196,6 +197,35 @@ def get_current_organization_id():
         return st.session_state.organization_id
     return None
 
+def track_page_load():
+    """
+    Tracks the current page being loaded and updates session state.
+    This allows the custom navigation to highlight the active page.
+    This function should be called at the top of each page.
+    
+    Returns:
+        The current page path
+    """
+    # Get the script path that's currently running
+    try:
+        current_script = sys.argv[0]
+        # Get the page name from the script path
+        if current_script.endswith(".py"):
+            if '/pages/' in current_script:
+                # For pages, use the page path
+                page_path = './pages/' + os.path.basename(current_script)
+            else:
+                # For main app, use root path
+                page_path = './'
+            
+            # Store the current page in session state
+            st.session_state["current_page"] = page_path
+            return page_path
+    except:
+        # Default to root if we can't determine the page
+        st.session_state["current_page"] = './'
+        return './'
+
 def check_page_access(allowed_roles):
     """Check if the current user has access to the page
     
@@ -207,6 +237,9 @@ def check_page_access(allowed_roles):
     """
     # Initialize session state if needed
     initialize_session_state()
+    
+    # Track what page is being loaded
+    track_page_load()
     
     # Check if user is authenticated
     if not st.session_state.get("authenticated", False):

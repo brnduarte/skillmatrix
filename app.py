@@ -32,10 +32,10 @@ with open(css_path) as f:
     st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     
 # Import UI helper functions
-from ui_helpers import hide_sidebar, create_top_navigation
+from ui_helpers import create_custom_sidebar
 
-# Hide the sidebar completely on all pages
-hide_sidebar()
+# Add track_page_load to monitor current page
+from utils import track_page_load
 
 
 # Check for invitation token in query parameters
