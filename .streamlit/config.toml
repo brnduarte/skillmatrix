@@ -3,6 +3,13 @@ headless = true
 address = "0.0.0.0"
 port = 5000
 
+[browser]
+serverAddress = "localhost"
+gatherUsageStats = false
+
+[ui]
+hideTopBar = true
+
 [theme]
 primaryColor = "#d13c35"
 backgroundColor = "#f5f0d2"
