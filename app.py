@@ -272,8 +272,8 @@ def display_login():
             unsafe_allow_html=True
         )
         
-        login_tab1, login_tab2, login_tab3 = st.tabs(
-            ["Account Login", "Email Self-Assessment", "Register"])
+        login_tab1, login_tab2 = st.tabs(
+            ["Account Login", "Register"])
 
         with login_tab1:
             username = st.text_input("Username", key="username_login", placeholder="Enter your username")
@@ -297,29 +297,6 @@ def display_login():
                 st.markdown("""<div style="text-align: right; padding-top: 8px;"><a href="#forgot-password">Forgot password?</a></div>""", unsafe_allow_html=True)
 
         with login_tab2:
-            st.markdown("<p>Access your self-assessment using your email address</p>", unsafe_allow_html=True)
-            email = st.text_input("Your Email",
-                                key="email_login",
-                                placeholder="name@company.com")
-
-            if st.button("Access Self-Assessment", key="email_login_button", use_container_width=True):
-                # Check if email exists in the employees database
-                employees_df = load_data("employees")
-                employee = employees_df[employees_df["email"] == email]
-
-                if not employee.empty:
-                    # Create a temporary user session for self-assessment only
-                    st.session_state.authenticated = True
-                    st.session_state.username = f"email_{email}"  # Special format to identify email login
-                    st.session_state.user_role = "email_user"  # Special role with limited access
-                    st.session_state.employee_email = email
-                    st.rerun()
-                else:
-                    st.error(
-                        "Email not found. Please contact your manager or administrator."
-                    )
-
-        with login_tab3:
             st.markdown("<p>Create a new account to access the Skill Matrix</p>", unsafe_allow_html=True)
 
             # Registration form
