@@ -98,7 +98,7 @@ with tab1:
             with col1:
                 submit_comp = st.button("Save", type="primary", key="submit_comp_btn")
             with col2:
-                cancel_comp = st.button("Cancel", key="cancel_comp_btn")
+                cancel_comp = st.button("Cancel", key="cancel_comp_btn", type="secondary")
             
             if submit_comp:
                 if comp_name:
@@ -142,7 +142,7 @@ with tab1:
                 with col1:
                     submit_skill = st.button("Save", type="primary", key="submit_skill_btn")
                 with col2:
-                    cancel_skill = st.button("Cancel", key="cancel_skill_btn")
+                    cancel_skill = st.button("Cancel", key="cancel_skill_btn", type="secondary")
                 
                 if submit_skill:
                     if skill_name:
@@ -248,7 +248,7 @@ with tab1:
                                 st.error(message)
                     
                     with edit_col2:
-                        if st.button("Cancel", key=f"cancel_comp_{comp_id}"):
+                        if st.button("Cancel", key=f"cancel_comp_{comp_id}", type="secondary"):
                             # Clear the editing state
                             st.session_state.pop(f"edit_comp_id_{comp_id}", None)
                             st.rerun()
@@ -380,7 +380,7 @@ with tab1:
                                     st.error(message)
                         
                         with skill_edit_col2:
-                            if st.button("Cancel", key=f"cancel_skill_{skill_id}"):
+                            if st.button("Cancel", key=f"cancel_skill_{skill_id}", type="secondary"):
                                 # Clear the editing state
                                 st.session_state.pop(f"edit_skill_id_{skill_id}", None)
                                 st.rerun()
@@ -416,7 +416,7 @@ with tab2:
             with col1:
                 submit_level = st.button("Save", type="primary", key="submit_level_btn")
             with col2:
-                cancel_level = st.button("Cancel", key="cancel_level_btn")
+                cancel_level = st.button("Cancel", key="cancel_level_btn", type="secondary")
             
             if submit_level:
                 if level_name:
@@ -546,7 +546,7 @@ with tab2:
                                 st.error(message)
                     
                     with edit_col2:
-                        if st.button("Cancel", key=f"cancel_level_{level_id}"):
+                        if st.button("Cancel", key=f"cancel_level_{level_id}", type="secondary"):
                             # Clear the editing state
                             st.session_state.pop(f"edit_level_id_{level_id}", None)
                             st.rerun()
@@ -614,7 +614,7 @@ with tab3:
                     with col1:
                         submit_expectation = st.button("Save", type="primary", key="submit_expectation_btn")
                     with col2:
-                        cancel_expectation = st.button("Cancel", key="cancel_expectation_btn")
+                        cancel_expectation = st.button("Cancel", key="cancel_expectation_btn", type="secondary")
                     
                     if submit_expectation:
                         success, message = set_skill_expectation(
@@ -746,7 +746,7 @@ with tab3:
                                             st.error(message)
                                 
                                 with edit_col2:
-                                    if st.button("Cancel", key=f"cancel_exp_{i}"):
+                                    if st.button("Cancel", key=f"cancel_exp_{i}", type="secondary"):
                                         st.session_state[f"edit_exp_{i}"] = False
                                         st.rerun()
                 else:
@@ -843,7 +843,7 @@ with tab3:
                                         st.error(message)
                             
                             with edit_col2:
-                                if st.button("Cancel", key=f"cancel_exp_all_{i}"):
+                                if st.button("Cancel", key=f"cancel_exp_all_{i}", type="secondary"):
                                     st.session_state[f"edit_exp_all_{i}"] = False
                                     st.rerun()
         else:
@@ -899,7 +899,7 @@ with tab4:
                 with col1:
                     submit_comp_expectation = st.button("Save", type="primary", key="submit_comp_expectation_btn")
                 with col2:
-                    cancel_comp_expectation = st.button("Cancel", key="cancel_comp_expectation_btn")
+                    cancel_comp_expectation = st.button("Cancel", key="cancel_comp_expectation_btn", type="secondary")
                 
                 if submit_comp_expectation:
                     success, message = set_competency_expectation(
@@ -1025,7 +1025,7 @@ with tab4:
                                             st.error(message)
                                 
                                 with edit_col2:
-                                    if st.button("Cancel", key=f"cancel_comp_exp_{i}"):
+                                    if st.button("Cancel", key=f"cancel_comp_exp_{i}", type="secondary"):
                                         st.session_state[f"edit_comp_exp_{i}"] = False
                                         st.rerun()
                 else:
@@ -1116,7 +1116,7 @@ with tab4:
                                         st.error(message)
                             
                             with edit_col2:
-                                if st.button("Cancel", key=f"cancel_comp_exp_all_{i}"):
+                                if st.button("Cancel", key=f"cancel_comp_exp_all_{i}", type="secondary"):
                                     st.session_state[f"edit_comp_exp_all_{i}"] = False
                                     st.rerun()
         else:
@@ -1181,7 +1181,7 @@ with tab5:
             with button_col1:
                 submit_employee = st.button("Save", type="primary", key="submit_employee_btn")
             with button_col2:
-                cancel_employee = st.button("Cancel", key="cancel_employee_btn")
+                cancel_employee = st.button("Cancel", key="cancel_employee_btn", type="secondary")
             
             # Submit handler
             if submit_employee:
@@ -1374,7 +1374,7 @@ with tab5:
                                 st.error(message)
                     
                     with action_col2:
-                        if st.button("Cancel", key=f"cancel_emp_{emp_id}"):
+                        if st.button("Cancel", key=f"cancel_emp_{emp_id}", type="secondary"):
                             # Clear the editing state
                             st.session_state[f"edit_emp_{emp_id}"] = False
                             st.rerun()

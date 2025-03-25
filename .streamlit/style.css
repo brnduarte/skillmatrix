@@ -45,6 +45,7 @@ button[kind="header"] {
 
 .stButton>button:hover {
   background-color: #1a4764;
+  color: #f5f0d2;
 }
 
 /* Style for links */
@@ -77,7 +78,8 @@ a:hover {
 
 /* Style for text inputs */
 .stTextInput>div>div>input {
-  border: 1px solid #f2bc54;
+  border: 0px solid #f2bc54;
+  background-color: #f5f0d2 !important;
 }
 
 .stTextInput>div>div>input:focus {
@@ -194,5 +196,41 @@ div.stContainer, [data-testid="stAppViewContainer"] {
 }
 
 .primary-button:hover {
-  background-color: #1a4764;
+  background-color: #0f2b3d;
+  color: #f5f0d2;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+/* Secondary button styles for cancel, edit, delete actions */
+.secondary-button {
+  background-color: #f5f0d2;
+  color: #0f2b3d;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+  border: 1px solid #0f2b3d;
+  width: 100%;
+}
+
+.secondary-button:hover {
+  background-color: #f2bc54;
+  color: #0f2b3d;
+  border: 1px solid #0f2b3d;
+}
+
+/* Apply secondary styling to buttons with type=secondary */
+.stButton > button[data-baseweb="button"][kind="secondary"] {
+  background-color: #f5f0d2;
+  color: #0f2b3d;
+  border: 1px solid #0f2b3d;
+}
+
+.stButton > button[data-baseweb="button"][kind="secondary"]:hover {
+  background-color: #f2bc54;
+  color: #0f2b3d;
 }
