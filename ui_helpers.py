@@ -18,7 +18,7 @@ def load_custom_css():
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
         
 def hide_sidebar():
-    """Hide the sidebar completely using CSS"""
+    """Hide the sidebar completely using CSS - use this only for login page"""
     st.markdown("""
     <style>
     /* Hide sidebar completely */
@@ -54,257 +54,83 @@ def create_card_container(content, key=None):
     
 def create_custom_sidebar():
     """
-    Creates a custom sidebar navigation that works with Streamlit but doesn't use
-    the built-in sidebar. Manages page navigation while preserving session state.
+    Creates a navigation sidebar using Streamlit native components.
+    Manages page navigation while preserving session state.
     """
     # Only show if user is authenticated
     if not st.session_state.get("authenticated", False):
         return
         
+    # Get user role from session state for access control
     user_role = st.session_state.get("user_role", "")
     
-    # CSS for the custom sidebar
-    st.markdown("""
-    <style>
-    /* Custom sidebar styles */
-    .custom-sidebar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        width: 230px;
-        background-color: #0f2b3d;
-        color: white;
-        z-index: 1000;
-        padding: 20px 10px;
-        overflow-y: auto;
-        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    }
-    
-    /* Adjust main content area to make room for the sidebar */
-    .main .block-container {
-        margin-left: 230px !important;
-        max-width: calc(100% - 230px) !important;
-        padding-left: 40px !important;
-        padding-right: 40px !important;
-        width: calc(100% - 230px) !important;
-    }
-    
-    /* Logo area */
-    .sidebar-logo {
-        text-align: center;
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    /* Navigation section */
-    .nav-section {
-        margin-bottom: 20px;
-    }
-    
-    .nav-section-header {
-        font-weight: bold;
-        color: rgba(255,255,255,0.7);
-        text-transform: uppercase;
-        font-size: 12px;
-        margin-bottom: 10px;
-        padding-left: 10px;
-    }
-    
-    /* Navigation items */
-    .nav-item {
-        padding: 10px;
-        border-radius: 5px;
-        margin-bottom: 5px;
-        cursor: pointer;
-        text-decoration: none;
-        color: white;
-        display: block;
-        transition: background-color 0.2s;
-    }
-    
-    .nav-item:hover {
-        background-color: rgba(255,255,255,0.1);
-    }
-    
-    .nav-item.active {
-        background-color: rgba(255,255,255,0.2);
-        font-weight: bold;
-    }
-    
-    /* User info section */
-    .user-section {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        padding: 15px;
-        background-color: rgba(0,0,0,0.2);
-        font-size: 14px;
-    }
-    
-    .user-info {
-        margin-bottom: 10px;
-    }
-    
-    /* Logout button */
-    .sidebar-logout-btn {
-        background-color: #d13c35;
-        color: white;
-        border: none;
-        padding: 8px 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        width: 100%;
-        text-align: center;
-        display: inline-block;
-        text-decoration: none;
-    }
-    
-    .sidebar-logout-btn:hover {
-        background-color: #b73229;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    # Get current page path - using only the session state to track it
+    # Get current page path from session state
     current_path = st.session_state.get("current_page", "")
     
-    # Functions to navigate to pages
-    def nav_to(page_path):
-        """Set the page to navigate to"""
-        # Save navigation in session state
-        st.session_state["nav_target"] = page_path
+    # Use Streamlit's sidebar
+    with st.sidebar:
+        # Add logo/title
+        st.title("Skill Matrix")
+        st.markdown("---")
         
-        # Use JavaScript to navigate without losing session state
-        nav_script = f"""
-        <script>
-            window.location.href = "{page_path}";
-        </script>
-        """
-        st.markdown(nav_script, unsafe_allow_html=True)
+        # Main navigation section
+        st.markdown("### Main")
+        if st.button("Home", key="nav_home", use_container_width=True, 
+                    type="primary" if current_path == "./" else "secondary"):
+            # Navigate to home page
+            st.switch_page("app.py")
         
-    # Create the HTML for the sidebar
-    sidebar_html = """
-    <div class="custom-sidebar">
-        <div class="sidebar-logo">
-            <h2>Skill Matrix</h2>
-        </div>
-    """
-    
-    # Create dictionary of navigation items with proper paths
-    nav_items = {
-        "Home": "./",
-        "Dashboard": "./"
-    }
-    
-    # Employee/self assessment pages (for all users)
-    emp_items = {
-        "Self Assessment": "./pages/02_Employee_Assessment",
-        "My Performance": "./pages/03_Individual_Performance"
-    }
-    
-    # Manager pages
-    manager_items = {}
-    if user_role in ["manager", "admin"]:
-        manager_items = {
-            "Team Dashboard": "./pages/04_Team_Dashboard",
-            "Export Reports": "./pages/05_Export_Reports"
-        }
-    
-    # Admin pages
-    admin_items = {}
-    if user_role == "admin":
-        admin_items = {
-            "Framework Setup": "./pages/01_Framework_Setup",
-            "Organizations": "./pages/06_Organization_Management",
-            "User Management": "./pages/07_User_Management"
-        }
-    
-    # Add main navigation items
-    sidebar_html += """
-        <div class="nav-section">
-            <div class="nav-section-header">Main</div>
-    """
-    
-    for label, path in nav_items.items():
-        active_class = "active" if current_path == path else ""
-        sidebar_html += f"""
-            <a href="{path}" class="nav-item {active_class}">{label}</a>
-        """
-    
-    sidebar_html += """
-        </div>
-    """
-    
-    # Add employee assessment section
-    sidebar_html += """
-        <div class="nav-section">
-            <div class="nav-section-header">Assessment</div>
-    """
-    
-    for label, path in emp_items.items():
-        active_class = "active" if current_path == path else ""
-        sidebar_html += f"""
-            <a href="{path}" class="nav-item {active_class}">{label}</a>
-        """
-    
-    sidebar_html += """
-        </div>
-    """
-    
-    # Add manager section if applicable
-    if manager_items:
-        sidebar_html += """
-            <div class="nav-section">
-                <div class="nav-section-header">Management</div>
-        """
+        # Assessment section
+        st.markdown("---")
+        st.markdown("### Assessment")
         
-        for label, path in manager_items.items():
-            active_class = "active" if current_path == path else ""
-            sidebar_html += f"""
-                <a href="{path}" class="nav-item {active_class}">{label}</a>
-            """
+        if st.button("Self Assessment", key="nav_self_assess", use_container_width=True,
+                    type="primary" if current_path == "./pages/02_Employee_Assessment" else "secondary"):
+            st.switch_page("pages/02_Employee_Assessment.py")
+            
+        if st.button("My Performance", key="nav_my_perf", use_container_width=True,
+                    type="primary" if current_path == "./pages/03_Individual_Performance" else "secondary"):
+            st.switch_page("pages/03_Individual_Performance.py")
         
-        sidebar_html += """
-            </div>
-        """
-    
-    # Add admin section if applicable
-    if admin_items:
-        sidebar_html += """
-            <div class="nav-section">
-                <div class="nav-section-header">Administration</div>
-        """
+        # Management section (for managers and admins)
+        if user_role in ["manager", "admin"]:
+            st.markdown("---")
+            st.markdown("### Management")
+            
+            if st.button("Team Dashboard", key="nav_team", use_container_width=True,
+                        type="primary" if current_path == "./pages/04_Team_Dashboard" else "secondary"):
+                st.switch_page("pages/04_Team_Dashboard.py")
+                
+            if st.button("Export Reports", key="nav_export", use_container_width=True,
+                        type="primary" if current_path == "./pages/05_Export_Reports" else "secondary"):
+                st.switch_page("pages/05_Export_Reports.py")
         
-        for label, path in admin_items.items():
-            active_class = "active" if current_path == path else ""
-            sidebar_html += f"""
-                <a href="{path}" class="nav-item {active_class}">{label}</a>
-            """
+        # Admin section (for admins only)
+        if user_role == "admin":
+            st.markdown("---")
+            st.markdown("### Administration")
+            
+            if st.button("Framework Setup", key="nav_framework", use_container_width=True,
+                        type="primary" if current_path == "./pages/01_Framework_Setup" else "secondary"):
+                st.switch_page("pages/01_Framework_Setup.py")
+                
+            if st.button("Organizations", key="nav_orgs", use_container_width=True,
+                        type="primary" if current_path == "./pages/06_Organization_Management" else "secondary"):
+                st.switch_page("pages/06_Organization_Management.py")
+                
+            if st.button("User Management", key="nav_users", use_container_width=True,
+                        type="primary" if current_path == "./pages/07_User_Management" else "secondary"):
+                st.switch_page("pages/07_User_Management.py")
         
-        sidebar_html += """
-            </div>
-        """
-    
-    # Add user info and logout
-    sidebar_html += f"""
-        <div class="user-section">
-            <div class="user-info">
-                <strong>{st.session_state.username}</strong><br>
-                {st.session_state.user_role}
-            </div>
-            <a href="./?logout=true" class="sidebar-logout-btn">Logout</a>
-        </div>
-    """
-    
-    sidebar_html += """
-    </div>
-    """
-    
-    # Render the sidebar
-    st.markdown(sidebar_html, unsafe_allow_html=True)
+        # User info and logout section
+        st.markdown("---")
+        st.markdown(f"**User:** {st.session_state.username}")
+        st.markdown(f"**Role:** {st.session_state.user_role}")
+        
+        if st.button("Logout", key="nav_logout", use_container_width=True, type="primary"):
+            # Set logout in query params and navigate to home
+            st.query_params["logout"] = "true"
+            st.rerun()
 
 def create_top_navigation():
     """
