@@ -4,7 +4,8 @@ import streamlit as st
 st.set_page_config(
     page_title="Team Dashboard - Skill Matrix",
     page_icon="👥",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 import pandas as pd
