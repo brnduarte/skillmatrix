@@ -29,6 +29,11 @@ header[data-testid="stHeader"] {
   display: none !important;
 }
 
+/* Hide sidebar collapse arrow */
+button[kind="header"] {
+  display: none !important;
+}
+
 /* Move content to top since header is hidden */
 section.main {
   margin-top: 0px !important;
