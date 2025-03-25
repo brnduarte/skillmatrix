@@ -48,23 +48,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Create a more visually appealing table of the pages and their URLs
-st.markdown("""
-| Page Name | Correct URL to Use | Description |
-|-----------|------------------|-------------|
-| Home/Login | `/` | Main dashboard and login page |
-| Navigation Helper | `/pages/00_Navigation_Helper` | This page - navigation assistance |
-| Framework Setup | `/pages/01_Framework_Setup` | Define competencies, skills, and job levels |
-| Employee Assessment | `/pages/02_Employee_Assessment` | Self and manager assessments |
-| Individual Performance | `/pages/03_Individual_Performance` | Individual performance metrics |
-| Team Dashboard | `/pages/04_Team_Dashboard` | Team performance and analysis |
-| Export Reports | `/pages/05_Export_Reports` | Generate PDF/Excel reports |
-| Organization Management | `/pages/06_Organization_Management` | Manage organizations |
-| User Management | `/pages/07_User_Management` | Manage users and invitations |
-""")
-
-st.warning("**Note**: Make sure you're logged in before using these direct links. If your session expires, you'll be redirected to the login page.")
-
 # Show user role and available pages
 if st.session_state.authenticated:
     st.header("Your Access")

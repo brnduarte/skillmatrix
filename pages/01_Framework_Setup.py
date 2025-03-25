@@ -15,8 +15,7 @@ from data_manager import (
     delete_expectation, delete_competency_expectation, update_competency, update_skill, update_job_level,
     update_employee
 )
-from utils import get_current_organization_id, check_page_access
-from utils import check_permission
+from utils import get_current_organization_id, check_page_access, initialize_session_state, check_permission
 from ui_helpers import load_custom_css
 
 # Load custom CSS for consistent styling
