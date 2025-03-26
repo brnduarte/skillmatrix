@@ -88,35 +88,12 @@ def handle_invitation():
                     type="password",
                     key="inv_accept_confirm_password")
 
-                # Job information
-                job_title = st.text_input("Job Title",
-                                          key="inv_accept_job_title",
-                                          placeholder="Software Engineer")
-
-                # Get job levels for dropdown
-                job_levels_df = load_data("levels")
-                job_level_options = [""] + job_levels_df["name"].tolist(
-                ) if not job_levels_df.empty else [""]
-                job_level = st.selectbox("Job Level",
-                                         options=job_level_options,
-                                         key="inv_accept_job_level")
-
-                department = st.text_input("Department",
-                                           key="inv_accept_department",
-                                           placeholder="Engineering")
-
-                # Get managers for dropdown
-                employees_df = load_data("employees")
-                managers = employees_df[["employee_id", "name"]].copy()
-                manager_options = [("", "None")] + list(
-                    zip(managers["employee_id"].astype(str),
-                        managers["name"])) if not employees_df.empty else [
-                            ("", "None")
-                        ]
-                manager_id = st.selectbox("Manager",
-                                          options=manager_options,
-                                          format_func=lambda x: x[1],
-                                          key="inv_accept_manager_id")
+                # Job information section removed for streamlined user experience
+                # All users coming from email invitations don't need to specify job details
+                job_title = "Admin"  # Default job title for invited users
+                job_level = ""  # Empty job level
+                department = ""  # Empty department
+                manager_id = ("", "None")  # Default - no manager
 
                 submit_button = st.form_submit_button(
                     label="Accept Invitation")
@@ -192,9 +169,18 @@ def handle_invitation():
                                             "name", "")
                                         st.session_state.organization_selected = True
 
-                                st.success(
-                                    "Invitation accepted! You've been automatically logged in."
-                                )
+                                # Determine where to redirect based on role
+                                if invitation.get("role", "employee") == "admin":
+                                    st.success(
+                                        "Invitation accepted! You've been automatically logged in. "
+                                        "You will be redirected to Organization Management."
+                                    )
+                                    # Set special session flag to redirect to Organization Management
+                                    st.session_state.redirect_to_org_management = True
+                                else:
+                                    st.success(
+                                        "Invitation accepted! You've been automatically logged in."
+                                    )
 
                                 # Clear invitation data and params
                                 for key in list(st.session_state.keys()):
@@ -320,35 +306,8 @@ def display_login():
                                                     type="password",
                                                     key="reg_confirm_password")
 
-                st.subheader("Job Information")
-                reg_job_title = st.text_input("Job Title",
-                                            key="reg_job_title",
-                                            placeholder="Software Engineer")
-
-                # Get job levels for dropdown
-                job_levels_df = load_data("levels")
-                job_level_options = [""] + job_levels_df["name"].tolist(
-                ) if not job_levels_df.empty else [""]
-                reg_job_level = st.selectbox("Job Level",
-                                            options=job_level_options,
-                                            key="reg_job_level")
-
-                reg_department = st.text_input("Department",
-                                            key="reg_department",
-                                            placeholder="Engineering")
-
-                # Get managers for dropdown
-                employees_df = load_data("employees")
-                managers = employees_df[["employee_id", "name"]].copy()
-                manager_options = [("", "None")] + list(
-                    zip(managers["employee_id"].astype(str),
-                        managers["name"])) if not employees_df.empty else [
-                            ("", "None")
-                        ]
-                reg_manager_id = st.selectbox("Manager",
-                                            options=manager_options,
-                                            format_func=lambda x: x[1],
-                                            key="reg_manager_id")
+                # Note: Job information section has been removed
+                # All users registering through this form will be assigned as Admins
                                             
                 # Submit button inside the form
                 submit_button = st.form_submit_button(label="Register")
@@ -365,9 +324,8 @@ def display_login():
                     # Add user to database
                     from data_manager import add_user, add_employee
 
-                    # Extract manager ID (first element of the tuple)
-                    manager_id = reg_manager_id[
-                        0] if reg_manager_id and reg_manager_id[0] else None
+                    # No manager ID needed as all users from registration are admins
+                    manager_id = None
 
                     # Add organization selection
                     st.subheader("Organization Information")
@@ -419,58 +377,144 @@ def display_login():
                                     f"Failed to create organization: {org_message}"
                                 )
 
-                    # Create user account first
-                    user_success, user_message = add_user(
+                    # First, create an invitation token and send verification email
+                    from email_manager import create_invitation, send_invitation_email
+                    
+                    # Create invitation with admin role
+                    success, message, token = create_invitation(
                         username=reg_username,
-                        password=reg_password,
-                        role="employee",  # Default role for new registrations
-                        name=reg_name,
-                        email=reg_email)
-
-                    if user_success:
-                        # Create employee record with organization
-                        employee_success, employee_message, employee_id = add_employee(
-                            name=reg_name,
+                        email=reg_email,
+                        role="admin",  # All users from registration form are admins
+                        organization_id=organization_id,
+                        expiry_days=7
+                    )
+                    
+                    if success:
+                        # Send verification email
+                        email_sent, email_message = send_invitation_email(
                             email=reg_email,
-                            job_title=reg_job_title,
-                            job_level=reg_job_level,
-                            department=reg_department,
-                            manager_id=manager_id,
-                            organization_id=
-                            organization_id  # Link to organization
+                            token=token,
+                            name=reg_name,
+                            organization_name=org_name if 'org_name' in locals() else None
                         )
-
-                        if employee_success:
-                            # Automatically log in the new user
-                            st.session_state.authenticated = True
-                            st.session_state.username = reg_username
-                            st.session_state.user_role = "employee"
-                            st.session_state.employee_id = employee_id
-
-                            # Set the organization properly
-                            if organization_id:
-                                # Get the organization name
-                                from data_manager import get_organization
-                                org_data = get_organization(organization_id)
-                                if org_data is not None:
-                                    # Set both organization ID and name
-                                    st.session_state.organization_id = int(
-                                        organization_id)
-                                    st.session_state.organization_name = org_data.get(
-                                        "name", "")
-                                    st.session_state.organization_selected = True
-
-                            st.success(
-                                "Registration successful! You've been automatically logged in."
-                            )
-                            st.rerun()
+                        
+                        if email_sent:
+                            st.success(f"Verification email sent to {reg_email}. Please check your inbox to complete registration.")
+                            
+                            # Also display the invitation link as fallback
+                            base_url = 'https://skilltracker.replit.app'
+                            invite_url = f"{base_url}/?token={token}"
+                            st.markdown(f"If you don't receive the email, you can use this link: [Accept Invitation]({invite_url})")
+                            
+                            # Skip automatic login since verification is required
+                            st.stop()
                         else:
-                            st.error(
-                                f"Failed to create employee record: {employee_message}"
-                            )
+                            # If email fails, proceed with direct registration but show the error
+                            st.warning(f"Failed to send verification email: {email_message}")
+                            st.warning("You can continue with direct registration.")
+                            
+                            # Create user account with admin role
+                            user_success, user_message = add_user(
+                                username=reg_username,
+                                password=reg_password,
+                                role="admin",  # Admin role for direct registrations
+                                name=reg_name,
+                                email=reg_email)
+                            
+                            if user_success:
+                                # Create employee record with organization (minimal info)
+                                employee_success, employee_message, employee_id = add_employee(
+                                    name=reg_name,
+                                    email=reg_email,
+                                    job_title="Admin",  # Default job title
+                                    job_level="",
+                                    department="",
+                                    manager_id=None,
+                                    organization_id=organization_id  # Link to organization
+                                )
+                                
+                                if employee_success:
+                                    # Automatically log in the new user
+                                    st.session_state.authenticated = True
+                                    st.session_state.username = reg_username
+                                    st.session_state.user_role = "admin"
+                                    st.session_state.employee_id = employee_id
+                                    
+                                    # Set the organization properly
+                                    if organization_id:
+                                        # Get the organization name
+                                        from data_manager import get_organization
+                                        org_data = get_organization(organization_id)
+                                        if org_data is not None:
+                                            # Set both organization ID and name
+                                            st.session_state.organization_id = int(organization_id)
+                                            st.session_state.organization_name = org_data.get("name", "")
+                                            st.session_state.organization_selected = True
+                                    
+                                    st.success(
+                                        "Registration successful! You've been automatically logged in. "
+                                        "You will be redirected to Organization Management."
+                                    )
+                                    # Set the flag for redirection to Organization Management
+                                    st.session_state.redirect_to_org_management = True
+                                    st.rerun()
+                                else:
+                                    st.error("Failed to create employee record")
+                            else:
+                                st.error("Failed to create user account")
                     else:
-                        st.error(
-                            f"Failed to create user account: {user_message}")
+                        st.error(f"Failed to create invitation: {message}")
+                        # Fallback to direct registration
+                        user_success, user_message = add_user(
+                            username=reg_username,
+                            password=reg_password,
+                            role="admin",  # Admin role for direct registrations
+                            name=reg_name,
+                            email=reg_email)
+                        
+                        if user_success:
+                            # Create employee record with organization (minimal info)
+                            employee_success, employee_message, employee_id = add_employee(
+                                name=reg_name,
+                                email=reg_email,
+                                job_title="Admin",  # Default job title
+                                job_level="",
+                                department="",
+                                manager_id=None,
+                                organization_id=organization_id  # Link to organization
+                            )
+                            
+                            if employee_success:
+                                # Automatically log in the new user
+                                st.session_state.authenticated = True
+                                st.session_state.username = reg_username
+                                st.session_state.user_role = "admin"
+                                st.session_state.employee_id = employee_id
+
+                                # Set the organization properly
+                                if organization_id:
+                                    # Get the organization name
+                                    from data_manager import get_organization
+                                    org_data = get_organization(organization_id)
+                                    if org_data is not None:
+                                        # Set both organization ID and name
+                                        st.session_state.organization_id = int(
+                                            organization_id)
+                                        st.session_state.organization_name = org_data.get(
+                                            "name", "")
+                                        st.session_state.organization_selected = True
+
+                                st.success(
+                                    "Registration successful! You've been automatically logged in. "
+                                    "You will be redirected to Organization Management."
+                                )
+                                # Set the flag for redirection to Organization Management
+                                st.session_state.redirect_to_org_management = True
+                                st.rerun()
+                            else:
+                                st.error("Failed to create employee record")
+                        else:
+                            st.error("Failed to create user account")
 
 
 # Function to hide pages based on user role
@@ -780,5 +824,12 @@ elif not st.session_state.get("organization_selected", False):
     # No navigation - removed as requested
     display_organization_selector()
 else:
-    # No navigation - removed as requested
-    main_app()
+    # Check if we need to redirect to Organization Management
+    if st.session_state.get("redirect_to_org_management", False) and st.session_state.user_role == "admin":
+        # Clear the flag
+        st.session_state.redirect_to_org_management = False
+        # Redirect to Organization Management page
+        st.switch_page("pages/06_Organization_Management.py")
+    else:
+        # No navigation - removed as requested
+        main_app()
