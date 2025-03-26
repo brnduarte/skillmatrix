@@ -36,7 +36,7 @@ button[kind="header"] {
 
 /* Custom styles for buttons using the color scheme */
 .stButton > button[type="primary"] {
-  background-color: #0f2b3d !important;
+  background-color: #0f2b3d;
   color: #f5f0d2;
   border: none;
   border-radius: 4px;
@@ -233,10 +233,4 @@ div.stContainer, [data-testid="stAppViewContainer"] {
 .stButton > button[type="secondary"]:hover {
   background-color: #f2bc54 !important;
   color: #0f2b3d;
-}
-
-/* Style for navigation pills in sidebar */
-.st-emotion-cache-pi3sxg {
-  background-color: rgb(15, 43, 61) !important;
-  border-color: rgb(15, 43, 61) !important;
 }

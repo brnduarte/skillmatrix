@@ -284,7 +284,7 @@ def display_login():
 
             col1, col2 = st.columns([1, 1])
             with col1:
-                if st.button("Login", key="login_button", use_container_width=True):
+                if st.button("Login", type="primary", key="login_button", use_container_width=True):
                     if authenticate_user(username, password):
                         st.session_state.authenticated = True
                         st.session_state.username = username
