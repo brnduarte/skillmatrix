@@ -377,32 +377,30 @@ with tab4:
             
             inv_role = st.selectbox("User Role", options=user_roles, key="inv_role")
             
-            # Get organizations for dropdown
-            from data_manager import get_organizations
-            orgs_df = get_organizations()
+            # Get organizations for dropdown - filter to show only admin's organization
+            from data_manager import get_organizations, get_user_organizations
+            
+            # Get only organizations the admin has access to
+            orgs_df = get_user_organizations(st.session_state.username)
+            
             if not orgs_df.empty:
                 # Ensure organization_id is properly formatted as a string
                 orgs_df["organization_id"] = orgs_df["organization_id"].apply(lambda x: str(int(float(x))) if pd.notnull(x) else "")
                 org_options = list(zip(orgs_df["organization_id"], orgs_df["name"]))
                 
-                # If current organization is set, pre-select it
+                # Always select the admin's organization by default
                 default_index = 0
-                if current_org_id:
-                    for i, (org_id, _) in enumerate(org_options):
-                        if str(org_id) == str(current_org_id):
-                            default_index = i
-                            break
+                
+                inv_organization = st.selectbox(
+                    "Organization", 
+                    options=org_options, 
+                    format_func=lambda x: x[1], 
+                    index=default_index,
+                    key="inv_org_id"
+                )
             else:
-                org_options = []
-                default_index = 0
-            
-            inv_organization = st.selectbox(
-                "Organization", 
-                options=org_options, 
-                format_func=lambda x: x[1], 
-                index=default_index,
-                key="inv_org_id"
-            )
+                st.error("No organizations found. Please create an organization first.")
+                return
             
             send_button = st.form_submit_button(label="Send Invitation")
             
@@ -412,18 +410,16 @@ with tab4:
                     st.error("Please fill in all required fields.")
                 elif "@" not in inv_email or "." not in inv_email:
                     st.error("Please enter a valid email address.")
+                elif not inv_organization:
+                    st.error("Please select an organization.")
                 else:
                     try:
-                        # Extract organization_id (first element of the tuple)
-                        organization_id = None
-                        if inv_organization and inv_organization[0]:
-                            # Handle potential float strings like '1.0'
-                            try:
-                                # First convert to float, then to int to handle '1.0' values
-                                organization_id = int(float(inv_organization[0]))
-                            except (ValueError, TypeError):
-                                st.error(f"Invalid organization ID format: {inv_organization[0]}")
-                                organization_id = None
+                        # Extract and validate organization_id
+                        organization_id = int(float(inv_organization[0])) if inv_organization and inv_organization[0] else None
+                        
+                        if not organization_id:
+                            st.error("Invalid organization selected.")
+                            return
                         
                         # Create invitation
                         inv_success, inv_message, token = create_invitation(
