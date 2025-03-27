@@ -169,28 +169,19 @@ def handle_invitation():
                                     # Automatically log in the new user
                                     st.session_state.authenticated = True
                                     st.session_state.username = username
-                                    # Always assign admin role regardless of what's in the invitation
-                                    st.session_state.user_role = invitation.get("role", "admin")
+                                    # Always set as admin for new registrations
+                                    st.session_state.user_role = "admin"
                                     st.session_state.employee_id = employee_id
 
-                                    # Set the organization properly
-                                    if organization_id:
-                                        # Get the organization name
-                                        from data_manager import get_organization
-                                        org_data = get_organization(
-                                            organization_id)
-                                        if org_data is not None:
-                                            # Set both organization ID and name
-                                            st.session_state.organization_id = int(
-                                                organization_id)
-                                            st.session_state.organization_name = org_data.get(
-                                                "name", "")
-                                            st.session_state.organization_selected = True
+                                    # Don't set organization - let user create their own
+                                    st.session_state.organization_id = None
+                                    st.session_state.organization_name = None
+                                    st.session_state.organization_selected = False
 
-                                    # Always redirect to Organization Management
+                                    # Redirect to Organization Management to create new org
                                     st.success(
-                                        "Invitation accepted! You've been automatically logged in. "
-                                        "You will be redirected to Organization Management."
+                                        "Invitation accepted! You've been automatically logged in as an admin. "
+                                        "Please create your organization to get started."
                                     )
                                     # Set special session flag to redirect to Organization Management
                                     st.session_state.redirect_to_org_management = True
