@@ -203,21 +203,35 @@ def update_invitation_status(token, status):
     Returns:
         Boolean indicating success
     """
+    print(f"Updating invitation status: token={token}, status={status}")
+    
     if not os.path.exists(INVITATIONS_FILE):
+        print(f"Invitations file not found: {INVITATIONS_FILE}")
         return False
     
     invitations_df = pd.read_csv(INVITATIONS_FILE)
     
-    if invitations_df.empty or "token" not in invitations_df.columns:
+    if invitations_df.empty:
+        print("Invitations dataframe is empty")
         return False
     
-    if token not in invitations_df["token"].values:
+    if "token" not in invitations_df.columns:
+        print("Token column not found in invitations file")
         return False
     
-    idx = invitations_df[invitations_df["token"] == token].index[0]
+    # Convert all tokens to string for comparison
+    invitations_df["token"] = invitations_df["token"].astype(str)
+    token_str = str(token)
+    
+    if token_str not in invitations_df["token"].values:
+        print(f"Token {token_str} not found in available tokens. Available tokens: {invitations_df['token'].tolist()}")
+        return False
+    
+    idx = invitations_df[invitations_df["token"] == token_str].index[0]
     invitations_df.at[idx, "status"] = status
     
     invitations_df.to_csv(INVITATIONS_FILE, index=False)
+    print(f"Updated invitation status to: {status}")
     return True
 
 def verify_invitation(token):
@@ -230,21 +244,38 @@ def verify_invitation(token):
     Returns:
         Tuple of (is_valid, invitation_data) where invitation_data is None if invalid
     """
+    print(f"Verifying token: {token}")
+    
     if not os.path.exists(INVITATIONS_FILE):
+        print(f"Invitations file not found: {INVITATIONS_FILE}")
         return False, None
     
     invitations_df = pd.read_csv(INVITATIONS_FILE)
     
-    if invitations_df.empty or "token" not in invitations_df.columns:
+    if invitations_df.empty:
+        print("Invitations dataframe is empty")
         return False, None
     
-    if token not in invitations_df["token"].values:
+    if "token" not in invitations_df.columns:
+        print("Token column not found in invitations file")
         return False, None
     
-    invitation = invitations_df[invitations_df["token"] == token].iloc[0]
+    # Convert all tokens to string for comparison
+    invitations_df["token"] = invitations_df["token"].astype(str)
+    token_str = str(token)
+    
+    print(f"Available tokens: {invitations_df['token'].tolist()}")
+    
+    if token_str not in invitations_df["token"].values:
+        print(f"Token {token_str} not found in available tokens")
+        return False, None
+    
+    invitation = invitations_df[invitations_df["token"] == token_str].iloc[0]
+    print(f"Found invitation: {invitation.to_dict()}")
     
     # Check if already accepted
     if invitation["status"] == "accepted":
+        print("Invitation already accepted")
         return False, None
     
     # Check if expired
@@ -252,6 +283,7 @@ def verify_invitation(token):
     expires_at = datetime.strptime(invitation["expires_at"], "%Y-%m-%d %H:%M:%S")
     
     if now > expires_at:
+        print("Invitation expired")
         # Update status to expired
         update_invitation_status(token, "expired")
         return False, None
@@ -263,6 +295,7 @@ def verify_invitation(token):
     if pd.isna(invitation_dict.get('organization_id')) or invitation_dict.get('organization_id') == '':
         invitation_dict['organization_id'] = None
     
+    print(f"Verified invitation: {invitation_dict}")
     return True, invitation_dict
 
 def mark_invitation_accepted(token):

@@ -43,13 +43,56 @@ def handle_invitation():
     """Handle invitation token from URL query parameters"""
     # Use the non-experimental API
     if "token" in st.query_params:
-        token = st.query_params["token"]
+        token_raw = st.query_params["token"]
         
-        # Show token for debugging
-        st.info(f"Processing invitation token. Please wait...")
+        # Clean the token and ensure it's a string
+        token = str(token_raw).strip()
+        
+        # Show more details for debugging
+        st.info(f"Processing invitation token: {token}")
+        st.write("Raw token from URL:", token_raw)
+        st.write("Cleaned token:", token)
+        st.write("Token type:", type(token).__name__)
+        st.write("Full query params:", st.experimental_get_query_params())
+        
+        # Debug: Let's check if this token exists in the invitations file
+        import pandas as pd
+        import os
+        
+        invitations_file = "invitations.csv"
+        if os.path.exists(invitations_file):
+            try:
+                invitations_df = pd.read_csv(invitations_file)
+                if not invitations_df.empty:
+                    # Convert all tokens to string for consistent comparison
+                    invitations_df["token"] = invitations_df["token"].astype(str)
+                    token_str = str(token).strip()
+                    
+                    st.write(f"Checking token '{token_str}' against database")
+                    
+                    if token_str in invitations_df["token"].values:
+                        st.success(f"Found token in database!")
+                        # Show the row for debugging
+                        token_row = invitations_df[invitations_df["token"] == token_str].iloc[0]
+                        st.write("Invitation details:", token_row.to_dict())
+                    else:
+                        st.error(f"Token not found in invitation database! Available tokens: {invitations_df['token'].tolist()}")
+                else:
+                    st.error("Invitations database is empty!")
+            except Exception as e:
+                st.error(f"Error reading invitations file: {str(e)}")
+        else:
+            st.error(f"Invitations file not found at: {invitations_file}")
+        
+        # Additional token validation logs
+        st.write("Token validation process starting...")
+        token_to_verify = str(token).strip()
+        st.write(f"Cleaned token for verification: '{token_to_verify}'")
         
         # Verify the token
-        is_valid, invitation = verify_invitation(token)
+        is_valid, invitation = verify_invitation(token_to_verify)
+        
+        st.write(f"Verification result: Valid={is_valid}, Data exists={invitation is not None}")
         
         if is_valid and invitation:
             st.success(f"Welcome! Your invitation is valid.")
@@ -145,8 +188,10 @@ def handle_invitation():
                                 organization_id=organization_id)
 
                             if employee_success:
-                                # Mark invitation as accepted
-                                mark_invitation_accepted(token)
+                                # Mark invitation as accepted - use the cleaned token_to_verify
+                                st.write(f"Marking token {token_to_verify} as accepted...")
+                                acceptance_result = mark_invitation_accepted(token_to_verify)
+                                st.write(f"Acceptance update result: {acceptance_result}")
 
                                 # Automatically log in the new user
                                 st.session_state.authenticated = True
@@ -208,12 +253,29 @@ def handle_invitation():
                 3. After registering, use the direct link shown on the registration confirmation page
                 """)
                 
-                # Check if the token exists in invitations.csv
+                # Check if the token exists in invitations.csv with proper string conversion
                 from email_manager import ensure_invitations_file
                 invitations_df = ensure_invitations_file()
-                if token in invitations_df["token"].values:
-                    invitation_row = invitations_df[invitations_df["token"] == token].iloc[0]
+                # Convert all tokens to string for reliable comparison
+                invitations_df["token"] = invitations_df["token"].astype(str)
+                token_str = str(token).strip()
+                
+                st.write(f"Looking for token '{token_str}' in database...")
+                st.write(f"Database tokens: {invitations_df['token'].tolist()}")
+                
+                if token_str in invitations_df["token"].values:
+                    invitation_row = invitations_df[invitations_df["token"] == token_str].iloc[0]
                     st.info(f"Found invitation: Status = {invitation_row['status']}, Expires at = {invitation_row['expires_at']}")
+                    
+                    # Show complete invitation details for debugging
+                    st.write("Complete invitation details:", invitation_row.to_dict())
+                    
+                    # Check expiration
+                    import datetime
+                    now = datetime.datetime.now()
+                    expires_at = datetime.datetime.strptime(invitation_row["expires_at"], "%Y-%m-%d %H:%M:%S")
+                    is_expired = now > expires_at
+                    st.write(f"Current time: {now}, Expiration time: {expires_at}, Is expired: {is_expired}")
                 else:
                     st.warning("Token not found in invitation database.")
             # Clear query params
