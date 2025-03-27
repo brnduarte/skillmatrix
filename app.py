@@ -819,6 +819,10 @@ def display_organization_selector():
 
 # Top navigation is already imported at the top of the file
 
+# Delete LearnUpon organization data
+from data_manager import delete_organization
+success, message = delete_organization(1, force_delete=True)
+
 # Check for logout in query parameters
 if "logout" in st.query_params and st.query_params["logout"] == "true":
     # Clear session state
