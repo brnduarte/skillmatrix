@@ -199,12 +199,15 @@ def handle_invitation():
                                             st.session_state.organization_selected = False
                                             st.session_state.redirect_to_org_management = True
                                             success_msg = "Registration successful! Please create your organization to get started."
+                                        elif role in ["employee", "manager"]:
+                                            st.error("Invalid invitation: Organization required for employee/manager roles.")
+                                            st.stop()
                                         else:
-                                            st.error("Invalid invitation: No organization specified for non-admin user.")
+                                            st.error("Invalid role specified.")
                                             st.stop()
                                     else:
                                         # Self-registered users are always admins
-                                        st.session_state.user_role = "admin"
+                                        st.session_state.user_role = "admin"in"
                                         st.session_state.employee_id = employee_id
                                         st.session_state.organization_id = None
                                         st.session_state.organization_name = None
