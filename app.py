@@ -327,55 +327,10 @@ def display_login():
                     # No manager ID needed as all users from registration are admins
                     manager_id = None
 
-                    # Add organization selection
-                    st.subheader("Organization Information")
-
-                    from data_manager import get_organizations, add_organization
-                    orgs_df = get_organizations()
-
-                    org_tab1, org_tab2 = st.tabs([
-                        "Select Existing Organization",
-                        "Create New Organization"
-                    ])
+                    # Skip organization selection during initial registration
+                    # Organization setup will happen after email verification
+                    # We'll set organization_id to None for now
                     organization_id = None
-
-                    with org_tab1:
-                        if not orgs_df.empty:
-                            org_options = list(
-                                zip(orgs_df["organization_id"].astype(str),
-                                    orgs_df["name"]))
-                            selected_org = st.selectbox(
-                                "Select an organization",
-                                options=org_options,
-                                format_func=lambda x: x[1],
-                                key="org_select")
-                            if selected_org:
-                                organization_id = int(selected_org[0])
-                        else:
-                            st.warning(
-                                "No organizations found. Please create a new organization."
-                            )
-
-                    with org_tab2:
-                        org_name = st.text_input("Organization Name",
-                                                 key="new_org_name")
-                        create_org = st.button("Create New Organization",
-                                               key="create_org")
-
-                        if create_org and org_name:
-                            # Add new organization
-                            org_success, org_message, org_id = add_organization(
-                                org_name, reg_username)
-
-                            if org_success:
-                                st.success(
-                                    f"Organization '{org_name}' created successfully!"
-                                )
-                                organization_id = org_id
-                            else:
-                                st.error(
-                                    f"Failed to create organization: {org_message}"
-                                )
 
                     # First, create an invitation token and send verification email
                     from email_manager import create_invitation, send_invitation_email
@@ -395,7 +350,7 @@ def display_login():
                             email=reg_email,
                             token=token,
                             name=reg_name,
-                            organization_name=org_name if 'org_name' in locals() else None
+                            organization_name=None  # Organization will be set after email confirmation
                         )
                         
                         if email_sent:
