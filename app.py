@@ -133,13 +133,16 @@ def handle_invitation():
 
                             # Get organization ID from invitation
                             organization_id = None
-                            if invitation.get("organization_id") is not None and pd.notnull(invitation["organization_id"]) and invitation["organization_id"] != '':
-                                # Convert to int for consistency
+                            if invitation.get("organization_id"):
                                 try:
-                                    organization_id = int(float(invitation["organization_id"]))
+                                    # Handle various formats (int, float, string)
+                                    org_id_raw = invitation["organization_id"]
+                                    if isinstance(org_id_raw, (int, float)):
+                                        organization_id = int(org_id_raw)
+                                    elif isinstance(org_id_raw, str) and org_id_raw.strip():
+                                        organization_id = int(float(org_id_raw))
                                 except (ValueError, TypeError):
-                                    print(f"Invalid organization ID in invitation data: {invitation.get('organization_id')}")
-                                    # Continue with None as organization_id
+                                    print(f"Invalid organization ID in invitation: {invitation.get('organization_id')}")
 
                             # Create user account first
                             user_success, user_message = add_user(
