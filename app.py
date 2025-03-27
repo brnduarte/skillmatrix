@@ -170,6 +170,9 @@ def handle_invitation():
                                     st.session_state.authenticated = True
                                     st.session_state.username = username
                                     
+                                    # Initialize success message
+                                    success_msg = ""
+                                    
                                     # Check if this is an invited admin or self-registered
                                     if invitation and invitation.get("role") == "admin":
                                         # Invited admin - can join existing organization
@@ -188,6 +191,8 @@ def handle_invitation():
                                             else:
                                                 st.error("Error retrieving organization information.")
                                                 st.stop()
+                                        else:
+                                            success_msg = "Invitation accepted! You've been registered as an admin."
                                     else:
                                         # Self-registered admin - must create new organization
                                         st.session_state.user_role = "admin"
