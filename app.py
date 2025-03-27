@@ -799,10 +799,9 @@ def display_organization_selector():
                     st.session_state.organization_id = org_id
                     st.session_state.organization_name = org_name
                     st.session_state.organization_selected = True
+                    
+                    # Force the page to reload with new state
                     st.rerun()
-
-                    # Store the organization ID in session state
-                    st.session_state.organization_id = org_id
                     st.session_state.organization_name = org_name
                     st.session_state.organization_selected = True
                     st.rerun()
