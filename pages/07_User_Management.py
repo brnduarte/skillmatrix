@@ -377,32 +377,47 @@ with tab4:
             
             inv_role = st.selectbox("User Role", options=user_roles, key="inv_role")
             
-            # Get organizations for dropdown
-            from data_manager import get_organizations
-            orgs_df = get_organizations()
-            if not orgs_df.empty:
-                # Ensure organization_id is properly formatted as a string
-                orgs_df["organization_id"] = orgs_df["organization_id"].apply(lambda x: str(int(float(x))) if pd.notnull(x) else "")
-                org_options = list(zip(orgs_df["organization_id"], orgs_df["name"]))
-                
-                # If current organization is set, pre-select it
-                default_index = 0
-                if current_org_id:
-                    for i, (org_id, _) in enumerate(org_options):
-                        if str(org_id) == str(current_org_id):
-                            default_index = i
-                            break
-            else:
-                org_options = []
-                default_index = 0
+            # Get current organization info
+            from data_manager import get_organization
+            current_org = None
+            if current_org_id:
+                current_org = get_organization(current_org_id)
             
-            inv_organization = st.selectbox(
-                "Organization", 
-                options=org_options, 
-                format_func=lambda x: x[1], 
-                index=default_index,
-                key="inv_org_id"
-            )
+            # For employee/manager roles, organization is required and locked to current org
+            if inv_role in ["employee", "manager"]:
+                if current_org:
+                    st.text_input("Organization", value=current_org["name"], disabled=True)
+                    inv_organization = (str(current_org_id), current_org["name"])
+                else:
+                    st.error("You must select an organization before inviting employees/managers")
+                    st.stop()
+            else:
+                # For admin role, organization is optional
+                # Get organizations for dropdown
+                from data_manager import get_organizations
+                orgs_df = get_organizations()
+                if not orgs_df.empty:
+                    orgs_df["organization_id"] = orgs_df["organization_id"].apply(lambda x: str(int(float(x))) if pd.notnull(x) else "")
+                    org_options = [("", "None")] + list(zip(orgs_df["organization_id"], orgs_df["name"]))
+                    
+                    # If current organization is set, pre-select it
+                    default_index = 0
+                    if current_org_id:
+                        for i, (org_id, _) in enumerate(org_options):
+                            if str(org_id) == str(current_org_id):
+                                default_index = i
+                                break
+                else:
+                    org_options = [("", "None")]
+                    default_index = 0
+                
+                inv_organization = st.selectbox(
+                    "Organization (Optional for Admin)", 
+                    options=org_options, 
+                    format_func=lambda x: x[1], 
+                    index=default_index,
+                    key="inv_org_id"
+                )
             
             send_button = st.form_submit_button(label="Send Invitation")
             
