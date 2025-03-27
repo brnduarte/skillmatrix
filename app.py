@@ -1,5 +1,10 @@
 import streamlit as st
 
+# Server configuration
+import os
+os.environ['STREAMLIT_SERVER_PORT'] = '5000'
+os.environ['STREAMLIT_SERVER_ADDRESS'] = '0.0.0.0'
+
 # Page configuration must be the first Streamlit command
 st.set_page_config(page_title="Dashboard - Skill Matrix & Competency Framework",
                    page_icon="📊",
