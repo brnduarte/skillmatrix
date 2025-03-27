@@ -317,7 +317,7 @@ def display_login():
         )
         
         login_tab1, login_tab2 = st.tabs(
-            ["Account Login", "Register"])
+            ["Account Login", "Sign in"])
 
         with login_tab1:
             username = st.text_input("Username", key="username_login", placeholder="Enter your username")
