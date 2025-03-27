@@ -204,8 +204,8 @@ def handle_invitation():
                                         success_msg = "Registration successful! You've been automatically logged in as an admin. Please create your organization to get started."
 
                                     st.success(success_msg)
-                                    # Set redirect flag based on role
-                                    st.session_state.redirect_to_org_management = redirect_flag
+                                    # Set redirect flag for admin users
+                                    st.session_state.redirect_to_org_management = (invitation.get("role") == "admin")
 
                                     # Clear invitation data and params
                                     for key in list(st.session_state.keys()):
