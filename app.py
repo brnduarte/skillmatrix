@@ -210,7 +210,7 @@ def handle_invitation():
                                             st.stop()
                                     else:
                                         # Self-registered users are always admins
-                                        st.session_state.user_role = "admin"in"
+                                        st.session_state.user_role = "admin"
                                         st.session_state.employee_id = employee_id
                                         st.session_state.organization_id = None
                                         st.session_state.organization_name = None
