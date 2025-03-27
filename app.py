@@ -173,13 +173,14 @@ def handle_invitation():
                                     # Initialize success message
                                     success_msg = ""
                                     
-                                    # Check if this is an invited admin or self-registered
-                                    if invitation and invitation.get("role") == "admin":
-                                        # Invited admin - can join existing organization
-                                        st.session_state.user_role = "admin"
+                                    # Set user role and handle organization assignment
+                                    if invitation:
+                                        # Use role from invitation
+                                        role = invitation.get("role", "employee")
+                                        st.session_state.user_role = role
                                         st.session_state.employee_id = employee_id
                                         
-                                        # Set organization if provided in invitation
+                                        # Handle organization assignment
                                         if invitation.get("organization_id"):
                                             org_id = int(float(invitation["organization_id"]))
                                             org_data = get_organization(org_id)
@@ -187,14 +188,22 @@ def handle_invitation():
                                                 st.session_state.organization_id = org_id
                                                 st.session_state.organization_name = org_data.get("name", "")
                                                 st.session_state.organization_selected = True
-                                                success_msg = "Invitation accepted! You've been added to the organization as an admin."
+                                                success_msg = f"Invitation accepted! You've been added to the organization as a {role}."
                                             else:
                                                 st.error("Error retrieving organization information.")
                                                 st.stop()
+                                        elif role == "admin":
+                                            # Only admins without organization should create one
+                                            st.session_state.organization_id = None
+                                            st.session_state.organization_name = None
+                                            st.session_state.organization_selected = False
+                                            st.session_state.redirect_to_org_management = True
+                                            success_msg = "Registration successful! Please create your organization to get started."
                                         else:
-                                            success_msg = "Invitation accepted! You've been registered as an admin."
+                                            st.error("Invalid invitation: No organization specified for non-admin user.")
+                                            st.stop()
                                     else:
-                                        # Self-registered admin - must create new organization
+                                        # Self-registered users are always admins
                                         st.session_state.user_role = "admin"
                                         st.session_state.employee_id = employee_id
                                         st.session_state.organization_id = None
