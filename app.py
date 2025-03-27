@@ -794,6 +794,12 @@ def display_organization_selector():
                     # Update schemas to include organization_id fields
                     from data_manager import update_schema_for_organizations
                     update_results = update_schema_for_organizations()
+                    
+                    # Update session state with new organization
+                    st.session_state.organization_id = org_id
+                    st.session_state.organization_name = org_name
+                    st.session_state.organization_selected = True
+                    st.rerun()s()
 
                     # Store the organization ID in session state
                     st.session_state.organization_id = org_id
