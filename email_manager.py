@@ -246,15 +246,15 @@ def verify_invitation(token):
     """
     print(f"Verifying token: {token}")
     
-    # Validate token format
-    if not token or not isinstance(token, str):
-        print(f"Invalid token format. Token: {token}, Type: {type(token)}")
+    # Validate token format and convert to string
+    try:
+        token = str(token).strip() if token else None
+        if not token:
+            print("Token is empty or None")
+            return False, None
+    except Exception as e:
+        print(f"Error converting token to string: {e}")
         return False, None
-        
-    # Make sure token is properly cleaned
-    token = token.strip()
-    if len(token) != 32:  # Our tokens should be 32 chars
-        print(f"Warning: Token length is {len(token)}, expected 32 characters")
     
     if not os.path.exists(INVITATIONS_FILE):
         print(f"Invitations file not found: {INVITATIONS_FILE}")
