@@ -377,19 +377,31 @@ with tab4:
             
             inv_role = st.selectbox("User Role", options=user_roles, key="inv_role")
             
-            # Get current organization info
-            from data_manager import get_organization
+            # Get current organization info for the admin
+            from data_manager import get_organization, get_user_organizations
             current_org = None
-            if current_org_id:
-                current_org = get_organization(current_org_id)
+            org_id = None
+            
+            # Get organizations for current admin
+            admin_orgs = get_user_organizations(st.session_state.username)
+            
+            if not admin_orgs.empty:
+                # If current_org_id is set, use that
+                if current_org_id and any(admin_orgs["organization_id"].astype(int) == int(current_org_id)):
+                    org_id = current_org_id
+                    current_org = get_organization(org_id)
+                else:
+                    # Otherwise use first organization
+                    org_id = int(admin_orgs.iloc[0]["organization_id"])
+                    current_org = admin_orgs.iloc[0]
             
             # For employee/manager roles, organization is required and locked to current org
             if inv_role in ["employee", "manager"]:
-                if current_org:
+                if current_org is not None:
                     st.text_input("Organization", value=current_org["name"], disabled=True)
-                    inv_organization = (str(current_org_id), current_org["name"])
+                    inv_organization = (str(org_id), current_org["name"])
                 else:
-                    st.error("You must select an organization before inviting employees/managers")
+                    st.error("You must create an organization before inviting employees/managers")
                     st.stop()
             else:
                 # For admin role, organization is optional
