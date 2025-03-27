@@ -246,16 +246,6 @@ def verify_invitation(token):
     """
     print(f"Verifying token: {token}")
     
-    # Validate token format
-    if not token or not isinstance(token, str):
-        print(f"Invalid token format. Token: {token}, Type: {type(token)}")
-        return False, None
-        
-    # Make sure token is properly cleaned
-    token = token.strip()
-    if len(token) != 32:  # Our tokens should be 32 chars
-        print(f"Warning: Token length is {len(token)}, expected 32 characters")
-    
     if not os.path.exists(INVITATIONS_FILE):
         print(f"Invitations file not found: {INVITATIONS_FILE}")
         return False, None
@@ -272,18 +262,12 @@ def verify_invitation(token):
     
     # Convert all tokens to string for comparison
     invitations_df["token"] = invitations_df["token"].astype(str)
-    token_str = str(token).strip()
+    token_str = str(token)
     
-    # Print the first few chars of each token for debugging
-    token_previews = [f"{t[:5]}...{t[-5:]}" for t in invitations_df["token"].tolist()]
-    print(f"Available token previews: {token_previews}")
+    print(f"Available tokens: {invitations_df['token'].tolist()}")
     
     if token_str not in invitations_df["token"].values:
         print(f"Token {token_str} not found in available tokens")
-        # Try to find near matches (useful for debugging)
-        for db_token in invitations_df["token"].values:
-            if token_str in db_token or db_token in token_str:
-                print(f"Found similar token: {db_token}")
         return False, None
     
     invitation = invitations_df[invitations_df["token"] == token_str].iloc[0]
@@ -294,28 +278,15 @@ def verify_invitation(token):
         print("Invitation already accepted")
         return False, None
     
-    # Check if expired - but with a grace period of 1 day
-    try:
-        now = datetime.now()
-        expires_at = datetime.strptime(invitation["expires_at"], "%Y-%m-%d %H:%M:%S")
-        # Add a 24-hour grace period
-        expires_with_grace = expires_at + timedelta(days=1)
-        
-        print(f"Current time: {now}")
-        print(f"Expiration time: {expires_at}")
-        print(f"Expiration with grace period: {expires_with_grace}")
-        
-        if now > expires_with_grace:
-            print(f"Invitation expired (even with grace period). Current: {now}, Expires: {expires_at}")
-            # Update status to expired
-            update_invitation_status(token, "expired")
-            return False, None
-        elif now > expires_at:
-            print(f"Invitation technically expired but within grace period. Will allow.")
-            # Continue processing - we're in the grace period
-    except Exception as e:
-        # If there's any error with date parsing, be generous and continue
-        print(f"Error checking expiration date: {str(e)}. Will proceed with validation.")
+    # Check if expired
+    now = datetime.now()
+    expires_at = datetime.strptime(invitation["expires_at"], "%Y-%m-%d %H:%M:%S")
+    
+    if now > expires_at:
+        print("Invitation expired")
+        # Update status to expired
+        update_invitation_status(token, "expired")
+        return False, None
     
     # Convert to dictionary and handle organization_id specially
     invitation_dict = invitation.to_dict()

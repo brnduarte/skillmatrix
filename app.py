@@ -48,238 +48,207 @@ def handle_invitation():
         # Clean the token and ensure it's a string
         token = str(token_raw).strip()
         
-        # Show more details for debugging
-        st.info(f"Processing invitation token: {token}")
-        st.write("Raw token from URL:", token_raw)
-        st.write("Cleaned token:", token)
-        st.write("Token type:", type(token).__name__)
-        st.write("Full query params:", st.experimental_get_query_params())
-        
-        # Debug: Let's check if this token exists in the invitations file
-        import pandas as pd
-        import os
-        
-        invitations_file = "invitations.csv"
-        if os.path.exists(invitations_file):
-            try:
-                invitations_df = pd.read_csv(invitations_file)
-                if not invitations_df.empty:
-                    # Convert all tokens to string for consistent comparison
-                    invitations_df["token"] = invitations_df["token"].astype(str)
-                    token_str = str(token).strip()
-                    
-                    st.write(f"Checking token '{token_str}' against database")
-                    
-                    if token_str in invitations_df["token"].values:
-                        st.success(f"Found token in database!")
-                        # Show the row for debugging
-                        token_row = invitations_df[invitations_df["token"] == token_str].iloc[0]
-                        st.write("Invitation details:", token_row.to_dict())
-                    else:
-                        st.error(f"Token not found in invitation database! Available tokens: {invitations_df['token'].tolist()}")
-                else:
-                    st.error("Invitations database is empty!")
-            except Exception as e:
-                st.error(f"Error reading invitations file: {str(e)}")
-        else:
-            st.error(f"Invitations file not found at: {invitations_file}")
-        
-        # Additional token validation logs
-        st.write("Token validation process starting...")
-        token_to_verify = str(token).strip()
-        st.write(f"Cleaned token for verification: '{token_to_verify}'")
-        
-        # Verify the token
-        is_valid, invitation = verify_invitation(token_to_verify)
-        
-        st.write(f"Verification result: Valid={is_valid}, Data exists={invitation is not None}")
-        
-        if is_valid and invitation:
-            st.success(f"Welcome! Your invitation is valid.")
+        # More subtle processing notification
+        with st.spinner("Processing your invitation..."):
+            # Process invitation token silently (log to console only)
+            print(f"Processing invitation token: {token}")
+            print(f"Raw token from URL: {token_raw}")
+            print(f"Cleaned token: {token}")
+            print(f"Token type: {type(token).__name__}")
+            
+            # Verify the token without showing all the debug info to user
+            token_to_verify = str(token).strip()
+            is_valid, invitation = verify_invitation(token_to_verify)
+            
+            print(f"Verification result: Valid={is_valid}, Data exists={invitation is not None}")
+            
+            if is_valid and invitation:
+                st.success(f"Welcome! Your invitation is valid.")
 
-            # Pre-fill registration form with invitation data
-            st.session_state.invitation_token = token
-            st.session_state.invitation_username = invitation.get(
-                "username", "")
-            st.session_state.invitation_email = invitation.get("email", "")
-            st.session_state.invitation_role = invitation.get(
-                "role", "employee")
-            st.session_state.invitation_organization_id = invitation.get(
-                "organization_id")
+                # Pre-fill registration form with invitation data
+                st.session_state.invitation_token = token
+                st.session_state.invitation_username = invitation.get(
+                    "username", "")
+                st.session_state.invitation_email = invitation.get("email", "")
+                st.session_state.invitation_role = invitation.get(
+                    "role", "employee")
+                st.session_state.invitation_organization_id = invitation.get(
+                    "organization_id")
 
-            # Show invitation acceptance form
-            with st.form(key="accept_invitation_form"):
-                st.subheader("Accept Invitation")
-                st.write(
-                    f"You've been invited to join the Skill Matrix platform with the username: **{invitation.get('username')}**"
-                )
+                # Show invitation acceptance form
+                with st.form(key="accept_invitation_form"):
+                    st.subheader("Accept Invitation")
+                    st.write(
+                        f"You've been invited to join the Skill Matrix platform with the username: **{invitation.get('username')}**"
+                    )
 
-                # Personal information
-                name = st.text_input("Full Name", key="inv_accept_name")
+                    # Personal information
+                    name = st.text_input("Full Name", key="inv_accept_name")
 
-                # Email is pre-filled and not editable
-                st.text_input("Email",
-                              value=invitation.get("email", ""),
-                              disabled=True)
+                    # Email is pre-filled and not editable
+                    st.text_input("Email",
+                                  value=invitation.get("email", ""),
+                                  disabled=True)
 
-                # Account setup
-                username = st.text_input("Username",
-                                         value=invitation.get("username", ""),
-                                         key="inv_accept_username")
-                password = st.text_input("Set Password",
-                                         type="password",
-                                         key="inv_accept_password")
-                confirm_password = st.text_input(
-                    "Confirm Password",
-                    type="password",
-                    key="inv_accept_confirm_password")
+                    # Account setup
+                    username = st.text_input("Username",
+                                             value=invitation.get("username", ""),
+                                             key="inv_accept_username")
+                    password = st.text_input("Set Password",
+                                             type="password",
+                                             key="inv_accept_password")
+                    confirm_password = st.text_input(
+                        "Confirm Password",
+                        type="password",
+                        key="inv_accept_confirm_password")
 
-                # Job information section removed for streamlined user experience
-                # All users coming from email invitations don't need to specify job details
-                job_title = "Admin"  # Default job title for invited users
-                job_level = ""  # Empty job level
-                department = ""  # Empty department
-                manager_id = ("", "None")  # Default - no manager
+                    # Job information section removed for streamlined user experience
+                    # All users coming from email invitations don't need to specify job details
+                    job_title = "Admin"  # Default job title for invited users
+                    job_level = ""  # Empty job level
+                    department = ""  # Empty department
+                    manager_id = ("", "None")  # Default - no manager
 
-                submit_button = st.form_submit_button(
-                    label="Accept Invitation")
+                    submit_button = st.form_submit_button(
+                        label="Accept Invitation")
 
-                if submit_button:
-                    # Validate form
-                    if not name or not username or not password:
-                        st.error("Please fill in all required fields")
-                    elif password != confirm_password:
-                        st.error("Passwords do not match")
-                    else:
-                        # Add user to database
-                        from data_manager import add_user, add_employee
+                    if submit_button:
+                        # Validate form
+                        if not name or not username or not password:
+                            st.error("Please fill in all required fields")
+                        elif password != confirm_password:
+                            st.error("Passwords do not match")
+                        else:
+                            # Add user to database
+                            from data_manager import add_user, add_employee
 
-                        # Extract manager ID (first element of the tuple)
-                        manager_id_value = manager_id[
-                            0] if manager_id and manager_id[0] else None
+                            # Extract manager ID (first element of the tuple)
+                            manager_id_value = manager_id[
+                                0] if manager_id and manager_id[0] else None
 
-                        # Get organization ID from invitation
-                        organization_id = None
-                        if invitation.get("organization_id") is not None and pd.notnull(invitation["organization_id"]) and invitation["organization_id"] != '':
-                            # Convert to int for consistency
-                            try:
-                                organization_id = int(float(invitation["organization_id"]))
-                            except (ValueError, TypeError):
-                                st.error(f"Invalid organization ID in invitation data")
-                                # Continue with None as organization_id
+                            # Get organization ID from invitation
+                            organization_id = None
+                            if invitation.get("organization_id") is not None and pd.notnull(invitation["organization_id"]) and invitation["organization_id"] != '':
+                                # Convert to int for consistency
+                                try:
+                                    organization_id = int(float(invitation["organization_id"]))
+                                except (ValueError, TypeError):
+                                    print(f"Invalid organization ID in invitation data: {invitation.get('organization_id')}")
+                                    # Continue with None as organization_id
 
-                        # Create user account first
-                        user_success, user_message = add_user(
-                            username=username,
-                            password=password,
-                            role=invitation.get("role", "employee"),
-                            name=name,
-                            email=invitation.get("email", ""))
-
-                        if user_success:
-                            # Create employee record with organization
-                            employee_success, employee_message, employee_id = add_employee(
+                            # Create user account first
+                            user_success, user_message = add_user(
+                                username=username,
+                                password=password,
+                                role=invitation.get("role", "employee"),
                                 name=name,
-                                email=invitation.get("email", ""),
-                                job_title=job_title,
-                                job_level=job_level,
-                                department=department,
-                                manager_id=manager_id_value,
-                                organization_id=organization_id)
+                                email=invitation.get("email", ""))
 
-                            if employee_success:
-                                # Mark invitation as accepted - use the cleaned token_to_verify
-                                st.write(f"Marking token {token_to_verify} as accepted...")
-                                acceptance_result = mark_invitation_accepted(token_to_verify)
-                                st.write(f"Acceptance update result: {acceptance_result}")
+                            if user_success:
+                                # Create employee record with organization
+                                employee_success, employee_message, employee_id = add_employee(
+                                    name=name,
+                                    email=invitation.get("email", ""),
+                                    job_title=job_title,
+                                    job_level=job_level,
+                                    department=department,
+                                    manager_id=manager_id_value,
+                                    organization_id=organization_id)
 
-                                # Automatically log in the new user
-                                st.session_state.authenticated = True
-                                st.session_state.username = username
-                                # Always assign admin role regardless of what's in the invitation
-                                st.session_state.user_role = "admin"
-                                st.session_state.employee_id = employee_id
+                                if employee_success:
+                                    # Mark invitation as accepted - use the cleaned token_to_verify
+                                    print(f"Marking token {token_to_verify} as accepted...")
+                                    acceptance_result = mark_invitation_accepted(token_to_verify)
+                                    print(f"Acceptance update result: {acceptance_result}")
 
-                                # Set the organization properly
-                                if organization_id:
-                                    # Get the organization name
-                                    from data_manager import get_organization
-                                    org_data = get_organization(
-                                        organization_id)
-                                    if org_data is not None:
-                                        # Set both organization ID and name
-                                        st.session_state.organization_id = int(
+                                    # Automatically log in the new user
+                                    st.session_state.authenticated = True
+                                    st.session_state.username = username
+                                    # Always assign admin role regardless of what's in the invitation
+                                    st.session_state.user_role = invitation.get("role", "admin")
+                                    st.session_state.employee_id = employee_id
+
+                                    # Set the organization properly
+                                    if organization_id:
+                                        # Get the organization name
+                                        from data_manager import get_organization
+                                        org_data = get_organization(
                                             organization_id)
-                                        st.session_state.organization_name = org_data.get(
-                                            "name", "")
-                                        st.session_state.organization_selected = True
+                                        if org_data is not None:
+                                            # Set both organization ID and name
+                                            st.session_state.organization_id = int(
+                                                organization_id)
+                                            st.session_state.organization_name = org_data.get(
+                                                "name", "")
+                                            st.session_state.organization_selected = True
 
-                                # Always redirect to Organization Management
-                                st.success(
-                                    "Invitation accepted! You've been automatically logged in. "
-                                    "You will be redirected to Organization Management."
-                                )
-                                # Set special session flag to redirect to Organization Management
-                                st.session_state.redirect_to_org_management = True
+                                    # Always redirect to Organization Management
+                                    st.success(
+                                        "Invitation accepted! You've been automatically logged in. "
+                                        "You will be redirected to Organization Management."
+                                    )
+                                    # Set special session flag to redirect to Organization Management
+                                    st.session_state.redirect_to_org_management = True
 
-                                # Clear invitation data and params
-                                for key in list(st.session_state.keys()):
-                                    if key.startswith("invitation_"):
-                                        del st.session_state[key]
+                                    # Clear invitation data and params
+                                    for key in list(st.session_state.keys()):
+                                        if key.startswith("invitation_"):
+                                            del st.session_state[key]
 
-                                # Clear query params and redirect to app
-                                st.query_params.clear()
-                                st.rerun()
+                                    # Clear query params and redirect to app
+                                    st.query_params.clear()
+                                    st.rerun()
+                                else:
+                                    st.error(
+                                        f"Failed to create employee record: {employee_message}"
+                                    )
                             else:
                                 st.error(
-                                    f"Failed to create employee record: {employee_message}"
+                                    f"Failed to create user account: {user_message}"
                                 )
-                        else:
-                            st.error(
-                                f"Failed to create user account: {user_message}"
-                            )
 
-            # Stop further execution
-            st.stop()
-        else:
-            st.error("This invitation link is invalid or has expired.")
-            # Add more details for troubleshooting
-            if token:
-                st.warning(f"Could not verify token: {token}")
-                st.info("If you just registered, please try these steps:")
+                # Stop further execution
+                st.stop()
+            else:
+                # More user-friendly error message
+                st.error("This invitation link appears to be invalid or has expired.")
+                # Provide help without exposing technical details
+                st.info("Need help? Here are some options:")
                 st.markdown("""
-                1. Make sure you're using the complete link from your email
-                2. Try registering again with the same email
-                3. After registering, use the direct link shown on the registration confirmation page
+                1. Check if you're using the complete invitation link from your email
+                2. The invitation might have expired (they're valid for 7 days)
+                3. Contact the person who sent you the invitation for a new link
                 """)
                 
-                # Check if the token exists in invitations.csv with proper string conversion
+                # Log technical details to console for debugging
+                print(f"Token verification failed for: {token}")
+                
+                # Check if the token exists in invitations.csv but don't display to user
                 from email_manager import ensure_invitations_file
                 invitations_df = ensure_invitations_file()
-                # Convert all tokens to string for reliable comparison
                 invitations_df["token"] = invitations_df["token"].astype(str)
                 token_str = str(token).strip()
                 
-                st.write(f"Looking for token '{token_str}' in database...")
-                st.write(f"Database tokens: {invitations_df['token'].tolist()}")
-                
                 if token_str in invitations_df["token"].values:
                     invitation_row = invitations_df[invitations_df["token"] == token_str].iloc[0]
-                    st.info(f"Found invitation: Status = {invitation_row['status']}, Expires at = {invitation_row['expires_at']}")
+                    print(f"Found invitation in DB: Status = {invitation_row['status']}, Expires at = {invitation_row['expires_at']}")
                     
-                    # Show complete invitation details for debugging
-                    st.write("Complete invitation details:", invitation_row.to_dict())
-                    
-                    # Check expiration
+                    # Check expiration for console logs
                     import datetime
                     now = datetime.datetime.now()
                     expires_at = datetime.datetime.strptime(invitation_row["expires_at"], "%Y-%m-%d %H:%M:%S")
                     is_expired = now > expires_at
-                    st.write(f"Current time: {now}, Expiration time: {expires_at}, Is expired: {is_expired}")
+                    print(f"Current time: {now}, Expiration time: {expires_at}, Is expired: {is_expired}")
+                    
+                    # Add a button to request a new invitation
+                    if st.button("Request a new invitation"):
+                        st.session_state.show_request_form = True
+                        st.rerun()
                 else:
-                    st.warning("Token not found in invitation database.")
-            # Clear query params
-            st.query_params.clear()
+                    print(f"Token {token_str} not found in invitation database.")
+                
+                # Clear query params to avoid repeated processing
+                st.query_params.clear()
 
 
 # User authentication
