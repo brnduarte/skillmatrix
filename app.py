@@ -728,7 +728,7 @@ def display_organization_selector():
     if st.session_state.authenticated:
         create_custom_sidebar()
         
-    st.title("Select or Create Organization")
+    st.title("Organization Selection")
 
     # Import data manager functions
     from data_manager import get_organizations, add_organization, get_user_organizations
@@ -788,33 +788,37 @@ def display_organization_selector():
                 else:
                     st.error(f"Failed to create organization: {message}")
     else:
-        # Regular users can only see their organizations
-        user_orgs = get_user_organizations(st.session_state.username)
+        # Get the organization of the admin who created this user
+        from data_manager import load_data
+        users_df = load_data("users")
+        if not users_df.empty:
+            user = users_df[users_df["username"] == st.session_state.username]
+            if not user.empty:
+                user_email = user.iloc[0]["email"]
+                # Find the user in employees table to get their organization
+                employees_df = load_data("employees")
+                if not employees_df.empty:
+                    employee = employees_df[employees_df["email"] == user_email]
+                    if not employee.empty and pd.notnull(employee.iloc[0]["organization_id"]):
+                        org_id = int(employee.iloc[0]["organization_id"])
+                        orgs_df = get_organizations()
+                        if not orgs_df.empty:
+                            org = orgs_df[orgs_df["organization_id"] == org_id]
+                            if not org.empty:
+                                st.session_state.organization_id = org_id
+                                st.session_state.organization_name = org.iloc[0]["name"]
+                                st.session_state.organization_selected = True
+                                st.rerun()
 
-        if not user_orgs.empty:
-            org_options = list(
-                zip(user_orgs["organization_id"].astype(str),
-                    user_orgs["name"]))
-            selected_org = st.selectbox("Select your organization",
-                                        options=org_options,
-                                        format_func=lambda x: x[1])
+        st.warning(
+            "You don't have access to any organizations. Please contact an administrator."
+        )
 
-            if st.button("Continue"):
-                # Store the organization ID in session state
-                st.session_state.organization_id = int(selected_org[0])
-                st.session_state.organization_name = selected_org[1]
-                st.session_state.organization_selected = True
-                st.rerun()
-        else:
-            st.warning(
-                "You don't have access to any organizations. Please contact an administrator."
-            )
-
-            if st.button("Logout"):
-                for key in list(st.session_state.keys()):
-                    del st.session_state[key]
-                initialize_session_state()
-                st.rerun()
+        if st.button("Logout"):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            initialize_session_state()
+            st.rerun()
 
 
 # Top navigation is already imported at the top of the file
