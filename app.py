@@ -169,22 +169,40 @@ def handle_invitation():
                                     # Automatically log in the new user
                                     st.session_state.authenticated = True
                                     st.session_state.username = username
-                                    # Always set as admin for new registrations
-                                    st.session_state.user_role = "admin"
+                                    # Set role from invitation
+                                    st.session_state.user_role = invitation.get("role", "employee")
                                     st.session_state.employee_id = employee_id
 
-                                    # Don't set organization - let user create their own
-                                    st.session_state.organization_id = None
-                                    st.session_state.organization_name = None
-                                    st.session_state.organization_selected = False
+                                    # Set organization based on invitation
+                                    if invitation.get("organization_id"):
+                                        org_id = int(float(invitation["organization_id"]))
+                                        from data_manager import get_organization
+                                        org_data = get_organization(org_id)
+                                        if org_data is not None:
+                                            st.session_state.organization_id = org_id
+                                            st.session_state.organization_name = org_data.get("name", "")
+                                            st.session_state.organization_selected = True
+                                            
+                                            success_msg = "Invitation accepted! You've been automatically logged in and added to the organization."
+                                            redirect_flag = False
+                                        else:
+                                            st.error("Error retrieving organization information.")
+                                            st.stop()
+                                    else:
+                                        # Only admins can create new organizations
+                                        if invitation.get("role") == "admin":
+                                            st.session_state.organization_id = None
+                                            st.session_state.organization_name = None
+                                            st.session_state.organization_selected = False
+                                            success_msg = "Invitation accepted! You've been automatically logged in as an admin. Please create your organization to get started."
+                                            redirect_flag = True
+                                        else:
+                                            st.error("Invalid invitation: No organization specified for non-admin user.")
+                                            st.stop()
 
-                                    # Redirect to Organization Management to create new org
-                                    st.success(
-                                        "Invitation accepted! You've been automatically logged in as an admin. "
-                                        "Please create your organization to get started."
-                                    )
-                                    # Set special session flag to redirect to Organization Management
-                                    st.session_state.redirect_to_org_management = True
+                                    st.success(success_msg)
+                                    # Set redirect flag based on role
+                                    st.session_state.redirect_to_org_management = redirect_flag
 
                                     # Clear invitation data and params
                                     for key in list(st.session_state.keys()):
