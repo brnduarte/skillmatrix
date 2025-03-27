@@ -44,10 +44,13 @@ def handle_invitation():
     # Use the non-experimental API
     if "token" in st.query_params:
         token = st.query_params["token"]
-
+        
+        # Show token for debugging
+        st.info(f"Processing invitation token. Please wait...")
+        
         # Verify the token
         is_valid, invitation = verify_invitation(token)
-
+        
         if is_valid and invitation:
             st.success(f"Welcome! Your invitation is valid.")
 
@@ -114,16 +117,13 @@ def handle_invitation():
 
                         # Get organization ID from invitation
                         organization_id = None
-                        if invitation.get("organization_id") and pd.notnull(
-                                invitation["organization_id"]):
+                        if invitation.get("organization_id") is not None and pd.notnull(invitation["organization_id"]) and invitation["organization_id"] != '':
                             # Convert to int for consistency
                             try:
-                                organization_id = int(
-                                    float(invitation["organization_id"]))
+                                organization_id = int(float(invitation["organization_id"]))
                             except (ValueError, TypeError):
-                                st.error(
-                                    f"Invalid organization ID in invitation data"
-                                )
+                                st.error(f"Invalid organization ID in invitation data")
+                                # Continue with None as organization_id
 
                         # Create user account first
                         user_success, user_message = add_user(
@@ -203,6 +203,24 @@ def handle_invitation():
             st.stop()
         else:
             st.error("This invitation link is invalid or has expired.")
+            # Add more details for troubleshooting
+            if token:
+                st.warning(f"Could not verify token: {token}")
+                st.info("If you just registered, please try these steps:")
+                st.markdown("""
+                1. Make sure you're using the complete link from your email
+                2. Try registering again with the same email
+                3. After registering, use the direct link shown on the registration confirmation page
+                """)
+                
+                # Check if the token exists in invitations.csv
+                from email_manager import ensure_invitations_file
+                invitations_df = ensure_invitations_file()
+                if token in invitations_df["token"].values:
+                    invitation_row = invitations_df[invitations_df["token"] == token].iloc[0]
+                    st.info(f"Found invitation: Status = {invitation_row['status']}, Expires at = {invitation_row['expires_at']}")
+                else:
+                    st.warning("Token not found in invitation database.")
             # Clear query params
             st.query_params.clear()
 

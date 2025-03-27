@@ -56,6 +56,10 @@ def create_invitation(username, email, role, organization_id=None, expiry_days=7
     # Load or create invitations file
     invitations_df = ensure_invitations_file()
     
+    # If organization_id is None, empty string or NaN, set to None explicitly
+    if organization_id is None or pd.isna(organization_id) or organization_id == '':
+        organization_id = None
+    
     # Check if invitation already exists for this email
     existing = invitations_df[invitations_df["email"] == email]
     if not existing.empty and any(existing["status"] == "pending"):
@@ -96,6 +100,7 @@ def create_invitation(username, email, role, organization_id=None, expiry_days=7
     # Save invitations file
     invitations_df.to_csv(INVITATIONS_FILE, index=False)
     
+    print(f"Created invitation with token: {token}, organization_id: {organization_id}, role: {role}")
     return True, "Invitation created successfully", token
 
 def send_invitation_email(email, token, name=None, organization_name=None):
@@ -251,7 +256,14 @@ def verify_invitation(token):
         update_invitation_status(token, "expired")
         return False, None
     
-    return True, invitation.to_dict()
+    # Convert to dictionary and handle organization_id specially
+    invitation_dict = invitation.to_dict()
+    
+    # Handle empty or NaN organization_id properly
+    if pd.isna(invitation_dict.get('organization_id')) or invitation_dict.get('organization_id') == '':
+        invitation_dict['organization_id'] = None
+    
+    return True, invitation_dict
 
 def mark_invitation_accepted(token):
     """Mark an invitation as accepted"""
