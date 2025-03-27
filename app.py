@@ -151,8 +151,8 @@ def handle_invitation():
                                 # Automatically log in the new user
                                 st.session_state.authenticated = True
                                 st.session_state.username = username
-                                st.session_state.user_role = invitation.get(
-                                    "role", "employee")
+                                # Always assign admin role regardless of what's in the invitation
+                                st.session_state.user_role = "admin"
                                 st.session_state.employee_id = employee_id
 
                                 # Set the organization properly
@@ -169,18 +169,13 @@ def handle_invitation():
                                             "name", "")
                                         st.session_state.organization_selected = True
 
-                                # Determine where to redirect based on role
-                                if invitation.get("role", "employee") == "admin":
-                                    st.success(
-                                        "Invitation accepted! You've been automatically logged in. "
-                                        "You will be redirected to Organization Management."
-                                    )
-                                    # Set special session flag to redirect to Organization Management
-                                    st.session_state.redirect_to_org_management = True
-                                else:
-                                    st.success(
-                                        "Invitation accepted! You've been automatically logged in."
-                                    )
+                                # Always redirect to Organization Management
+                                st.success(
+                                    "Invitation accepted! You've been automatically logged in. "
+                                    "You will be redirected to Organization Management."
+                                )
+                                # Set special session flag to redirect to Organization Management
+                                st.session_state.redirect_to_org_management = True
 
                                 # Clear invitation data and params
                                 for key in list(st.session_state.keys()):
