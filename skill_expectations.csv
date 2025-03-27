@@ -1,12 +1,4 @@
 job_level,competency,skill,expected_score,organization_id
-Expertise,Decision Making,Interaction Design,2.0,1.0
-Expertise,Continuous Improvement,Design Systems and A11y,1.5,1.0
-Expertise,Accountability,UX Strategy,2.0,1.0
-Expertise,Initiative,User Testing and Validation,1.5,1.0
-Expertise,Personal Development,Influence,2.0,1.0
-Expertise,Collaboration,Cross-Functional Collaboration,2.0,1.0
-Expertise,Communication,Competitive Analysis,1.5,1.0
-Expertise,Open Minded,Resource Management and Operations,2.5,1.0
 Expertise,Visual Design,1.5,1.0,
 Expertise,Visual Design,2.5,1.0,
 Decision Making,Interaction Design,3.0,1.0,
