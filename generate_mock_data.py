@@ -20,9 +20,19 @@ def generate_assessments():
     comp_expectations_df = pd.read_csv('competency_expectations.csv')
     skill_expectations_df = pd.read_csv('skill_expectations.csv')
 
-    # Clear existing assessment data
-    data_manager.save_data("skill_assessments", pd.DataFrame())
-    data_manager.save_data("competency_assessments", pd.DataFrame())
+    # Create empty DataFrames with correct columns
+    skill_assessments_df = pd.DataFrame(columns=[
+        "assessment_id", "employee_id", "competency", "skill", "score",
+        "assessment_type", "assessment_date", "notes", "organization_id"
+    ])
+    comp_assessments_df = pd.DataFrame(columns=[
+        "assessment_id", "employee_id", "competency", "score",
+        "assessment_type", "assessment_date", "notes", "organization_id"
+    ])
+    
+    # Save empty DataFrames to clear existing data
+    data_manager.save_data("skill_assessments", skill_assessments_df)
+    data_manager.save_data("competency_assessments", comp_assessments_df)
 
     assessment_date = datetime.now().strftime('%Y-%m-%d')
     skill_assessments = []
