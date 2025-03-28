@@ -32,7 +32,7 @@ def generate_assessments():
     
     # Save empty DataFrames to clear existing data
     data_manager.save_data("skill_assessments", skill_assessments_df)
-    data_manager.save_data("competency_assessments", comp_assessments_df)
+    data_manager.save_data("comp_assessments", comp_assessments_df)
 
     assessment_date = datetime.now().strftime('%Y-%m-%d')
     skill_assessments = []
@@ -97,7 +97,7 @@ def generate_assessments():
     comp_assessments_df = pd.DataFrame(comp_assessments)
 
     data_manager.save_data("skill_assessments", skill_assessments_df)
-    data_manager.save_data("competency_assessments", comp_assessments_df)
+    data_manager.save_data("comp_assessments", comp_assessments_df)
 
     return len(skill_assessments), len(comp_assessments)
 

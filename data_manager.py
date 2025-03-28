@@ -29,6 +29,7 @@ ID_COLUMNS = {
     "expectations": None,  # Composite key
     "comp_expectations": None,  # Composite key
     "assessments": "assessment_id",
+    "skill_assessments": "assessment_id",  # Added to match DATA_FILES
     "comp_assessments": "assessment_id",
     "organizations": "organization_id"
 }
@@ -58,10 +59,10 @@ def load_data(data_type):
             return pd.DataFrame(columns=["job_level", "competency", "skill", "expected_score"])
         elif data_type == "comp_expectations":
             return pd.DataFrame(columns=["job_level", "competency", "expected_score"])
-        elif data_type == "assessments":
-            return pd.DataFrame(columns=["assessment_id", "employee_id", "competency", "skill", "score", "assessment_type", "assessment_date", "notes"])
+        elif data_type == "assessments" or data_type == "skill_assessments":
+            return pd.DataFrame(columns=["assessment_id", "employee_id", "competency", "skill", "score", "assessment_type", "assessment_date", "notes", "organization_id"])
         elif data_type == "comp_assessments":
-            return pd.DataFrame(columns=["assessment_id", "employee_id", "competency", "score", "assessment_type", "assessment_date", "notes"])
+            return pd.DataFrame(columns=["assessment_id", "employee_id", "competency", "score", "assessment_type", "assessment_date", "notes", "organization_id"])
         elif data_type == "organizations":
             return pd.DataFrame(columns=["organization_id", "name", "created_by", "created_at"])
         else:

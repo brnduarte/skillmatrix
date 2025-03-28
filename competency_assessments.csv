@@ -1,1 +1,251 @@
 assessment_id,employee_id,competency,score,assessment_type,assessment_date,notes,organization_id
+1,1,Technical Leadership,4.2,self,2025-03-28,Self assessment for Technical Leadership,2
+2,1,Software Architecture,3.9,self,2025-03-28,Self assessment for Software Architecture,2
+3,1,Development Practices,3.9,self,2025-03-28,Self assessment for Development Practices,2
+4,1,Problem Solving,4.3,self,2025-03-28,Self assessment for Problem Solving,2
+5,1,Communication,5.0,self,2025-03-28,Self assessment for Communication,2
+6,2,Technical Leadership,4.5,self,2025-03-28,Self assessment for Technical Leadership,2
+7,2,Software Architecture,4.2,self,2025-03-28,Self assessment for Software Architecture,2
+8,2,Development Practices,4.0,self,2025-03-28,Self assessment for Development Practices,2
+9,2,Problem Solving,4.3,self,2025-03-28,Self assessment for Problem Solving,2
+10,2,Communication,5.0,self,2025-03-28,Self assessment for Communication,2
+11,3,Technical Leadership,4.5,self,2025-03-28,Self assessment for Technical Leadership,2
+12,3,Software Architecture,4.3,self,2025-03-28,Self assessment for Software Architecture,2
+13,3,Development Practices,4.2,self,2025-03-28,Self assessment for Development Practices,2
+14,3,Problem Solving,4.7,self,2025-03-28,Self assessment for Problem Solving,2
+15,3,Communication,5.0,self,2025-03-28,Self assessment for Communication,2
+16,4,Technical Leadership,2.7,self,2025-03-28,Self assessment for Technical Leadership,2
+17,4,Software Architecture,3.2,self,2025-03-28,Self assessment for Software Architecture,2
+18,4,Development Practices,3.5,self,2025-03-28,Self assessment for Development Practices,2
+19,4,Problem Solving,3.4,self,2025-03-28,Self assessment for Problem Solving,2
+20,4,Communication,3.1,self,2025-03-28,Self assessment for Communication,2
+21,5,Technical Leadership,3.7,self,2025-03-28,Self assessment for Technical Leadership,2
+22,5,Software Architecture,3.6,self,2025-03-28,Self assessment for Software Architecture,2
+23,5,Development Practices,4.0,self,2025-03-28,Self assessment for Development Practices,2
+24,5,Problem Solving,3.9,self,2025-03-28,Self assessment for Problem Solving,2
+25,5,Communication,3.8,self,2025-03-28,Self assessment for Communication,2
+26,6,Technical Leadership,4.2,self,2025-03-28,Self assessment for Technical Leadership,2
+27,6,Software Architecture,4.2,self,2025-03-28,Self assessment for Software Architecture,2
+28,6,Development Practices,4.1,self,2025-03-28,Self assessment for Development Practices,2
+29,6,Problem Solving,4.6,self,2025-03-28,Self assessment for Problem Solving,2
+30,6,Communication,4.4,self,2025-03-28,Self assessment for Communication,2
+31,7,Technical Leadership,4.5,self,2025-03-28,Self assessment for Technical Leadership,2
+32,7,Software Architecture,4.7,self,2025-03-28,Self assessment for Software Architecture,2
+33,7,Development Practices,4.7,self,2025-03-28,Self assessment for Development Practices,2
+34,7,Problem Solving,4.5,self,2025-03-28,Self assessment for Problem Solving,2
+35,7,Communication,4.8,self,2025-03-28,Self assessment for Communication,2
+36,8,Technical Leadership,4.5,self,2025-03-28,Self assessment for Technical Leadership,2
+37,8,Software Architecture,5.0,self,2025-03-28,Self assessment for Software Architecture,2
+38,8,Development Practices,4.9,self,2025-03-28,Self assessment for Development Practices,2
+39,8,Problem Solving,4.5,self,2025-03-28,Self assessment for Problem Solving,2
+40,8,Communication,4.9,self,2025-03-28,Self assessment for Communication,2
+41,9,Technical Leadership,4.8,self,2025-03-28,Self assessment for Technical Leadership,2
+42,9,Software Architecture,4.4,self,2025-03-28,Self assessment for Software Architecture,2
+43,9,Development Practices,4.0,self,2025-03-28,Self assessment for Development Practices,2
+44,9,Problem Solving,4.1,self,2025-03-28,Self assessment for Problem Solving,2
+45,9,Communication,4.5,self,2025-03-28,Self assessment for Communication,2
+46,10,Technical Leadership,5.0,self,2025-03-28,Self assessment for Technical Leadership,2
+47,10,Software Architecture,4.8,self,2025-03-28,Self assessment for Software Architecture,2
+48,10,Development Practices,4.7,self,2025-03-28,Self assessment for Development Practices,2
+49,10,Problem Solving,4.6,self,2025-03-28,Self assessment for Problem Solving,2
+50,10,Communication,4.5,self,2025-03-28,Self assessment for Communication,2
+51,11,Technical Leadership,5.0,self,2025-03-28,Self assessment for Technical Leadership,2
+52,11,Software Architecture,5.0,self,2025-03-28,Self assessment for Software Architecture,2
+53,11,Development Practices,5.0,self,2025-03-28,Self assessment for Development Practices,2
+54,11,Problem Solving,5.0,self,2025-03-28,Self assessment for Problem Solving,2
+55,11,Communication,4.6,self,2025-03-28,Self assessment for Communication,2
+56,12,Technical Leadership,3.3,self,2025-03-28,Self assessment for Technical Leadership,2
+57,12,Software Architecture,3.0,self,2025-03-28,Self assessment for Software Architecture,2
+58,12,Development Practices,3.8,self,2025-03-28,Self assessment for Development Practices,2
+59,12,Problem Solving,3.1,self,2025-03-28,Self assessment for Problem Solving,2
+60,12,Communication,2.6,self,2025-03-28,Self assessment for Communication,2
+61,13,Technical Leadership,3.6,self,2025-03-28,Self assessment for Technical Leadership,2
+62,13,Software Architecture,3.9,self,2025-03-28,Self assessment for Software Architecture,2
+63,13,Development Practices,4.3,self,2025-03-28,Self assessment for Development Practices,2
+64,13,Problem Solving,3.6,self,2025-03-28,Self assessment for Problem Solving,2
+65,13,Communication,4.3,self,2025-03-28,Self assessment for Communication,2
+66,14,Technical Leadership,4.8,self,2025-03-28,Self assessment for Technical Leadership,2
+67,14,Software Architecture,4.7,self,2025-03-28,Self assessment for Software Architecture,2
+68,14,Development Practices,5.0,self,2025-03-28,Self assessment for Development Practices,2
+69,14,Problem Solving,5.0,self,2025-03-28,Self assessment for Problem Solving,2
+70,14,Communication,5.0,self,2025-03-28,Self assessment for Communication,2
+71,15,Technical Leadership,4.7,self,2025-03-28,Self assessment for Technical Leadership,2
+72,15,Software Architecture,5.0,self,2025-03-28,Self assessment for Software Architecture,2
+73,15,Development Practices,4.7,self,2025-03-28,Self assessment for Development Practices,2
+74,15,Problem Solving,4.5,self,2025-03-28,Self assessment for Problem Solving,2
+75,15,Communication,5.0,self,2025-03-28,Self assessment for Communication,2
+76,16,Technical Leadership,2.7,self,2025-03-28,Self assessment for Technical Leadership,2
+77,16,Software Architecture,3.2,self,2025-03-28,Self assessment for Software Architecture,2
+78,16,Development Practices,3.0,self,2025-03-28,Self assessment for Development Practices,2
+79,16,Problem Solving,3.5,self,2025-03-28,Self assessment for Problem Solving,2
+80,16,Communication,2.7,self,2025-03-28,Self assessment for Communication,2
+81,17,Technical Leadership,4.9,self,2025-03-28,Self assessment for Technical Leadership,2
+82,17,Software Architecture,4.9,self,2025-03-28,Self assessment for Software Architecture,2
+83,17,Development Practices,5.0,self,2025-03-28,Self assessment for Development Practices,2
+84,17,Problem Solving,4.9,self,2025-03-28,Self assessment for Problem Solving,2
+85,17,Communication,5.0,self,2025-03-28,Self assessment for Communication,2
+86,18,Technical Leadership,1.6,self,2025-03-28,Self assessment for Technical Leadership,2
+87,18,Software Architecture,2.0,self,2025-03-28,Self assessment for Software Architecture,2
+88,18,Development Practices,2.8,self,2025-03-28,Self assessment for Development Practices,2
+89,18,Problem Solving,2.7,self,2025-03-28,Self assessment for Problem Solving,2
+90,18,Communication,2.7,self,2025-03-28,Self assessment for Communication,2
+91,19,Technical Leadership,4.2,self,2025-03-28,Self assessment for Technical Leadership,2
+92,19,Software Architecture,3.5,self,2025-03-28,Self assessment for Software Architecture,2
+93,19,Development Practices,4.2,self,2025-03-28,Self assessment for Development Practices,2
+94,19,Problem Solving,4.1,self,2025-03-28,Self assessment for Problem Solving,2
+95,19,Communication,4.1,self,2025-03-28,Self assessment for Communication,2
+96,20,Technical Leadership,2.1,self,2025-03-28,Self assessment for Technical Leadership,2
+97,20,Software Architecture,1.8,self,2025-03-28,Self assessment for Software Architecture,2
+98,20,Development Practices,2.8,self,2025-03-28,Self assessment for Development Practices,2
+99,20,Problem Solving,2.0,self,2025-03-28,Self assessment for Problem Solving,2
+100,20,Communication,2.5,self,2025-03-28,Self assessment for Communication,2
+101,21,Technical Leadership,3.1,self,2025-03-28,Self assessment for Technical Leadership,2
+102,21,Software Architecture,2.8,self,2025-03-28,Self assessment for Software Architecture,2
+103,21,Development Practices,3.3,self,2025-03-28,Self assessment for Development Practices,2
+104,21,Problem Solving,3.1,self,2025-03-28,Self assessment for Problem Solving,2
+105,21,Communication,3.2,self,2025-03-28,Self assessment for Communication,2
+106,22,Technical Leadership,4.5,self,2025-03-28,Self assessment for Technical Leadership,2
+107,22,Software Architecture,4.3,self,2025-03-28,Self assessment for Software Architecture,2
+108,22,Development Practices,4.8,self,2025-03-28,Self assessment for Development Practices,2
+109,22,Problem Solving,4.3,self,2025-03-28,Self assessment for Problem Solving,2
+110,22,Communication,4.5,self,2025-03-28,Self assessment for Communication,2
+111,23,Technical Leadership,2.0,self,2025-03-28,Self assessment for Technical Leadership,2
+112,23,Software Architecture,2.2,self,2025-03-28,Self assessment for Software Architecture,2
+113,23,Development Practices,2.6,self,2025-03-28,Self assessment for Development Practices,2
+114,23,Problem Solving,2.1,self,2025-03-28,Self assessment for Problem Solving,2
+115,23,Communication,2.5,self,2025-03-28,Self assessment for Communication,2
+116,24,Technical Leadership,4.5,self,2025-03-28,Self assessment for Technical Leadership,2
+117,24,Software Architecture,4.7,self,2025-03-28,Self assessment for Software Architecture,2
+118,24,Development Practices,4.8,self,2025-03-28,Self assessment for Development Practices,2
+119,24,Problem Solving,4.2,self,2025-03-28,Self assessment for Problem Solving,2
+120,24,Communication,4.6,self,2025-03-28,Self assessment for Communication,2
+121,25,Technical Leadership,4.3,self,2025-03-28,Self assessment for Technical Leadership,2
+122,25,Software Architecture,4.5,self,2025-03-28,Self assessment for Software Architecture,2
+123,25,Development Practices,4.6,self,2025-03-28,Self assessment for Development Practices,2
+124,25,Problem Solving,4.3,self,2025-03-28,Self assessment for Problem Solving,2
+125,25,Communication,4.3,self,2025-03-28,Self assessment for Communication,2
+126,26,Technical Leadership,4.7,self,2025-03-28,Self assessment for Technical Leadership,2
+127,26,Software Architecture,4.6,self,2025-03-28,Self assessment for Software Architecture,2
+128,26,Development Practices,4.5,self,2025-03-28,Self assessment for Development Practices,2
+129,26,Problem Solving,4.9,self,2025-03-28,Self assessment for Problem Solving,2
+130,26,Communication,5.0,self,2025-03-28,Self assessment for Communication,2
+131,27,Technical Leadership,2.9,self,2025-03-28,Self assessment for Technical Leadership,2
+132,27,Software Architecture,2.9,self,2025-03-28,Self assessment for Software Architecture,2
+133,27,Development Practices,3.1,self,2025-03-28,Self assessment for Development Practices,2
+134,27,Problem Solving,3.6,self,2025-03-28,Self assessment for Problem Solving,2
+135,27,Communication,3.0,self,2025-03-28,Self assessment for Communication,2
+136,28,Technical Leadership,2.8,self,2025-03-28,Self assessment for Technical Leadership,2
+137,28,Software Architecture,2.5,self,2025-03-28,Self assessment for Software Architecture,2
+138,28,Development Practices,3.2,self,2025-03-28,Self assessment for Development Practices,2
+139,28,Problem Solving,3.6,self,2025-03-28,Self assessment for Problem Solving,2
+140,28,Communication,3.1,self,2025-03-28,Self assessment for Communication,2
+141,29,Technical Leadership,4.0,self,2025-03-28,Self assessment for Technical Leadership,2
+142,29,Software Architecture,4.4,self,2025-03-28,Self assessment for Software Architecture,2
+143,29,Development Practices,4.5,self,2025-03-28,Self assessment for Development Practices,2
+144,29,Problem Solving,4.7,self,2025-03-28,Self assessment for Problem Solving,2
+145,29,Communication,4.5,self,2025-03-28,Self assessment for Communication,2
+146,30,Technical Leadership,2.2,self,2025-03-28,Self assessment for Technical Leadership,2
+147,30,Software Architecture,1.6,self,2025-03-28,Self assessment for Software Architecture,2
+148,30,Development Practices,2.2,self,2025-03-28,Self assessment for Development Practices,2
+149,30,Problem Solving,2.6,self,2025-03-28,Self assessment for Problem Solving,2
+150,30,Communication,2.3,self,2025-03-28,Self assessment for Communication,2
+151,31,Technical Leadership,4.2,self,2025-03-28,Self assessment for Technical Leadership,2
+152,31,Software Architecture,4.1,self,2025-03-28,Self assessment for Software Architecture,2
+153,31,Development Practices,4.1,self,2025-03-28,Self assessment for Development Practices,2
+154,31,Problem Solving,3.8,self,2025-03-28,Self assessment for Problem Solving,2
+155,31,Communication,3.6,self,2025-03-28,Self assessment for Communication,2
+156,32,Technical Leadership,4.1,self,2025-03-28,Self assessment for Technical Leadership,2
+157,32,Software Architecture,3.9,self,2025-03-28,Self assessment for Software Architecture,2
+158,32,Development Practices,3.6,self,2025-03-28,Self assessment for Development Practices,2
+159,32,Problem Solving,3.8,self,2025-03-28,Self assessment for Problem Solving,2
+160,32,Communication,4.0,self,2025-03-28,Self assessment for Communication,2
+161,33,Technical Leadership,3.6,self,2025-03-28,Self assessment for Technical Leadership,2
+162,33,Software Architecture,4.0,self,2025-03-28,Self assessment for Software Architecture,2
+163,33,Development Practices,3.6,self,2025-03-28,Self assessment for Development Practices,2
+164,33,Problem Solving,3.5,self,2025-03-28,Self assessment for Problem Solving,2
+165,33,Communication,4.2,self,2025-03-28,Self assessment for Communication,2
+166,34,Technical Leadership,4.1,self,2025-03-28,Self assessment for Technical Leadership,2
+167,34,Software Architecture,3.7,self,2025-03-28,Self assessment for Software Architecture,2
+168,34,Development Practices,3.7,self,2025-03-28,Self assessment for Development Practices,2
+169,34,Problem Solving,3.8,self,2025-03-28,Self assessment for Problem Solving,2
+170,34,Communication,3.6,self,2025-03-28,Self assessment for Communication,2
+171,35,Technical Leadership,3.9,self,2025-03-28,Self assessment for Technical Leadership,2
+172,35,Software Architecture,3.7,self,2025-03-28,Self assessment for Software Architecture,2
+173,35,Development Practices,3.6,self,2025-03-28,Self assessment for Development Practices,2
+174,35,Problem Solving,3.8,self,2025-03-28,Self assessment for Problem Solving,2
+175,35,Communication,3.8,self,2025-03-28,Self assessment for Communication,2
+176,36,Technical Leadership,4.2,self,2025-03-28,Self assessment for Technical Leadership,2
+177,36,Software Architecture,4.6,self,2025-03-28,Self assessment for Software Architecture,2
+178,36,Development Practices,4.2,self,2025-03-28,Self assessment for Development Practices,2
+179,36,Problem Solving,4.2,self,2025-03-28,Self assessment for Problem Solving,2
+180,36,Communication,4.5,self,2025-03-28,Self assessment for Communication,2
+181,37,Technical Leadership,2.6,self,2025-03-28,Self assessment for Technical Leadership,2
+182,37,Software Architecture,3.0,self,2025-03-28,Self assessment for Software Architecture,2
+183,37,Development Practices,3.5,self,2025-03-28,Self assessment for Development Practices,2
+184,37,Problem Solving,3.1,self,2025-03-28,Self assessment for Problem Solving,2
+185,37,Communication,3.2,self,2025-03-28,Self assessment for Communication,2
+186,38,Technical Leadership,1.7,self,2025-03-28,Self assessment for Technical Leadership,2
+187,38,Software Architecture,1.5,self,2025-03-28,Self assessment for Software Architecture,2
+188,38,Development Practices,2.7,self,2025-03-28,Self assessment for Development Practices,2
+189,38,Problem Solving,2.6,self,2025-03-28,Self assessment for Problem Solving,2
+190,38,Communication,2.3,self,2025-03-28,Self assessment for Communication,2
+191,39,Technical Leadership,3.2,self,2025-03-28,Self assessment for Technical Leadership,2
+192,39,Software Architecture,2.7,self,2025-03-28,Self assessment for Software Architecture,2
+193,39,Development Practices,3.4,self,2025-03-28,Self assessment for Development Practices,2
+194,39,Problem Solving,3.1,self,2025-03-28,Self assessment for Problem Solving,2
+195,39,Communication,2.6,self,2025-03-28,Self assessment for Communication,2
+196,40,Technical Leadership,4.6,self,2025-03-28,Self assessment for Technical Leadership,2
+197,40,Software Architecture,4.3,self,2025-03-28,Self assessment for Software Architecture,2
+198,40,Development Practices,4.7,self,2025-03-28,Self assessment for Development Practices,2
+199,40,Problem Solving,4.1,self,2025-03-28,Self assessment for Problem Solving,2
+200,40,Communication,4.4,self,2025-03-28,Self assessment for Communication,2
+201,41,Technical Leadership,4.6,self,2025-03-28,Self assessment for Technical Leadership,2
+202,41,Software Architecture,4.6,self,2025-03-28,Self assessment for Software Architecture,2
+203,41,Development Practices,4.4,self,2025-03-28,Self assessment for Development Practices,2
+204,41,Problem Solving,4.5,self,2025-03-28,Self assessment for Problem Solving,2
+205,41,Communication,4.4,self,2025-03-28,Self assessment for Communication,2
+206,42,Technical Leadership,1.6,self,2025-03-28,Self assessment for Technical Leadership,2
+207,42,Software Architecture,1.5,self,2025-03-28,Self assessment for Software Architecture,2
+208,42,Development Practices,2.5,self,2025-03-28,Self assessment for Development Practices,2
+209,42,Problem Solving,2.0,self,2025-03-28,Self assessment for Problem Solving,2
+210,42,Communication,2.3,self,2025-03-28,Self assessment for Communication,2
+211,43,Technical Leadership,4.6,self,2025-03-28,Self assessment for Technical Leadership,2
+212,43,Software Architecture,4.5,self,2025-03-28,Self assessment for Software Architecture,2
+213,43,Development Practices,4.2,self,2025-03-28,Self assessment for Development Practices,2
+214,43,Problem Solving,4.5,self,2025-03-28,Self assessment for Problem Solving,2
+215,43,Communication,4.5,self,2025-03-28,Self assessment for Communication,2
+216,44,Technical Leadership,2.8,self,2025-03-28,Self assessment for Technical Leadership,2
+217,44,Software Architecture,3.2,self,2025-03-28,Self assessment for Software Architecture,2
+218,44,Development Practices,3.2,self,2025-03-28,Self assessment for Development Practices,2
+219,44,Problem Solving,3.3,self,2025-03-28,Self assessment for Problem Solving,2
+220,44,Communication,2.6,self,2025-03-28,Self assessment for Communication,2
+221,45,Technical Leadership,1.8,self,2025-03-28,Self assessment for Technical Leadership,2
+222,45,Software Architecture,1.6,self,2025-03-28,Self assessment for Software Architecture,2
+223,45,Development Practices,2.7,self,2025-03-28,Self assessment for Development Practices,2
+224,45,Problem Solving,2.5,self,2025-03-28,Self assessment for Problem Solving,2
+225,45,Communication,2.5,self,2025-03-28,Self assessment for Communication,2
+226,46,Technical Leadership,2.7,self,2025-03-28,Self assessment for Technical Leadership,2
+227,46,Software Architecture,2.8,self,2025-03-28,Self assessment for Software Architecture,2
+228,46,Development Practices,3.5,self,2025-03-28,Self assessment for Development Practices,2
+229,46,Problem Solving,3.4,self,2025-03-28,Self assessment for Problem Solving,2
+230,46,Communication,3.1,self,2025-03-28,Self assessment for Communication,2
+231,47,Technical Leadership,4.3,self,2025-03-28,Self assessment for Technical Leadership,2
+232,47,Software Architecture,4.2,self,2025-03-28,Self assessment for Software Architecture,2
+233,47,Development Practices,4.4,self,2025-03-28,Self assessment for Development Practices,2
+234,47,Problem Solving,4.1,self,2025-03-28,Self assessment for Problem Solving,2
+235,47,Communication,4.3,self,2025-03-28,Self assessment for Communication,2
+236,48,Technical Leadership,4.3,self,2025-03-28,Self assessment for Technical Leadership,2
+237,48,Software Architecture,4.0,self,2025-03-28,Self assessment for Software Architecture,2
+238,48,Development Practices,4.0,self,2025-03-28,Self assessment for Development Practices,2
+239,48,Problem Solving,4.6,self,2025-03-28,Self assessment for Problem Solving,2
+240,48,Communication,4.6,self,2025-03-28,Self assessment for Communication,2
+241,49,Technical Leadership,2.7,self,2025-03-28,Self assessment for Technical Leadership,2
+242,49,Software Architecture,2.7,self,2025-03-28,Self assessment for Software Architecture,2
+243,49,Development Practices,3.1,self,2025-03-28,Self assessment for Development Practices,2
+244,49,Problem Solving,3.0,self,2025-03-28,Self assessment for Problem Solving,2
+245,49,Communication,2.7,self,2025-03-28,Self assessment for Communication,2
+246,50,Technical Leadership,2.0,self,2025-03-28,Self assessment for Technical Leadership,2
+247,50,Software Architecture,2.1,self,2025-03-28,Self assessment for Software Architecture,2
+248,50,Development Practices,2.1,self,2025-03-28,Self assessment for Development Practices,2
+249,50,Problem Solving,2.3,self,2025-03-28,Self assessment for Problem Solving,2
+250,50,Communication,2.3,self,2025-03-28,Self assessment for Communication,2

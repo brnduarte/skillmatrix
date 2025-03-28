@@ -1,1 +1,501 @@
 assessment_id,employee_id,competency,skill,score,assessment_type,assessment_date,notes,organization_id
+1,1,Technical Leadership,Team Mentorship,4.4,self,2025-03-28,Self assessment for Team Mentorship,2
+2,1,Technical Leadership,Technical Planning,4.4,self,2025-03-28,Self assessment for Technical Planning,2
+3,1,Software Architecture,System Design,3.7,self,2025-03-28,Self assessment for System Design,2
+4,1,Software Architecture,Architecture Patterns,3.6,self,2025-03-28,Self assessment for Architecture Patterns,2
+5,1,Development Practices,Code Quality,4.0,self,2025-03-28,Self assessment for Code Quality,2
+6,1,Development Practices,Testing Strategies,3.7,self,2025-03-28,Self assessment for Testing Strategies,2
+7,1,Problem Solving,Debug & Troubleshoot,4.4,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+8,1,Problem Solving,Performance Optimization,4.7,self,2025-03-28,Self assessment for Performance Optimization,2
+9,1,Communication,Technical Documentation,5.0,self,2025-03-28,Self assessment for Technical Documentation,2
+10,1,Communication,Stakeholder Communication,4.6,self,2025-03-28,Self assessment for Stakeholder Communication,2
+11,2,Technical Leadership,Team Mentorship,4.8,self,2025-03-28,Self assessment for Team Mentorship,2
+12,2,Technical Leadership,Technical Planning,4.8,self,2025-03-28,Self assessment for Technical Planning,2
+13,2,Software Architecture,System Design,3.7,self,2025-03-28,Self assessment for System Design,2
+14,2,Software Architecture,Architecture Patterns,4.2,self,2025-03-28,Self assessment for Architecture Patterns,2
+15,2,Development Practices,Code Quality,3.8,self,2025-03-28,Self assessment for Code Quality,2
+16,2,Development Practices,Testing Strategies,3.8,self,2025-03-28,Self assessment for Testing Strategies,2
+17,2,Problem Solving,Debug & Troubleshoot,4.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+18,2,Problem Solving,Performance Optimization,4.1,self,2025-03-28,Self assessment for Performance Optimization,2
+19,2,Communication,Technical Documentation,4.6,self,2025-03-28,Self assessment for Technical Documentation,2
+20,2,Communication,Stakeholder Communication,4.7,self,2025-03-28,Self assessment for Stakeholder Communication,2
+21,3,Technical Leadership,Team Mentorship,4.1,self,2025-03-28,Self assessment for Team Mentorship,2
+22,3,Technical Leadership,Technical Planning,4.8,self,2025-03-28,Self assessment for Technical Planning,2
+23,3,Software Architecture,System Design,4.2,self,2025-03-28,Self assessment for System Design,2
+24,3,Software Architecture,Architecture Patterns,4.0,self,2025-03-28,Self assessment for Architecture Patterns,2
+25,3,Development Practices,Code Quality,3.8,self,2025-03-28,Self assessment for Code Quality,2
+26,3,Development Practices,Testing Strategies,4.2,self,2025-03-28,Self assessment for Testing Strategies,2
+27,3,Problem Solving,Debug & Troubleshoot,4.5,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+28,3,Problem Solving,Performance Optimization,4.2,self,2025-03-28,Self assessment for Performance Optimization,2
+29,3,Communication,Technical Documentation,4.6,self,2025-03-28,Self assessment for Technical Documentation,2
+30,3,Communication,Stakeholder Communication,5.0,self,2025-03-28,Self assessment for Stakeholder Communication,2
+31,4,Technical Leadership,Team Mentorship,2.7,self,2025-03-28,Self assessment for Team Mentorship,2
+32,4,Technical Leadership,Technical Planning,3.1,self,2025-03-28,Self assessment for Technical Planning,2
+33,4,Software Architecture,System Design,2.7,self,2025-03-28,Self assessment for System Design,2
+34,4,Software Architecture,Architecture Patterns,2.5,self,2025-03-28,Self assessment for Architecture Patterns,2
+35,4,Development Practices,Code Quality,3.6,self,2025-03-28,Self assessment for Code Quality,2
+36,4,Development Practices,Testing Strategies,3.5,self,2025-03-28,Self assessment for Testing Strategies,2
+37,4,Problem Solving,Debug & Troubleshoot,3.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+38,4,Problem Solving,Performance Optimization,3.0,self,2025-03-28,Self assessment for Performance Optimization,2
+39,4,Communication,Technical Documentation,2.8,self,2025-03-28,Self assessment for Technical Documentation,2
+40,4,Communication,Stakeholder Communication,2.6,self,2025-03-28,Self assessment for Stakeholder Communication,2
+41,5,Technical Leadership,Team Mentorship,4.1,self,2025-03-28,Self assessment for Team Mentorship,2
+42,5,Technical Leadership,Technical Planning,4.2,self,2025-03-28,Self assessment for Technical Planning,2
+43,5,Software Architecture,System Design,4.3,self,2025-03-28,Self assessment for System Design,2
+44,5,Software Architecture,Architecture Patterns,3.9,self,2025-03-28,Self assessment for Architecture Patterns,2
+45,5,Development Practices,Code Quality,3.6,self,2025-03-28,Self assessment for Code Quality,2
+46,5,Development Practices,Testing Strategies,3.6,self,2025-03-28,Self assessment for Testing Strategies,2
+47,5,Problem Solving,Debug & Troubleshoot,4.2,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+48,5,Problem Solving,Performance Optimization,3.7,self,2025-03-28,Self assessment for Performance Optimization,2
+49,5,Communication,Technical Documentation,4.2,self,2025-03-28,Self assessment for Technical Documentation,2
+50,5,Communication,Stakeholder Communication,3.7,self,2025-03-28,Self assessment for Stakeholder Communication,2
+51,6,Technical Leadership,Team Mentorship,4.5,self,2025-03-28,Self assessment for Team Mentorship,2
+52,6,Technical Leadership,Technical Planning,4.2,self,2025-03-28,Self assessment for Technical Planning,2
+53,6,Software Architecture,System Design,4.4,self,2025-03-28,Self assessment for System Design,2
+54,6,Software Architecture,Architecture Patterns,4.3,self,2025-03-28,Self assessment for Architecture Patterns,2
+55,6,Development Practices,Code Quality,4.6,self,2025-03-28,Self assessment for Code Quality,2
+56,6,Development Practices,Testing Strategies,4.2,self,2025-03-28,Self assessment for Testing Strategies,2
+57,6,Problem Solving,Debug & Troubleshoot,4.7,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+58,6,Problem Solving,Performance Optimization,4.4,self,2025-03-28,Self assessment for Performance Optimization,2
+59,6,Communication,Technical Documentation,4.2,self,2025-03-28,Self assessment for Technical Documentation,2
+60,6,Communication,Stakeholder Communication,4.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+61,7,Technical Leadership,Team Mentorship,4.1,self,2025-03-28,Self assessment for Team Mentorship,2
+62,7,Technical Leadership,Technical Planning,4.2,self,2025-03-28,Self assessment for Technical Planning,2
+63,7,Software Architecture,System Design,4.5,self,2025-03-28,Self assessment for System Design,2
+64,7,Software Architecture,Architecture Patterns,4.6,self,2025-03-28,Self assessment for Architecture Patterns,2
+65,7,Development Practices,Code Quality,4.8,self,2025-03-28,Self assessment for Code Quality,2
+66,7,Development Practices,Testing Strategies,4.3,self,2025-03-28,Self assessment for Testing Strategies,2
+67,7,Problem Solving,Debug & Troubleshoot,4.3,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+68,7,Problem Solving,Performance Optimization,4.0,self,2025-03-28,Self assessment for Performance Optimization,2
+69,7,Communication,Technical Documentation,4.5,self,2025-03-28,Self assessment for Technical Documentation,2
+70,7,Communication,Stakeholder Communication,4.4,self,2025-03-28,Self assessment for Stakeholder Communication,2
+71,8,Technical Leadership,Team Mentorship,5.0,self,2025-03-28,Self assessment for Team Mentorship,2
+72,8,Technical Leadership,Technical Planning,5.0,self,2025-03-28,Self assessment for Technical Planning,2
+73,8,Software Architecture,System Design,4.6,self,2025-03-28,Self assessment for System Design,2
+74,8,Software Architecture,Architecture Patterns,4.7,self,2025-03-28,Self assessment for Architecture Patterns,2
+75,8,Development Practices,Code Quality,4.6,self,2025-03-28,Self assessment for Code Quality,2
+76,8,Development Practices,Testing Strategies,4.8,self,2025-03-28,Self assessment for Testing Strategies,2
+77,8,Problem Solving,Debug & Troubleshoot,4.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+78,8,Problem Solving,Performance Optimization,5.0,self,2025-03-28,Self assessment for Performance Optimization,2
+79,8,Communication,Technical Documentation,5.0,self,2025-03-28,Self assessment for Technical Documentation,2
+80,8,Communication,Stakeholder Communication,4.7,self,2025-03-28,Self assessment for Stakeholder Communication,2
+81,9,Technical Leadership,Team Mentorship,4.0,self,2025-03-28,Self assessment for Team Mentorship,2
+82,9,Technical Leadership,Technical Planning,4.8,self,2025-03-28,Self assessment for Technical Planning,2
+83,9,Software Architecture,System Design,4.5,self,2025-03-28,Self assessment for System Design,2
+84,9,Software Architecture,Architecture Patterns,4.2,self,2025-03-28,Self assessment for Architecture Patterns,2
+85,9,Development Practices,Code Quality,4.6,self,2025-03-28,Self assessment for Code Quality,2
+86,9,Development Practices,Testing Strategies,4.1,self,2025-03-28,Self assessment for Testing Strategies,2
+87,9,Problem Solving,Debug & Troubleshoot,4.8,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+88,9,Problem Solving,Performance Optimization,4.6,self,2025-03-28,Self assessment for Performance Optimization,2
+89,9,Communication,Technical Documentation,4.4,self,2025-03-28,Self assessment for Technical Documentation,2
+90,9,Communication,Stakeholder Communication,4.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+91,10,Technical Leadership,Team Mentorship,5.0,self,2025-03-28,Self assessment for Team Mentorship,2
+92,10,Technical Leadership,Technical Planning,4.9,self,2025-03-28,Self assessment for Technical Planning,2
+93,10,Software Architecture,System Design,5.0,self,2025-03-28,Self assessment for System Design,2
+94,10,Software Architecture,Architecture Patterns,4.7,self,2025-03-28,Self assessment for Architecture Patterns,2
+95,10,Development Practices,Code Quality,5.0,self,2025-03-28,Self assessment for Code Quality,2
+96,10,Development Practices,Testing Strategies,5.0,self,2025-03-28,Self assessment for Testing Strategies,2
+97,10,Problem Solving,Debug & Troubleshoot,5.0,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+98,10,Problem Solving,Performance Optimization,5.0,self,2025-03-28,Self assessment for Performance Optimization,2
+99,10,Communication,Technical Documentation,5.0,self,2025-03-28,Self assessment for Technical Documentation,2
+100,10,Communication,Stakeholder Communication,4.8,self,2025-03-28,Self assessment for Stakeholder Communication,2
+101,11,Technical Leadership,Team Mentorship,5.0,self,2025-03-28,Self assessment for Team Mentorship,2
+102,11,Technical Leadership,Technical Planning,4.5,self,2025-03-28,Self assessment for Technical Planning,2
+103,11,Software Architecture,System Design,4.8,self,2025-03-28,Self assessment for System Design,2
+104,11,Software Architecture,Architecture Patterns,5.0,self,2025-03-28,Self assessment for Architecture Patterns,2
+105,11,Development Practices,Code Quality,4.9,self,2025-03-28,Self assessment for Code Quality,2
+106,11,Development Practices,Testing Strategies,4.7,self,2025-03-28,Self assessment for Testing Strategies,2
+107,11,Problem Solving,Debug & Troubleshoot,4.9,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+108,11,Problem Solving,Performance Optimization,4.6,self,2025-03-28,Self assessment for Performance Optimization,2
+109,11,Communication,Technical Documentation,4.9,self,2025-03-28,Self assessment for Technical Documentation,2
+110,11,Communication,Stakeholder Communication,4.8,self,2025-03-28,Self assessment for Stakeholder Communication,2
+111,12,Technical Leadership,Team Mentorship,2.2,self,2025-03-28,Self assessment for Team Mentorship,2
+112,12,Technical Leadership,Technical Planning,2.6,self,2025-03-28,Self assessment for Technical Planning,2
+113,12,Software Architecture,System Design,3.0,self,2025-03-28,Self assessment for System Design,2
+114,12,Software Architecture,Architecture Patterns,3.1,self,2025-03-28,Self assessment for Architecture Patterns,2
+115,12,Development Practices,Code Quality,3.3,self,2025-03-28,Self assessment for Code Quality,2
+116,12,Development Practices,Testing Strategies,3.8,self,2025-03-28,Self assessment for Testing Strategies,2
+117,12,Problem Solving,Debug & Troubleshoot,3.1,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+118,12,Problem Solving,Performance Optimization,3.3,self,2025-03-28,Self assessment for Performance Optimization,2
+119,12,Communication,Technical Documentation,3.1,self,2025-03-28,Self assessment for Technical Documentation,2
+120,12,Communication,Stakeholder Communication,3.0,self,2025-03-28,Self assessment for Stakeholder Communication,2
+121,13,Technical Leadership,Team Mentorship,3.5,self,2025-03-28,Self assessment for Team Mentorship,2
+122,13,Technical Leadership,Technical Planning,3.5,self,2025-03-28,Self assessment for Technical Planning,2
+123,13,Software Architecture,System Design,4.1,self,2025-03-28,Self assessment for System Design,2
+124,13,Software Architecture,Architecture Patterns,3.9,self,2025-03-28,Self assessment for Architecture Patterns,2
+125,13,Development Practices,Code Quality,3.8,self,2025-03-28,Self assessment for Code Quality,2
+126,13,Development Practices,Testing Strategies,4.0,self,2025-03-28,Self assessment for Testing Strategies,2
+127,13,Problem Solving,Debug & Troubleshoot,3.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+128,13,Problem Solving,Performance Optimization,4.3,self,2025-03-28,Self assessment for Performance Optimization,2
+129,13,Communication,Technical Documentation,4.3,self,2025-03-28,Self assessment for Technical Documentation,2
+130,13,Communication,Stakeholder Communication,4.1,self,2025-03-28,Self assessment for Stakeholder Communication,2
+131,14,Technical Leadership,Team Mentorship,5.0,self,2025-03-28,Self assessment for Team Mentorship,2
+132,14,Technical Leadership,Technical Planning,4.5,self,2025-03-28,Self assessment for Technical Planning,2
+133,14,Software Architecture,System Design,4.6,self,2025-03-28,Self assessment for System Design,2
+134,14,Software Architecture,Architecture Patterns,5.0,self,2025-03-28,Self assessment for Architecture Patterns,2
+135,14,Development Practices,Code Quality,4.6,self,2025-03-28,Self assessment for Code Quality,2
+136,14,Development Practices,Testing Strategies,5.0,self,2025-03-28,Self assessment for Testing Strategies,2
+137,14,Problem Solving,Debug & Troubleshoot,4.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+138,14,Problem Solving,Performance Optimization,4.9,self,2025-03-28,Self assessment for Performance Optimization,2
+139,14,Communication,Technical Documentation,5.0,self,2025-03-28,Self assessment for Technical Documentation,2
+140,14,Communication,Stakeholder Communication,4.8,self,2025-03-28,Self assessment for Stakeholder Communication,2
+141,15,Technical Leadership,Team Mentorship,4.7,self,2025-03-28,Self assessment for Team Mentorship,2
+142,15,Technical Leadership,Technical Planning,5.0,self,2025-03-28,Self assessment for Technical Planning,2
+143,15,Software Architecture,System Design,5.0,self,2025-03-28,Self assessment for System Design,2
+144,15,Software Architecture,Architecture Patterns,5.0,self,2025-03-28,Self assessment for Architecture Patterns,2
+145,15,Development Practices,Code Quality,4.6,self,2025-03-28,Self assessment for Code Quality,2
+146,15,Development Practices,Testing Strategies,4.6,self,2025-03-28,Self assessment for Testing Strategies,2
+147,15,Problem Solving,Debug & Troubleshoot,4.9,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+148,15,Problem Solving,Performance Optimization,5.0,self,2025-03-28,Self assessment for Performance Optimization,2
+149,15,Communication,Technical Documentation,5.0,self,2025-03-28,Self assessment for Technical Documentation,2
+150,15,Communication,Stakeholder Communication,4.9,self,2025-03-28,Self assessment for Stakeholder Communication,2
+151,16,Technical Leadership,Team Mentorship,2.4,self,2025-03-28,Self assessment for Team Mentorship,2
+152,16,Technical Leadership,Technical Planning,3.1,self,2025-03-28,Self assessment for Technical Planning,2
+153,16,Software Architecture,System Design,3.3,self,2025-03-28,Self assessment for System Design,2
+154,16,Software Architecture,Architecture Patterns,2.7,self,2025-03-28,Self assessment for Architecture Patterns,2
+155,16,Development Practices,Code Quality,3.7,self,2025-03-28,Self assessment for Code Quality,2
+156,16,Development Practices,Testing Strategies,3.6,self,2025-03-28,Self assessment for Testing Strategies,2
+157,16,Problem Solving,Debug & Troubleshoot,3.1,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+158,16,Problem Solving,Performance Optimization,2.6,self,2025-03-28,Self assessment for Performance Optimization,2
+159,16,Communication,Technical Documentation,2.7,self,2025-03-28,Self assessment for Technical Documentation,2
+160,16,Communication,Stakeholder Communication,2.8,self,2025-03-28,Self assessment for Stakeholder Communication,2
+161,17,Technical Leadership,Team Mentorship,4.7,self,2025-03-28,Self assessment for Team Mentorship,2
+162,17,Technical Leadership,Technical Planning,4.9,self,2025-03-28,Self assessment for Technical Planning,2
+163,17,Software Architecture,System Design,5.0,self,2025-03-28,Self assessment for System Design,2
+164,17,Software Architecture,Architecture Patterns,4.7,self,2025-03-28,Self assessment for Architecture Patterns,2
+165,17,Development Practices,Code Quality,5.0,self,2025-03-28,Self assessment for Code Quality,2
+166,17,Development Practices,Testing Strategies,4.8,self,2025-03-28,Self assessment for Testing Strategies,2
+167,17,Problem Solving,Debug & Troubleshoot,4.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+168,17,Problem Solving,Performance Optimization,4.9,self,2025-03-28,Self assessment for Performance Optimization,2
+169,17,Communication,Technical Documentation,4.7,self,2025-03-28,Self assessment for Technical Documentation,2
+170,17,Communication,Stakeholder Communication,5.0,self,2025-03-28,Self assessment for Stakeholder Communication,2
+171,18,Technical Leadership,Team Mentorship,1.8,self,2025-03-28,Self assessment for Team Mentorship,2
+172,18,Technical Leadership,Technical Planning,2.2,self,2025-03-28,Self assessment for Technical Planning,2
+173,18,Software Architecture,System Design,2.0,self,2025-03-28,Self assessment for System Design,2
+174,18,Software Architecture,Architecture Patterns,1.7,self,2025-03-28,Self assessment for Architecture Patterns,2
+175,18,Development Practices,Code Quality,2.1,self,2025-03-28,Self assessment for Code Quality,2
+176,18,Development Practices,Testing Strategies,2.2,self,2025-03-28,Self assessment for Testing Strategies,2
+177,18,Problem Solving,Debug & Troubleshoot,2.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+178,18,Problem Solving,Performance Optimization,2.0,self,2025-03-28,Self assessment for Performance Optimization,2
+179,18,Communication,Technical Documentation,2.4,self,2025-03-28,Self assessment for Technical Documentation,2
+180,18,Communication,Stakeholder Communication,2.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+181,19,Technical Leadership,Team Mentorship,3.8,self,2025-03-28,Self assessment for Team Mentorship,2
+182,19,Technical Leadership,Technical Planning,4.2,self,2025-03-28,Self assessment for Technical Planning,2
+183,19,Software Architecture,System Design,4.1,self,2025-03-28,Self assessment for System Design,2
+184,19,Software Architecture,Architecture Patterns,3.8,self,2025-03-28,Self assessment for Architecture Patterns,2
+185,19,Development Practices,Code Quality,4.0,self,2025-03-28,Self assessment for Code Quality,2
+186,19,Development Practices,Testing Strategies,3.7,self,2025-03-28,Self assessment for Testing Strategies,2
+187,19,Problem Solving,Debug & Troubleshoot,4.0,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+188,19,Problem Solving,Performance Optimization,3.9,self,2025-03-28,Self assessment for Performance Optimization,2
+189,19,Communication,Technical Documentation,4.3,self,2025-03-28,Self assessment for Technical Documentation,2
+190,19,Communication,Stakeholder Communication,3.8,self,2025-03-28,Self assessment for Stakeholder Communication,2
+191,20,Technical Leadership,Team Mentorship,1.9,self,2025-03-28,Self assessment for Team Mentorship,2
+192,20,Technical Leadership,Technical Planning,2.3,self,2025-03-28,Self assessment for Technical Planning,2
+193,20,Software Architecture,System Design,2.2,self,2025-03-28,Self assessment for System Design,2
+194,20,Software Architecture,Architecture Patterns,1.8,self,2025-03-28,Self assessment for Architecture Patterns,2
+195,20,Development Practices,Code Quality,2.4,self,2025-03-28,Self assessment for Code Quality,2
+196,20,Development Practices,Testing Strategies,2.6,self,2025-03-28,Self assessment for Testing Strategies,2
+197,20,Problem Solving,Debug & Troubleshoot,2.3,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+198,20,Problem Solving,Performance Optimization,2.0,self,2025-03-28,Self assessment for Performance Optimization,2
+199,20,Communication,Technical Documentation,2.4,self,2025-03-28,Self assessment for Technical Documentation,2
+200,20,Communication,Stakeholder Communication,2.6,self,2025-03-28,Self assessment for Stakeholder Communication,2
+201,21,Technical Leadership,Team Mentorship,2.3,self,2025-03-28,Self assessment for Team Mentorship,2
+202,21,Technical Leadership,Technical Planning,2.6,self,2025-03-28,Self assessment for Technical Planning,2
+203,21,Software Architecture,System Design,3.3,self,2025-03-28,Self assessment for System Design,2
+204,21,Software Architecture,Architecture Patterns,2.8,self,2025-03-28,Self assessment for Architecture Patterns,2
+205,21,Development Practices,Code Quality,3.5,self,2025-03-28,Self assessment for Code Quality,2
+206,21,Development Practices,Testing Strategies,3.6,self,2025-03-28,Self assessment for Testing Strategies,2
+207,21,Problem Solving,Debug & Troubleshoot,3.1,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+208,21,Problem Solving,Performance Optimization,2.8,self,2025-03-28,Self assessment for Performance Optimization,2
+209,21,Communication,Technical Documentation,3.2,self,2025-03-28,Self assessment for Technical Documentation,2
+210,21,Communication,Stakeholder Communication,2.6,self,2025-03-28,Self assessment for Stakeholder Communication,2
+211,22,Technical Leadership,Team Mentorship,4.8,self,2025-03-28,Self assessment for Team Mentorship,2
+212,22,Technical Leadership,Technical Planning,4.6,self,2025-03-28,Self assessment for Technical Planning,2
+213,22,Software Architecture,System Design,4.5,self,2025-03-28,Self assessment for System Design,2
+214,22,Software Architecture,Architecture Patterns,4.7,self,2025-03-28,Self assessment for Architecture Patterns,2
+215,22,Development Practices,Code Quality,4.6,self,2025-03-28,Self assessment for Code Quality,2
+216,22,Development Practices,Testing Strategies,4.5,self,2025-03-28,Self assessment for Testing Strategies,2
+217,22,Problem Solving,Debug & Troubleshoot,4.5,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+218,22,Problem Solving,Performance Optimization,4.0,self,2025-03-28,Self assessment for Performance Optimization,2
+219,22,Communication,Technical Documentation,4.7,self,2025-03-28,Self assessment for Technical Documentation,2
+220,22,Communication,Stakeholder Communication,4.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+221,23,Technical Leadership,Team Mentorship,1.6,self,2025-03-28,Self assessment for Team Mentorship,2
+222,23,Technical Leadership,Technical Planning,1.8,self,2025-03-28,Self assessment for Technical Planning,2
+223,23,Software Architecture,System Design,1.9,self,2025-03-28,Self assessment for System Design,2
+224,23,Software Architecture,Architecture Patterns,1.7,self,2025-03-28,Self assessment for Architecture Patterns,2
+225,23,Development Practices,Code Quality,2.5,self,2025-03-28,Self assessment for Code Quality,2
+226,23,Development Practices,Testing Strategies,2.3,self,2025-03-28,Self assessment for Testing Strategies,2
+227,23,Problem Solving,Debug & Troubleshoot,2.8,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+228,23,Problem Solving,Performance Optimization,1.8,self,2025-03-28,Self assessment for Performance Optimization,2
+229,23,Communication,Technical Documentation,2.1,self,2025-03-28,Self assessment for Technical Documentation,2
+230,23,Communication,Stakeholder Communication,2.1,self,2025-03-28,Self assessment for Stakeholder Communication,2
+231,24,Technical Leadership,Team Mentorship,4.1,self,2025-03-28,Self assessment for Team Mentorship,2
+232,24,Technical Leadership,Technical Planning,4.3,self,2025-03-28,Self assessment for Technical Planning,2
+233,24,Software Architecture,System Design,4.1,self,2025-03-28,Self assessment for System Design,2
+234,24,Software Architecture,Architecture Patterns,4.0,self,2025-03-28,Self assessment for Architecture Patterns,2
+235,24,Development Practices,Code Quality,4.5,self,2025-03-28,Self assessment for Code Quality,2
+236,24,Development Practices,Testing Strategies,4.3,self,2025-03-28,Self assessment for Testing Strategies,2
+237,24,Problem Solving,Debug & Troubleshoot,4.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+238,24,Problem Solving,Performance Optimization,4.3,self,2025-03-28,Self assessment for Performance Optimization,2
+239,24,Communication,Technical Documentation,4.6,self,2025-03-28,Self assessment for Technical Documentation,2
+240,24,Communication,Stakeholder Communication,4.8,self,2025-03-28,Self assessment for Stakeholder Communication,2
+241,25,Technical Leadership,Team Mentorship,4.0,self,2025-03-28,Self assessment for Team Mentorship,2
+242,25,Technical Leadership,Technical Planning,4.7,self,2025-03-28,Self assessment for Technical Planning,2
+243,25,Software Architecture,System Design,4.7,self,2025-03-28,Self assessment for System Design,2
+244,25,Software Architecture,Architecture Patterns,4.8,self,2025-03-28,Self assessment for Architecture Patterns,2
+245,25,Development Practices,Code Quality,4.1,self,2025-03-28,Self assessment for Code Quality,2
+246,25,Development Practices,Testing Strategies,4.1,self,2025-03-28,Self assessment for Testing Strategies,2
+247,25,Problem Solving,Debug & Troubleshoot,4.2,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+248,25,Problem Solving,Performance Optimization,4.3,self,2025-03-28,Self assessment for Performance Optimization,2
+249,25,Communication,Technical Documentation,4.0,self,2025-03-28,Self assessment for Technical Documentation,2
+250,25,Communication,Stakeholder Communication,4.3,self,2025-03-28,Self assessment for Stakeholder Communication,2
+251,26,Technical Leadership,Team Mentorship,5.0,self,2025-03-28,Self assessment for Team Mentorship,2
+252,26,Technical Leadership,Technical Planning,4.8,self,2025-03-28,Self assessment for Technical Planning,2
+253,26,Software Architecture,System Design,4.7,self,2025-03-28,Self assessment for System Design,2
+254,26,Software Architecture,Architecture Patterns,5.0,self,2025-03-28,Self assessment for Architecture Patterns,2
+255,26,Development Practices,Code Quality,5.0,self,2025-03-28,Self assessment for Code Quality,2
+256,26,Development Practices,Testing Strategies,4.7,self,2025-03-28,Self assessment for Testing Strategies,2
+257,26,Problem Solving,Debug & Troubleshoot,5.0,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+258,26,Problem Solving,Performance Optimization,4.8,self,2025-03-28,Self assessment for Performance Optimization,2
+259,26,Communication,Technical Documentation,5.0,self,2025-03-28,Self assessment for Technical Documentation,2
+260,26,Communication,Stakeholder Communication,4.8,self,2025-03-28,Self assessment for Stakeholder Communication,2
+261,27,Technical Leadership,Team Mentorship,2.3,self,2025-03-28,Self assessment for Team Mentorship,2
+262,27,Technical Leadership,Technical Planning,2.7,self,2025-03-28,Self assessment for Technical Planning,2
+263,27,Software Architecture,System Design,3.3,self,2025-03-28,Self assessment for System Design,2
+264,27,Software Architecture,Architecture Patterns,3.2,self,2025-03-28,Self assessment for Architecture Patterns,2
+265,27,Development Practices,Code Quality,3.8,self,2025-03-28,Self assessment for Code Quality,2
+266,27,Development Practices,Testing Strategies,3.6,self,2025-03-28,Self assessment for Testing Strategies,2
+267,27,Problem Solving,Debug & Troubleshoot,3.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+268,27,Problem Solving,Performance Optimization,2.6,self,2025-03-28,Self assessment for Performance Optimization,2
+269,27,Communication,Technical Documentation,3.2,self,2025-03-28,Self assessment for Technical Documentation,2
+270,27,Communication,Stakeholder Communication,2.8,self,2025-03-28,Self assessment for Stakeholder Communication,2
+271,28,Technical Leadership,Team Mentorship,2.3,self,2025-03-28,Self assessment for Team Mentorship,2
+272,28,Technical Leadership,Technical Planning,2.6,self,2025-03-28,Self assessment for Technical Planning,2
+273,28,Software Architecture,System Design,2.5,self,2025-03-28,Self assessment for System Design,2
+274,28,Software Architecture,Architecture Patterns,2.9,self,2025-03-28,Self assessment for Architecture Patterns,2
+275,28,Development Practices,Code Quality,3.5,self,2025-03-28,Self assessment for Code Quality,2
+276,28,Development Practices,Testing Strategies,3.7,self,2025-03-28,Self assessment for Testing Strategies,2
+277,28,Problem Solving,Debug & Troubleshoot,3.4,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+278,28,Problem Solving,Performance Optimization,2.7,self,2025-03-28,Self assessment for Performance Optimization,2
+279,28,Communication,Technical Documentation,2.7,self,2025-03-28,Self assessment for Technical Documentation,2
+280,28,Communication,Stakeholder Communication,3.0,self,2025-03-28,Self assessment for Stakeholder Communication,2
+281,29,Technical Leadership,Team Mentorship,4.5,self,2025-03-28,Self assessment for Team Mentorship,2
+282,29,Technical Leadership,Technical Planning,4.4,self,2025-03-28,Self assessment for Technical Planning,2
+283,29,Software Architecture,System Design,4.6,self,2025-03-28,Self assessment for System Design,2
+284,29,Software Architecture,Architecture Patterns,4.6,self,2025-03-28,Self assessment for Architecture Patterns,2
+285,29,Development Practices,Code Quality,4.3,self,2025-03-28,Self assessment for Code Quality,2
+286,29,Development Practices,Testing Strategies,4.2,self,2025-03-28,Self assessment for Testing Strategies,2
+287,29,Problem Solving,Debug & Troubleshoot,4.3,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+288,29,Problem Solving,Performance Optimization,4.6,self,2025-03-28,Self assessment for Performance Optimization,2
+289,29,Communication,Technical Documentation,4.3,self,2025-03-28,Self assessment for Technical Documentation,2
+290,29,Communication,Stakeholder Communication,4.5,self,2025-03-28,Self assessment for Stakeholder Communication,2
+291,30,Technical Leadership,Team Mentorship,1.8,self,2025-03-28,Self assessment for Team Mentorship,2
+292,30,Technical Leadership,Technical Planning,2.0,self,2025-03-28,Self assessment for Technical Planning,2
+293,30,Software Architecture,System Design,1.9,self,2025-03-28,Self assessment for System Design,2
+294,30,Software Architecture,Architecture Patterns,2.3,self,2025-03-28,Self assessment for Architecture Patterns,2
+295,30,Development Practices,Code Quality,2.7,self,2025-03-28,Self assessment for Code Quality,2
+296,30,Development Practices,Testing Strategies,2.3,self,2025-03-28,Self assessment for Testing Strategies,2
+297,30,Problem Solving,Debug & Troubleshoot,2.5,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+298,30,Problem Solving,Performance Optimization,2.2,self,2025-03-28,Self assessment for Performance Optimization,2
+299,30,Communication,Technical Documentation,2.3,self,2025-03-28,Self assessment for Technical Documentation,2
+300,30,Communication,Stakeholder Communication,2.3,self,2025-03-28,Self assessment for Stakeholder Communication,2
+301,31,Technical Leadership,Team Mentorship,4.1,self,2025-03-28,Self assessment for Team Mentorship,2
+302,31,Technical Leadership,Technical Planning,4.0,self,2025-03-28,Self assessment for Technical Planning,2
+303,31,Software Architecture,System Design,4.2,self,2025-03-28,Self assessment for System Design,2
+304,31,Software Architecture,Architecture Patterns,4.1,self,2025-03-28,Self assessment for Architecture Patterns,2
+305,31,Development Practices,Code Quality,3.6,self,2025-03-28,Self assessment for Code Quality,2
+306,31,Development Practices,Testing Strategies,3.8,self,2025-03-28,Self assessment for Testing Strategies,2
+307,31,Problem Solving,Debug & Troubleshoot,3.7,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+308,31,Problem Solving,Performance Optimization,3.6,self,2025-03-28,Self assessment for Performance Optimization,2
+309,31,Communication,Technical Documentation,4.2,self,2025-03-28,Self assessment for Technical Documentation,2
+310,31,Communication,Stakeholder Communication,4.1,self,2025-03-28,Self assessment for Stakeholder Communication,2
+311,32,Technical Leadership,Team Mentorship,4.2,self,2025-03-28,Self assessment for Team Mentorship,2
+312,32,Technical Leadership,Technical Planning,3.5,self,2025-03-28,Self assessment for Technical Planning,2
+313,32,Software Architecture,System Design,3.9,self,2025-03-28,Self assessment for System Design,2
+314,32,Software Architecture,Architecture Patterns,3.6,self,2025-03-28,Self assessment for Architecture Patterns,2
+315,32,Development Practices,Code Quality,4.0,self,2025-03-28,Self assessment for Code Quality,2
+316,32,Development Practices,Testing Strategies,3.6,self,2025-03-28,Self assessment for Testing Strategies,2
+317,32,Problem Solving,Debug & Troubleshoot,3.7,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+318,32,Problem Solving,Performance Optimization,3.8,self,2025-03-28,Self assessment for Performance Optimization,2
+319,32,Communication,Technical Documentation,4.3,self,2025-03-28,Self assessment for Technical Documentation,2
+320,32,Communication,Stakeholder Communication,4.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+321,33,Technical Leadership,Team Mentorship,4.2,self,2025-03-28,Self assessment for Team Mentorship,2
+322,33,Technical Leadership,Technical Planning,4.0,self,2025-03-28,Self assessment for Technical Planning,2
+323,33,Software Architecture,System Design,4.3,self,2025-03-28,Self assessment for System Design,2
+324,33,Software Architecture,Architecture Patterns,4.3,self,2025-03-28,Self assessment for Architecture Patterns,2
+325,33,Development Practices,Code Quality,3.9,self,2025-03-28,Self assessment for Code Quality,2
+326,33,Development Practices,Testing Strategies,3.7,self,2025-03-28,Self assessment for Testing Strategies,2
+327,33,Problem Solving,Debug & Troubleshoot,3.9,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+328,33,Problem Solving,Performance Optimization,4.1,self,2025-03-28,Self assessment for Performance Optimization,2
+329,33,Communication,Technical Documentation,3.9,self,2025-03-28,Self assessment for Technical Documentation,2
+330,33,Communication,Stakeholder Communication,4.1,self,2025-03-28,Self assessment for Stakeholder Communication,2
+331,34,Technical Leadership,Team Mentorship,3.7,self,2025-03-28,Self assessment for Team Mentorship,2
+332,34,Technical Leadership,Technical Planning,4.2,self,2025-03-28,Self assessment for Technical Planning,2
+333,34,Software Architecture,System Design,4.1,self,2025-03-28,Self assessment for System Design,2
+334,34,Software Architecture,Architecture Patterns,3.7,self,2025-03-28,Self assessment for Architecture Patterns,2
+335,34,Development Practices,Code Quality,3.8,self,2025-03-28,Self assessment for Code Quality,2
+336,34,Development Practices,Testing Strategies,4.2,self,2025-03-28,Self assessment for Testing Strategies,2
+337,34,Problem Solving,Debug & Troubleshoot,3.7,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+338,34,Problem Solving,Performance Optimization,4.0,self,2025-03-28,Self assessment for Performance Optimization,2
+339,34,Communication,Technical Documentation,3.7,self,2025-03-28,Self assessment for Technical Documentation,2
+340,34,Communication,Stakeholder Communication,4.0,self,2025-03-28,Self assessment for Stakeholder Communication,2
+341,35,Technical Leadership,Team Mentorship,3.8,self,2025-03-28,Self assessment for Team Mentorship,2
+342,35,Technical Leadership,Technical Planning,4.1,self,2025-03-28,Self assessment for Technical Planning,2
+343,35,Software Architecture,System Design,4.2,self,2025-03-28,Self assessment for System Design,2
+344,35,Software Architecture,Architecture Patterns,3.8,self,2025-03-28,Self assessment for Architecture Patterns,2
+345,35,Development Practices,Code Quality,3.6,self,2025-03-28,Self assessment for Code Quality,2
+346,35,Development Practices,Testing Strategies,4.2,self,2025-03-28,Self assessment for Testing Strategies,2
+347,35,Problem Solving,Debug & Troubleshoot,3.7,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+348,35,Problem Solving,Performance Optimization,3.7,self,2025-03-28,Self assessment for Performance Optimization,2
+349,35,Communication,Technical Documentation,4.1,self,2025-03-28,Self assessment for Technical Documentation,2
+350,35,Communication,Stakeholder Communication,3.9,self,2025-03-28,Self assessment for Stakeholder Communication,2
+351,36,Technical Leadership,Team Mentorship,4.4,self,2025-03-28,Self assessment for Team Mentorship,2
+352,36,Technical Leadership,Technical Planning,4.1,self,2025-03-28,Self assessment for Technical Planning,2
+353,36,Software Architecture,System Design,4.6,self,2025-03-28,Self assessment for System Design,2
+354,36,Software Architecture,Architecture Patterns,4.2,self,2025-03-28,Self assessment for Architecture Patterns,2
+355,36,Development Practices,Code Quality,4.1,self,2025-03-28,Self assessment for Code Quality,2
+356,36,Development Practices,Testing Strategies,4.4,self,2025-03-28,Self assessment for Testing Strategies,2
+357,36,Problem Solving,Debug & Troubleshoot,4.1,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+358,36,Problem Solving,Performance Optimization,4.8,self,2025-03-28,Self assessment for Performance Optimization,2
+359,36,Communication,Technical Documentation,4.3,self,2025-03-28,Self assessment for Technical Documentation,2
+360,36,Communication,Stakeholder Communication,4.7,self,2025-03-28,Self assessment for Stakeholder Communication,2
+361,37,Technical Leadership,Team Mentorship,2.7,self,2025-03-28,Self assessment for Team Mentorship,2
+362,37,Technical Leadership,Technical Planning,2.7,self,2025-03-28,Self assessment for Technical Planning,2
+363,37,Software Architecture,System Design,3.0,self,2025-03-28,Self assessment for System Design,2
+364,37,Software Architecture,Architecture Patterns,2.8,self,2025-03-28,Self assessment for Architecture Patterns,2
+365,37,Development Practices,Code Quality,3.7,self,2025-03-28,Self assessment for Code Quality,2
+366,37,Development Practices,Testing Strategies,3.0,self,2025-03-28,Self assessment for Testing Strategies,2
+367,37,Problem Solving,Debug & Troubleshoot,3.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+368,37,Problem Solving,Performance Optimization,2.9,self,2025-03-28,Self assessment for Performance Optimization,2
+369,37,Communication,Technical Documentation,2.9,self,2025-03-28,Self assessment for Technical Documentation,2
+370,37,Communication,Stakeholder Communication,2.9,self,2025-03-28,Self assessment for Stakeholder Communication,2
+371,38,Technical Leadership,Team Mentorship,2.2,self,2025-03-28,Self assessment for Team Mentorship,2
+372,38,Technical Leadership,Technical Planning,1.6,self,2025-03-28,Self assessment for Technical Planning,2
+373,38,Software Architecture,System Design,2.1,self,2025-03-28,Self assessment for System Design,2
+374,38,Software Architecture,Architecture Patterns,1.8,self,2025-03-28,Self assessment for Architecture Patterns,2
+375,38,Development Practices,Code Quality,2.4,self,2025-03-28,Self assessment for Code Quality,2
+376,38,Development Practices,Testing Strategies,2.4,self,2025-03-28,Self assessment for Testing Strategies,2
+377,38,Problem Solving,Debug & Troubleshoot,2.1,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+378,38,Problem Solving,Performance Optimization,2.1,self,2025-03-28,Self assessment for Performance Optimization,2
+379,38,Communication,Technical Documentation,2.4,self,2025-03-28,Self assessment for Technical Documentation,2
+380,38,Communication,Stakeholder Communication,2.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+381,39,Technical Leadership,Team Mentorship,2.7,self,2025-03-28,Self assessment for Team Mentorship,2
+382,39,Technical Leadership,Technical Planning,2.9,self,2025-03-28,Self assessment for Technical Planning,2
+383,39,Software Architecture,System Design,3.0,self,2025-03-28,Self assessment for System Design,2
+384,39,Software Architecture,Architecture Patterns,3.2,self,2025-03-28,Self assessment for Architecture Patterns,2
+385,39,Development Practices,Code Quality,3.8,self,2025-03-28,Self assessment for Code Quality,2
+386,39,Development Practices,Testing Strategies,3.4,self,2025-03-28,Self assessment for Testing Strategies,2
+387,39,Problem Solving,Debug & Troubleshoot,3.2,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+388,39,Problem Solving,Performance Optimization,2.8,self,2025-03-28,Self assessment for Performance Optimization,2
+389,39,Communication,Technical Documentation,3.0,self,2025-03-28,Self assessment for Technical Documentation,2
+390,39,Communication,Stakeholder Communication,3.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+391,40,Technical Leadership,Team Mentorship,4.1,self,2025-03-28,Self assessment for Team Mentorship,2
+392,40,Technical Leadership,Technical Planning,4.6,self,2025-03-28,Self assessment for Technical Planning,2
+393,40,Software Architecture,System Design,4.3,self,2025-03-28,Self assessment for System Design,2
+394,40,Software Architecture,Architecture Patterns,4.6,self,2025-03-28,Self assessment for Architecture Patterns,2
+395,40,Development Practices,Code Quality,4.2,self,2025-03-28,Self assessment for Code Quality,2
+396,40,Development Practices,Testing Strategies,4.3,self,2025-03-28,Self assessment for Testing Strategies,2
+397,40,Problem Solving,Debug & Troubleshoot,4.4,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+398,40,Problem Solving,Performance Optimization,4.1,self,2025-03-28,Self assessment for Performance Optimization,2
+399,40,Communication,Technical Documentation,4.3,self,2025-03-28,Self assessment for Technical Documentation,2
+400,40,Communication,Stakeholder Communication,4.6,self,2025-03-28,Self assessment for Stakeholder Communication,2
+401,41,Technical Leadership,Team Mentorship,4.3,self,2025-03-28,Self assessment for Team Mentorship,2
+402,41,Technical Leadership,Technical Planning,4.5,self,2025-03-28,Self assessment for Technical Planning,2
+403,41,Software Architecture,System Design,4.6,self,2025-03-28,Self assessment for System Design,2
+404,41,Software Architecture,Architecture Patterns,4.2,self,2025-03-28,Self assessment for Architecture Patterns,2
+405,41,Development Practices,Code Quality,4.7,self,2025-03-28,Self assessment for Code Quality,2
+406,41,Development Practices,Testing Strategies,4.8,self,2025-03-28,Self assessment for Testing Strategies,2
+407,41,Problem Solving,Debug & Troubleshoot,4.1,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+408,41,Problem Solving,Performance Optimization,4.6,self,2025-03-28,Self assessment for Performance Optimization,2
+409,41,Communication,Technical Documentation,4.6,self,2025-03-28,Self assessment for Technical Documentation,2
+410,41,Communication,Stakeholder Communication,4.1,self,2025-03-28,Self assessment for Stakeholder Communication,2
+411,42,Technical Leadership,Team Mentorship,1.8,self,2025-03-28,Self assessment for Team Mentorship,2
+412,42,Technical Leadership,Technical Planning,1.9,self,2025-03-28,Self assessment for Technical Planning,2
+413,42,Software Architecture,System Design,1.6,self,2025-03-28,Self assessment for System Design,2
+414,42,Software Architecture,Architecture Patterns,1.6,self,2025-03-28,Self assessment for Architecture Patterns,2
+415,42,Development Practices,Code Quality,2.1,self,2025-03-28,Self assessment for Code Quality,2
+416,42,Development Practices,Testing Strategies,2.7,self,2025-03-28,Self assessment for Testing Strategies,2
+417,42,Problem Solving,Debug & Troubleshoot,2.4,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+418,42,Problem Solving,Performance Optimization,1.9,self,2025-03-28,Self assessment for Performance Optimization,2
+419,42,Communication,Technical Documentation,2.7,self,2025-03-28,Self assessment for Technical Documentation,2
+420,42,Communication,Stakeholder Communication,2.1,self,2025-03-28,Self assessment for Stakeholder Communication,2
+421,43,Technical Leadership,Team Mentorship,4.1,self,2025-03-28,Self assessment for Team Mentorship,2
+422,43,Technical Leadership,Technical Planning,4.4,self,2025-03-28,Self assessment for Technical Planning,2
+423,43,Software Architecture,System Design,4.1,self,2025-03-28,Self assessment for System Design,2
+424,43,Software Architecture,Architecture Patterns,4.0,self,2025-03-28,Self assessment for Architecture Patterns,2
+425,43,Development Practices,Code Quality,4.1,self,2025-03-28,Self assessment for Code Quality,2
+426,43,Development Practices,Testing Strategies,4.7,self,2025-03-28,Self assessment for Testing Strategies,2
+427,43,Problem Solving,Debug & Troubleshoot,4.2,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+428,43,Problem Solving,Performance Optimization,4.5,self,2025-03-28,Self assessment for Performance Optimization,2
+429,43,Communication,Technical Documentation,4.7,self,2025-03-28,Self assessment for Technical Documentation,2
+430,43,Communication,Stakeholder Communication,4.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+431,44,Technical Leadership,Team Mentorship,2.6,self,2025-03-28,Self assessment for Team Mentorship,2
+432,44,Technical Leadership,Technical Planning,2.9,self,2025-03-28,Self assessment for Technical Planning,2
+433,44,Software Architecture,System Design,2.5,self,2025-03-28,Self assessment for System Design,2
+434,44,Software Architecture,Architecture Patterns,3.3,self,2025-03-28,Self assessment for Architecture Patterns,2
+435,44,Development Practices,Code Quality,3.6,self,2025-03-28,Self assessment for Code Quality,2
+436,44,Development Practices,Testing Strategies,3.8,self,2025-03-28,Self assessment for Testing Strategies,2
+437,44,Problem Solving,Debug & Troubleshoot,3.6,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+438,44,Problem Solving,Performance Optimization,2.9,self,2025-03-28,Self assessment for Performance Optimization,2
+439,44,Communication,Technical Documentation,3.0,self,2025-03-28,Self assessment for Technical Documentation,2
+440,44,Communication,Stakeholder Communication,3.1,self,2025-03-28,Self assessment for Stakeholder Communication,2
+441,45,Technical Leadership,Team Mentorship,2.3,self,2025-03-28,Self assessment for Team Mentorship,2
+442,45,Technical Leadership,Technical Planning,1.5,self,2025-03-28,Self assessment for Technical Planning,2
+443,45,Software Architecture,System Design,2.2,self,2025-03-28,Self assessment for System Design,2
+444,45,Software Architecture,Architecture Patterns,1.6,self,2025-03-28,Self assessment for Architecture Patterns,2
+445,45,Development Practices,Code Quality,2.7,self,2025-03-28,Self assessment for Code Quality,2
+446,45,Development Practices,Testing Strategies,2.4,self,2025-03-28,Self assessment for Testing Strategies,2
+447,45,Problem Solving,Debug & Troubleshoot,2.7,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+448,45,Problem Solving,Performance Optimization,1.9,self,2025-03-28,Self assessment for Performance Optimization,2
+449,45,Communication,Technical Documentation,2.7,self,2025-03-28,Self assessment for Technical Documentation,2
+450,45,Communication,Stakeholder Communication,2.5,self,2025-03-28,Self assessment for Stakeholder Communication,2
+451,46,Technical Leadership,Team Mentorship,2.3,self,2025-03-28,Self assessment for Team Mentorship,2
+452,46,Technical Leadership,Technical Planning,2.8,self,2025-03-28,Self assessment for Technical Planning,2
+453,46,Software Architecture,System Design,2.7,self,2025-03-28,Self assessment for System Design,2
+454,46,Software Architecture,Architecture Patterns,2.9,self,2025-03-28,Self assessment for Architecture Patterns,2
+455,46,Development Practices,Code Quality,3.6,self,2025-03-28,Self assessment for Code Quality,2
+456,46,Development Practices,Testing Strategies,3.3,self,2025-03-28,Self assessment for Testing Strategies,2
+457,46,Problem Solving,Debug & Troubleshoot,3.8,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+458,46,Problem Solving,Performance Optimization,2.9,self,2025-03-28,Self assessment for Performance Optimization,2
+459,46,Communication,Technical Documentation,3.0,self,2025-03-28,Self assessment for Technical Documentation,2
+460,46,Communication,Stakeholder Communication,3.0,self,2025-03-28,Self assessment for Stakeholder Communication,2
+461,47,Technical Leadership,Team Mentorship,4.7,self,2025-03-28,Self assessment for Team Mentorship,2
+462,47,Technical Leadership,Technical Planning,4.5,self,2025-03-28,Self assessment for Technical Planning,2
+463,47,Software Architecture,System Design,4.6,self,2025-03-28,Self assessment for System Design,2
+464,47,Software Architecture,Architecture Patterns,4.1,self,2025-03-28,Self assessment for Architecture Patterns,2
+465,47,Development Practices,Code Quality,4.7,self,2025-03-28,Self assessment for Code Quality,2
+466,47,Development Practices,Testing Strategies,4.4,self,2025-03-28,Self assessment for Testing Strategies,2
+467,47,Problem Solving,Debug & Troubleshoot,4.3,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+468,47,Problem Solving,Performance Optimization,4.3,self,2025-03-28,Self assessment for Performance Optimization,2
+469,47,Communication,Technical Documentation,4.1,self,2025-03-28,Self assessment for Technical Documentation,2
+470,47,Communication,Stakeholder Communication,4.8,self,2025-03-28,Self assessment for Stakeholder Communication,2
+471,48,Technical Leadership,Team Mentorship,4.1,self,2025-03-28,Self assessment for Team Mentorship,2
+472,48,Technical Leadership,Technical Planning,4.1,self,2025-03-28,Self assessment for Technical Planning,2
+473,48,Software Architecture,System Design,4.2,self,2025-03-28,Self assessment for System Design,2
+474,48,Software Architecture,Architecture Patterns,4.0,self,2025-03-28,Self assessment for Architecture Patterns,2
+475,48,Development Practices,Code Quality,4.5,self,2025-03-28,Self assessment for Code Quality,2
+476,48,Development Practices,Testing Strategies,4.7,self,2025-03-28,Self assessment for Testing Strategies,2
+477,48,Problem Solving,Debug & Troubleshoot,4.8,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+478,48,Problem Solving,Performance Optimization,4.7,self,2025-03-28,Self assessment for Performance Optimization,2
+479,48,Communication,Technical Documentation,4.3,self,2025-03-28,Self assessment for Technical Documentation,2
+480,48,Communication,Stakeholder Communication,4.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+481,49,Technical Leadership,Team Mentorship,2.1,self,2025-03-28,Self assessment for Team Mentorship,2
+482,49,Technical Leadership,Technical Planning,2.6,self,2025-03-28,Self assessment for Technical Planning,2
+483,49,Software Architecture,System Design,2.5,self,2025-03-28,Self assessment for System Design,2
+484,49,Software Architecture,Architecture Patterns,3.0,self,2025-03-28,Self assessment for Architecture Patterns,2
+485,49,Development Practices,Code Quality,3.5,self,2025-03-28,Self assessment for Code Quality,2
+486,49,Development Practices,Testing Strategies,3.4,self,2025-03-28,Self assessment for Testing Strategies,2
+487,49,Problem Solving,Debug & Troubleshoot,3.1,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+488,49,Problem Solving,Performance Optimization,2.7,self,2025-03-28,Self assessment for Performance Optimization,2
+489,49,Communication,Technical Documentation,2.7,self,2025-03-28,Self assessment for Technical Documentation,2
+490,49,Communication,Stakeholder Communication,3.2,self,2025-03-28,Self assessment for Stakeholder Communication,2
+491,50,Technical Leadership,Team Mentorship,1.6,self,2025-03-28,Self assessment for Team Mentorship,2
+492,50,Technical Leadership,Technical Planning,2.2,self,2025-03-28,Self assessment for Technical Planning,2
+493,50,Software Architecture,System Design,1.8,self,2025-03-28,Self assessment for System Design,2
+494,50,Software Architecture,Architecture Patterns,1.8,self,2025-03-28,Self assessment for Architecture Patterns,2
+495,50,Development Practices,Code Quality,2.1,self,2025-03-28,Self assessment for Code Quality,2
+496,50,Development Practices,Testing Strategies,2.0,self,2025-03-28,Self assessment for Testing Strategies,2
+497,50,Problem Solving,Debug & Troubleshoot,2.4,self,2025-03-28,Self assessment for Debug & Troubleshoot,2
+498,50,Problem Solving,Performance Optimization,1.7,self,2025-03-28,Self assessment for Performance Optimization,2
+499,50,Communication,Technical Documentation,2.6,self,2025-03-28,Self assessment for Technical Documentation,2
+500,50,Communication,Stakeholder Communication,2.7,self,2025-03-28,Self assessment for Stakeholder Communication,2
