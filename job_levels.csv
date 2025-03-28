@@ -1,2 +1,8 @@
+
 level_id,name,description,organization_id
-9,IC 1 - Associate,,
+1,Associate,Entry level position focused on learning and development,2
+2,Mid Level,Intermediate position with growing independence and expertise,2
+3,Senior,Experienced professional with deep expertise and mentoring abilities,2
+4,Staff,Technical leader with broad impact across teams,2
+5,Principal,Distinguished technical expert driving organizational strategy,2
+6,Manager,People manager focusing on team leadership and development,2

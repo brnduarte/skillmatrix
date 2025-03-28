@@ -1,1 +1,32 @@
+
 job_level,competency,expected_score,organization_id
+Associate,Technical Leadership,2.0,2
+Associate,Software Architecture,2.0,2
+Associate,Development Practices,2.5,2
+Associate,Problem Solving,2.5,2
+Associate,Communication,2.5,2
+Mid Level,Technical Leadership,3.0,2
+Mid Level,Software Architecture,3.0,2
+Mid Level,Development Practices,3.5,2
+Mid Level,Problem Solving,3.5,2
+Mid Level,Communication,3.0,2
+Senior,Technical Leadership,4.0,2
+Senior,Software Architecture,4.0,2
+Senior,Development Practices,4.0,2
+Senior,Problem Solving,4.0,2
+Senior,Communication,4.0,2
+Staff,Technical Leadership,4.5,2
+Staff,Software Architecture,4.5,2
+Staff,Development Practices,4.5,2
+Staff,Problem Solving,4.5,2
+Staff,Communication,4.5,2
+Principal,Technical Leadership,5.0,2
+Principal,Software Architecture,5.0,2
+Principal,Development Practices,5.0,2
+Principal,Problem Solving,5.0,2
+Principal,Communication,5.0,2
+Manager,Technical Leadership,4.5,2
+Manager,Software Architecture,4.0,2
+Manager,Development Practices,4.0,2
+Manager,Problem Solving,4.5,2
+Manager,Communication,5.0,2
