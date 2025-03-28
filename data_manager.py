@@ -14,6 +14,7 @@ DATA_FILES = {
     "expectations": "skill_expectations.csv",
     "comp_expectations": "competency_expectations.csv",
     "assessments": "skill_assessments.csv",
+    "skill_assessments": "skill_assessments.csv",
     "comp_assessments": "competency_assessments.csv",
     "organizations": "organizations.csv"
 }
