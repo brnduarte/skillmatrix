@@ -49,3 +49,53 @@ employee_id,name,email,job_title,job_level,department,manager_id,hire_date,organ
 48,Employee 45,employee45@demoorg.com,Product Staff,Staff,Product,2.0,2025-03-28,2
 49,Employee 46,employee46@demoorg.com,Engineering Mid Level,Mid Level,Engineering,1.0,2025-03-28,2
 50,Employee 47,employee47@demoorg.com,Design Associate,Associate,Design,3.0,2025-03-28,2
+51,Manager 1,manager1@demoorg.com,Engineering Manager,Manager,Engineering,,2025-03-28,3
+52,Manager 2,manager2@demoorg.com,Product Manager,Manager,Product,,2025-03-28,3
+53,Manager 3,manager3@demoorg.com,Design Manager,Manager,Design,,2025-03-28,3
+54,Employee 1,employee1@demoorg.com,Engineering Mid Level,Mid Level,Engineering,51.0,2025-03-28,3
+55,Employee 2,employee2@demoorg.com,Product Principal,Principal,Product,52.0,2025-03-28,3
+56,Employee 3,employee3@demoorg.com,Engineering Mid Level,Mid Level,Engineering,51.0,2025-03-28,3
+57,Employee 4,employee4@demoorg.com,Engineering Mid Level,Mid Level,Engineering,51.0,2025-03-28,3
+58,Employee 5,employee5@demoorg.com,Design Mid Level,Mid Level,Design,53.0,2025-03-28,3
+59,Employee 6,employee6@demoorg.com,Product Mid Level,Mid Level,Product,52.0,2025-03-28,3
+60,Employee 7,employee7@demoorg.com,Design Staff,Staff,Design,53.0,2025-03-28,3
+61,Employee 8,employee8@demoorg.com,Engineering Senior,Senior,Engineering,51.0,2025-03-28,3
+62,Employee 9,employee9@demoorg.com,Design Principal,Principal,Design,53.0,2025-03-28,3
+63,Employee 10,employee10@demoorg.com,Engineering Mid Level,Mid Level,Engineering,51.0,2025-03-28,3
+64,Employee 11,employee11@demoorg.com,Engineering Staff,Staff,Engineering,51.0,2025-03-28,3
+65,Employee 12,employee12@demoorg.com,Design Associate,Associate,Design,53.0,2025-03-28,3
+66,Employee 13,employee13@demoorg.com,Product Associate,Associate,Product,52.0,2025-03-28,3
+67,Employee 14,employee14@demoorg.com,Design Principal,Principal,Design,53.0,2025-03-28,3
+68,Employee 15,employee15@demoorg.com,Engineering Mid Level,Mid Level,Engineering,51.0,2025-03-28,3
+69,Employee 16,employee16@demoorg.com,Engineering Associate,Associate,Engineering,51.0,2025-03-28,3
+70,Employee 17,employee17@demoorg.com,Engineering Associate,Associate,Engineering,51.0,2025-03-28,3
+71,Employee 18,employee18@demoorg.com,Engineering Associate,Associate,Engineering,51.0,2025-03-28,3
+72,Employee 19,employee19@demoorg.com,Engineering Associate,Associate,Engineering,51.0,2025-03-28,3
+73,Employee 20,employee20@demoorg.com,Design Senior,Senior,Design,53.0,2025-03-28,3
+74,Employee 21,employee21@demoorg.com,Product Senior,Senior,Product,52.0,2025-03-28,3
+75,Employee 22,employee22@demoorg.com,Engineering Staff,Staff,Engineering,51.0,2025-03-28,3
+76,Employee 23,employee23@demoorg.com,Engineering Staff,Staff,Engineering,51.0,2025-03-28,3
+77,Employee 24,employee24@demoorg.com,Engineering Mid Level,Mid Level,Engineering,51.0,2025-03-28,3
+78,Employee 25,employee25@demoorg.com,Engineering Principal,Principal,Engineering,51.0,2025-03-28,3
+79,Employee 26,employee26@demoorg.com,Engineering Principal,Principal,Engineering,51.0,2025-03-28,3
+80,Employee 27,employee27@demoorg.com,Product Staff,Staff,Product,52.0,2025-03-28,3
+81,Employee 28,employee28@demoorg.com,Engineering Associate,Associate,Engineering,51.0,2025-03-28,3
+82,Employee 29,employee29@demoorg.com,Engineering Staff,Staff,Engineering,51.0,2025-03-28,3
+83,Employee 30,employee30@demoorg.com,Product Mid Level,Mid Level,Product,52.0,2025-03-28,3
+84,Employee 31,employee31@demoorg.com,Design Senior,Senior,Design,53.0,2025-03-28,3
+85,Employee 32,employee32@demoorg.com,Product Principal,Principal,Product,52.0,2025-03-28,3
+86,Employee 33,employee33@demoorg.com,Product Staff,Staff,Product,52.0,2025-03-28,3
+87,Employee 34,employee34@demoorg.com,Design Mid Level,Mid Level,Design,53.0,2025-03-28,3
+88,Employee 35,employee35@demoorg.com,Engineering Mid Level,Mid Level,Engineering,51.0,2025-03-28,3
+89,Employee 36,employee36@demoorg.com,Product Staff,Staff,Product,52.0,2025-03-28,3
+90,Employee 37,employee37@demoorg.com,Product Mid Level,Mid Level,Product,52.0,2025-03-28,3
+91,Employee 38,employee38@demoorg.com,Engineering Associate,Associate,Engineering,51.0,2025-03-28,3
+92,Employee 39,employee39@demoorg.com,Design Principal,Principal,Design,53.0,2025-03-28,3
+93,Employee 40,employee40@demoorg.com,Engineering Principal,Principal,Engineering,51.0,2025-03-28,3
+94,Employee 41,employee41@demoorg.com,Design Mid Level,Mid Level,Design,53.0,2025-03-28,3
+95,Employee 42,employee42@demoorg.com,Product Mid Level,Mid Level,Product,52.0,2025-03-28,3
+96,Employee 43,employee43@demoorg.com,Engineering Mid Level,Mid Level,Engineering,51.0,2025-03-28,3
+97,Employee 44,employee44@demoorg.com,Product Staff,Staff,Product,52.0,2025-03-28,3
+98,Employee 45,employee45@demoorg.com,Product Mid Level,Mid Level,Product,52.0,2025-03-28,3
+99,Employee 46,employee46@demoorg.com,Product Senior,Senior,Product,52.0,2025-03-28,3
+100,Employee 47,employee47@demoorg.com,Design Staff,Staff,Design,53.0,2025-03-28,3
