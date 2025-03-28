@@ -16,7 +16,8 @@ DATA_FILES = {
     "assessments": "skill_assessments.csv",
     "skill_assessments": "skill_assessments.csv",
     "comp_assessments": "competency_assessments.csv",
-    "organizations": "organizations.csv"
+    "organizations": "organizations.csv",
+    "notes": "notes.csv"
 }
 
 # Define the ID columns for each data type
@@ -1536,3 +1537,71 @@ def update_schema_for_organizations():
     results.append(f"Skills: {message}")
     
     return results
+def add_note(employee_id, author_id, author_type, content, is_shared, organization_id=None, related_skills=None, related_competencies=None):
+    """Add a new note
+    
+    Args:
+        employee_id: ID of the employee the note is about
+        author_id: ID of the note author (employee or manager)
+        author_type: Either 'employee' or 'manager'
+        content: Note content
+        is_shared: Boolean indicating if note is shared
+        organization_id: Optional organization ID
+        related_skills: Optional list of skill names
+        related_competencies: Optional list of competency names
+    """
+    notes_df = load_data("notes")
+    
+    # Generate new note ID
+    if notes_df.empty:
+        new_id = 1
+    else:
+        new_id = notes_df["note_id"].max() + 1
+    
+    # Convert lists to strings for storage
+    skills_str = ",".join(related_skills) if related_skills else ""
+    comp_str = ",".join(related_competencies) if related_competencies else ""
+    
+    # Add new note
+    new_note = pd.DataFrame({
+        "note_id": [new_id],
+        "employee_id": [employee_id],
+        "author_id": [author_id],
+        "author_type": [author_type],
+        "date": [datetime.now().strftime("%Y-%m-%d")],
+        "content": [content],
+        "is_shared": [is_shared],
+        "organization_id": [organization_id],
+        "related_skills": [skills_str],
+        "related_competencies": [comp_str]
+    })
+    
+    notes_df = pd.concat([notes_df, new_note], ignore_index=True)
+    save_data("notes", notes_df)
+    return True, "Note added successfully", new_id
+
+def get_employee_notes(employee_id, viewer_id, viewer_type):
+    """Get notes for an employee that are visible to the viewer"""
+    notes_df = load_data("notes")
+    
+    if notes_df.empty:
+        return pd.DataFrame()
+    
+    # Filter by employee
+    notes = notes_df[notes_df["employee_id"] == employee_id]
+    
+    # Filter based on sharing permissions
+    if viewer_type == "employee":
+        # Employees see their own notes and shared notes from their manager
+        visible_notes = notes[
+            (notes["author_id"] == viewer_id) |  # Own notes
+            ((notes["author_type"] == "manager") & (notes["is_shared"] == True))  # Shared manager notes
+        ]
+    else:  # manager
+        # Managers see their own notes and shared notes from the employee
+        visible_notes = notes[
+            (notes["author_id"] == viewer_id) |  # Own notes
+            ((notes["author_type"] == "employee") & (notes["is_shared"] == True))  # Shared employee notes
+        ]
+    
+    return visible_notes
