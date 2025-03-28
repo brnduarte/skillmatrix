@@ -1,1 +1,12 @@
+
 skill_id,competency_id,name,description,organization_id
+1,1,Team Mentorship,Ability to guide and develop team members technically,2
+2,1,Technical Planning,Capability to plan and scope technical initiatives,2
+3,2,System Design,Ability to design scalable and maintainable systems,2
+4,2,Architecture Patterns,Knowledge of common architectural patterns and their applications,2
+5,3,Code Quality,Understanding of code quality principles and practices,2
+6,3,Testing Strategies,Knowledge of testing methodologies and implementation,2
+7,4,Debug & Troubleshoot,Ability to identify and resolve complex technical issues,2
+8,4,Performance Optimization,Skills in improving system performance and efficiency,2
+9,5,Technical Documentation,Ability to create clear technical documentation,2
+10,5,Stakeholder Communication,Skill in communicating with various stakeholder groups,2

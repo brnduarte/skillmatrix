@@ -1,1 +1,7 @@
+
 competency_id,name,description,organization_id
+1,Technical Leadership,Ability to provide technical direction and mentorship,2
+2,Software Architecture,Knowledge of system design and architectural patterns,2
+3,Development Practices,Understanding of software development methodologies and best practices,2
+4,Problem Solving,Ability to analyze and solve complex technical challenges,2
+5,Communication,Ability to effectively communicate technical concepts,2
