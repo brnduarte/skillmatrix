@@ -669,8 +669,8 @@ else:
         # Get existing notes
         notes = get_employee_notes(selected_emp_id, get_user_id(st.session_state.username), "manager")
 
-                    # Display existing notes
-                    if not notes.empty:
+        # Display existing notes
+        if not notes.empty:
                         for _, note in notes.iterrows():
                             with st.expander(f"Note from {note['author_type']} - {note['date']}", expanded=False):
                                 st.write(note["content"])
