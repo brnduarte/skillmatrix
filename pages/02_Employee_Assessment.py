@@ -672,12 +672,12 @@ else:
 
         # Add new note section
         with st.expander("Add New Note", expanded=True):
-            note_content = st.text_area("Note Content", key="new_note_content", height=150)
-            is_shared = st.checkbox("Share with Employee", key="note_is_shared")
+            note_content = st.text_area("Note Content", key="new_note_content_tab", height=150)
+            is_shared = st.checkbox("Share with Employee", key="note_is_shared_tab")
 
             # Multi-select for related items
-            related_comps = st.multiselect("Related Competencies", competencies_df["name"].tolist())
-            related_skills = st.multiselect("Related Skills", skills_df["name"].tolist())
+            related_comps = st.multiselect("Related Competencies", competencies_df["name"].tolist(), key="related_comps_tab")
+            related_skills = st.multiselect("Related Skills", skills_df["name"].tolist(), key="related_skills_tab")
 
             if st.button("Add Note", type="primary"):
                 if note_content.strip():
