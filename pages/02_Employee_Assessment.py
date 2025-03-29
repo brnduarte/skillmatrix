@@ -209,7 +209,7 @@ if st.session_state.user_role == "email_user":
 
 else:
     # For regular users (admin, manager, employee), show tabs
-    tab1, tab2, tab3 = st.tabs(["Self Assessment", "Manager Assessment", "Shared Assessment History"])
+    tab1, tab2, tab3 = st.tabs(["Self Assessment", "Manager Assessment", "Notes"])
 
     # Self Assessment Tab
     with tab1:
@@ -663,16 +663,56 @@ else:
         else:
             st.info("You need to be a manager or administrator to assess employees.")
             
-    # Shared Assessment History Tab
+    # Notes Tab
     with tab3:
-        st.header("Shared Assessment History")
-        
-        if employee_id is None:
-            st.warning("Your user account is not linked to an employee record. Please contact an administrator.")
+        st.header("Assessment Notes")
+
+        # Get existing notes
+        notes = get_employee_notes(selected_emp_id, get_user_id(st.session_state.username), "manager")
+
+        # Add new note section
+        with st.expander("Add New Note", expanded=True):
+            note_content = st.text_area("Note Content", key="new_note_content", height=150)
+            is_shared = st.checkbox("Share with Employee", key="note_is_shared")
+
+            # Multi-select for related items
+            related_comps = st.multiselect("Related Competencies", competencies_df["name"].tolist())
+            related_skills = st.multiselect("Related Skills", skills_df["name"].tolist())
+
+            if st.button("Add Note", type="primary"):
+                if note_content.strip():
+                    success, msg, _ = add_note(
+                        selected_emp_id,
+                        get_user_id(st.session_state.username),
+                        "manager",
+                        note_content,
+                        is_shared,
+                        get_current_organization_id(),
+                        related_skills,
+                        related_comps
+                    )
+                    if success:
+                        st.success("Note added successfully")
+                        st.rerun()
+                    else:
+                        st.error(f"Failed to add note: {msg}")
+                else:
+                    st.warning("Please enter note content")
+
+        # Display existing notes
+        st.markdown("### Previous Notes")
+        if not notes.empty:
+            for _, note in notes.iloc[::-1].iterrows():
+                with st.container(border=True):
+                    st.write(f"**Date:** {note['date']}")
+                    st.write(note["content"])
+                    if note["related_competencies"]:
+                        st.write("**Related Competencies:** " + note["related_competencies"])
+                    if note["related_skills"]:
+                        st.write("**Related Skills:** " + note["related_skills"])
+                    st.write("**Visibility:** " + ("Shared" if note["is_shared"] else "Private"))
         else:
-            # Get both self and manager assessments
-            self_assessments = get_employee_assessments(employee_id, "self")
-            manager_assessments = get_employee_assessments(employee_id, "manager")
+            st.info("No notes available yet")
             
             if not self_assessments.empty or not manager_assessments.empty:
                 # Create tabs for skill vs competency history
