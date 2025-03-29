@@ -671,19 +671,19 @@ else:
 
         # Display existing notes
         if not notes.empty:
-                        for _, note in notes.iterrows():
-                            with st.expander(f"Note from {note['author_type']} - {note['date']}", expanded=False):
-                                st.write(note["content"])
-                                if note["related_competencies"]:
-                                    st.write("**Related Competencies:** " + note["related_competencies"])
-                                if note["related_skills"]:
-                                    st.write("**Related Skills:** " + note["related_skills"])
-                                st.write("**Visibility:** " + ("Shared" if note["is_shared"] else "Private"))
+            for _, note in notes.iterrows():
+                with st.expander(f"Note from {note['author_type']} - {note['date']}", expanded=False):
+                    st.write(note["content"])
+                    if note["related_competencies"]:
+                        st.write("**Related Competencies:** " + note["related_competencies"])
+                    if note["related_skills"]:
+                        st.write("**Related Skills:** " + note["related_skills"])
+                    st.write("**Visibility:** " + ("Shared" if note["is_shared"] else "Private"))
 
-                    # Add new note
-                    with st.expander("Add New Note", expanded=False):
-                        note_content = st.text_area("Note Content", key="new_note_content", height=150)
-                        is_shared = st.checkbox("Share with Employee", key="note_is_shared")
+        # Add new note
+        with st.expander("Add New Note", expanded=False):
+            note_content = st.text_area("Note Content", key="new_note_content", height=150)
+            is_shared = st.checkbox("Share with Employee", key="note_is_shared")
 
                         # Multi-select for related items
                         related_comps = st.multiselect("Related Competencies", competencies_df["name"].tolist())
