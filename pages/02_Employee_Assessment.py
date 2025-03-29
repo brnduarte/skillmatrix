@@ -663,11 +663,11 @@ else:
         else:
             st.info("You need to be a manager or administrator to assess employees.")
 
-                    # Notes section
-                    st.subheader("Assessment Notes")
+        # Notes section
+        st.subheader("Assessment Notes")
 
-                    # Get existing notes
-                    notes = get_employee_notes(selected_emp_id, get_user_id(st.session_state.username), "manager")
+        # Get existing notes
+        notes = get_employee_notes(selected_emp_id, get_user_id(st.session_state.username), "manager")
 
                     # Display existing notes
                     if not notes.empty:
