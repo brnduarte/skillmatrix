@@ -209,7 +209,7 @@ if st.session_state.user_role == "email_user":
 
 else:
     # For regular users (admin, manager, employee), show tabs
-    tab1, tab2 = st.tabs(["Self Assessment", "Manager Assessment"])
+    tab1, tab2, tab3 = st.tabs(["Self Assessment", "Manager Assessment", "Shared Assessment History"])
 
     # Self Assessment Tab
     with tab1:
@@ -662,6 +662,97 @@ else:
                 st.info("You don't have any team members to assess.")
         else:
             st.info("You need to be a manager or administrator to assess employees.")
+            
+    # Shared Assessment History Tab
+    with tab3:
+        st.header("Shared Assessment History")
+        
+        if employee_id is None:
+            st.warning("Your user account is not linked to an employee record. Please contact an administrator.")
+        else:
+            # Get both self and manager assessments
+            self_assessments = get_employee_assessments(employee_id, "self")
+            manager_assessments = get_employee_assessments(employee_id, "manager")
+            
+            if not self_assessments.empty or not manager_assessments.empty:
+                # Create tabs for skill vs competency history
+                hist_skill_tab, hist_comp_tab = st.tabs(["Skills History", "Competencies History"])
+                
+                with hist_skill_tab:
+                    st.subheader("Skills Assessment History")
+                    
+                    # Select competency to view
+                    comp_options = competencies_df["name"].tolist()
+                    selected_comp = st.selectbox("Select Competency", comp_options, key="hist_comp_select")
+                    
+                    # Get skills for selected competency
+                    comp_id = competencies_df[competencies_df["name"] == selected_comp]["competency_id"].iloc[0]
+                    comp_skills = get_competency_skills(comp_id)
+                    
+                    for _, skill_row in comp_skills.iterrows():
+                        skill_name = skill_row["name"]
+                        with st.expander(f"Skill: {skill_name}"):
+                            # Show self assessment
+                            st.markdown("##### Self Assessment")
+                            self_skill = self_assessments[
+                                (self_assessments["competency"] == selected_comp) & 
+                                (self_assessments["skill"] == skill_name)
+                            ]
+                            if not self_skill.empty:
+                                for _, assessment in self_skill.iterrows():
+                                    st.write(f"Score: {assessment['score']} (Date: {assessment['assessment_date']})")
+                                    if assessment["notes"]:
+                                        st.write(f"Notes: {assessment['notes']}")
+                            else:
+                                st.write("No self assessment available")
+                                
+                            # Show manager assessment
+                            st.markdown("##### Manager Assessment")
+                            mgr_skill = manager_assessments[
+                                (manager_assessments["competency"] == selected_comp) & 
+                                (manager_assessments["skill"] == skill_name)
+                            ]
+                            if not mgr_skill.empty:
+                                for _, assessment in mgr_skill.iterrows():
+                                    st.write(f"Score: {assessment['score']} (Date: {assessment['assessment_date']})")
+                                    if assessment["notes"]:
+                                        st.write(f"Notes: {assessment['notes']}")
+                            else:
+                                st.write("No manager assessment available")
+                
+                with hist_comp_tab:
+                    st.subheader("Competencies Assessment History")
+                    
+                    # Load competency assessments
+                    self_comp_assessments = get_employee_competency_assessments(employee_id, "self")
+                    manager_comp_assessments = get_employee_competency_assessments(employee_id, "manager")
+                    
+                    for _, comp_row in competencies_df.iterrows():
+                        comp_name = comp_row["name"]
+                        with st.expander(f"Competency: {comp_name}"):
+                            # Show self assessment
+                            st.markdown("##### Self Assessment")
+                            self_comp = self_comp_assessments[self_comp_assessments["competency"] == comp_name]
+                            if not self_comp.empty:
+                                for _, assessment in self_comp.iterrows():
+                                    st.write(f"Score: {assessment['score']} (Date: {assessment['assessment_date']})")
+                                    if assessment["notes"]:
+                                        st.write(f"Notes: {assessment['notes']}")
+                            else:
+                                st.write("No self assessment available")
+                                
+                            # Show manager assessment
+                            st.markdown("##### Manager Assessment")
+                            mgr_comp = manager_comp_assessments[manager_comp_assessments["competency"] == comp_name]
+                            if not mgr_comp.empty:
+                                for _, assessment in mgr_comp.iterrows():
+                                    st.write(f"Score: {assessment['score']} (Date: {assessment['assessment_date']})")
+                                    if assessment["notes"]:
+                                        st.write(f"Notes: {assessment['notes']}")
+                            else:
+                                st.write("No manager assessment available")
+            else:
+                st.info("No assessment history available yet.")
 
         # Notes section
         st.subheader("Assessment Notes")
